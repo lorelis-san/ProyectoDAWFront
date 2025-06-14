@@ -1,1 +1,29 @@
-<p>category-list works!</p>
+<div class="container mt-4">
+  <h2>Categorías</h2>
+
+  <button routerLink="/categorias/nuevo" class="btn btn-primary mb-3">
+    Nueva Categoría
+  </button>
+
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let categoria of categories; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ categoria.name }}</td>
+        <td>{{ categoria.description }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm me-2" (click)="edit(categoria.id!)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="delete(categoria.id!)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

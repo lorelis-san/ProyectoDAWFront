@@ -1,0 +1,12 @@
+<h2>{{ isEdit ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+<form [formGroup]="productForm" (ngSubmit)="submit()" enctype="multipart/form-data">
+  <input formControlName="cod" placeholder="Código" />
+  <input formControlName="name" placeholder="Nombre" />
+  <input formControlName="brand" placeholder="Marca" />
+  <input type="number" formControlName="salePrice" placeholder="Precio de venta" />
+  <input type="number" formControlName="stock" placeholder="Stock" />
+  
+  <input type="file" (change)="onFileChange($event)" />
+
+  <button type="submit">{{ isEdit ? 'Actualizar' : 'Registrar' }}</button>
+</form>

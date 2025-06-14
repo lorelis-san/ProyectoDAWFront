@@ -22,6 +22,8 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './components/helpers/auth.guard';
 import { AuthInterceptor } from './components/helpers/auth.interceptor';
+import { ProductListComponent } from './components/product/product-list/product-list.component';
+import { ProductFormComponent } from './components/product/product-form/product-form.component';
 
 
 @NgModule({
@@ -40,7 +42,9 @@ import { AuthInterceptor } from './components/helpers/auth.interceptor';
     MainLayoutComponent,
     SidebarComponent,
     NavbarComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProductListComponent,
+    ProductFormComponent
   ],
   imports: [
     BrowserModule,

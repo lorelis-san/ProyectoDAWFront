@@ -1,1 +1,28 @@
-<p>supplier-list works!</p>
+<div class="container">
+  <h2>Proveedores</h2>
+  <a routerLink="/suppliers/new" class="btn btn-primary mb-3">Registrar proveedor</a>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>RUC</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let supplier of suppliers">
+        <td>{{ supplier.name }}</td>
+        <td>{{ supplier.ruc }}</td>
+        <td>{{ supplier.email }}</td>
+        <td>{{ supplier.phone }}</td>
+        <td>
+          <a [routerLink]="['/suppliers/edit', supplier.id]" class="btn btn-warning btn-sm">Editar</a>
+          <button class="btn btn-danger btn-sm" (click)="deleteSupplier(supplier.id!)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

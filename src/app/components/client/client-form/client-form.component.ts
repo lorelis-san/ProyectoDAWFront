@@ -4,36 +4,42 @@ import { ClientService, Client } from '../../../services/client.service';
 
 @Component({
   selector: 'app-client-form',
-  templateUrl: './client-form.component.html'
+  templateUrl: './client-form.component.html',
+  styleUrls: ['./client-form.component.css']
 })
 export class ClientFormComponent implements OnInit {
   client: Client = {
+    id: undefined,
+    firstName: '',
+    lastName: '',
     typeDocument: 'DNI',
     documentNumber: '',
+    businessName: '',
     phoneNumber: '',
-    email: ''
+    email: '',
+    enabled: true
   };
-  editing: boolean = false;
+  isEditMode = false;
 
   constructor(
-    private clientService: ClientService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private clientService: ClientService
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.params['id'];
     if (id) {
-      this.editing = true;
-      this.clientService.getById(+id).subscribe(res => {
+      this.isEditMode = true;
+      this.clientService.getById(id).subscribe(res => {
         this.client = res.data;
       });
     }
   }
 
-  onSubmit(): void {
-    if (this.editing && this.client.id) {
-      this.clientService.update(this.client.id, this.client).subscribe(() => {
+  save(): void {
+    if (this.isEditMode) {
+      this.clientService.update(this.client.id!, this.client).subscribe(() => {
         this.router.navigate(['/clientes']);
       });
     } else {

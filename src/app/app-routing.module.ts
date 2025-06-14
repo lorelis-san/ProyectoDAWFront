@@ -23,16 +23,19 @@ const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard] },
       { path: 'clientes', component: ClientListComponent ,canActivate: [AuthGuard]},
-      { path: 'clientes/nuevo', component: ClientFormComponent },
-      { path: 'clientes/editar/:id', component: ClientFormComponent },
-      { path: 'vehiculos', component: VehicleListComponent },
-      { path: 'vehiculos/nuevo', component: VehicleFormComponent },
-      { path: 'categorias', component: CategoryListComponent },
-      { path: 'categorias/nuevo', component: CategoryFormComponent },
-      { path: 'proveedores', component: SupplierListComponent },
-      { path: 'proveedores/nuevo', component: SupplierFormComponent }
+      { path: 'clientes/nuevo', component: ClientFormComponent,canActivate: [AuthGuard] },
+      { path: 'clientes/editar/:id', component: ClientFormComponent,canActivate: [AuthGuard] },
+      { path: 'vehiculos', component: VehicleListComponent,canActivate: [AuthGuard] },
+      { path: 'vehiculos/nuevo', component: VehicleFormComponent,canActivate: [AuthGuard] },
+      { path: 'vehiculos/editar/:id', component: VehicleFormComponent, canActivate: [AuthGuard] },
+      { path: 'categorias', component: CategoryListComponent,canActivate: [AuthGuard] },
+      { path: 'categorias/nuevo', component: CategoryFormComponent,canActivate: [AuthGuard] },
+      { path: 'categorias/editar/:id', component: CategoryFormComponent, canActivate: [AuthGuard] },
+      { path: 'suppliers', component: SupplierListComponent, canActivate: [AuthGuard] },
+      { path: 'suppliers/new', component: SupplierFormComponent, canActivate: [AuthGuard] },
+      { path: 'suppliers/edit/:id', component: SupplierFormComponent, canActivate: [AuthGuard] }
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

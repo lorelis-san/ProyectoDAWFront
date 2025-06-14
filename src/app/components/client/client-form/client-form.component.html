@@ -1,16 +1,46 @@
-<h2>{{ editing ? 'Editar' : 'Nuevo' }} Cliente</h2>
+<div class="container mt-4">
+  <h2>{{ isEditMode ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
 
-<form (ngSubmit)="onSubmit()">
-  <input [(ngModel)]="client.firstName" name="firstName" placeholder="Nombres" required />
-  <input [(ngModel)]="client.lastName" name="lastName" placeholder="Apellidos" required />
-  <select [(ngModel)]="client.typeDocument" name="typeDocument" required>
-    <option value="DNI">DNI</option>
-    <option value="RUC">RUC</option>
-  </select>
-  <input [(ngModel)]="client.documentNumber" name="documentNumber" placeholder="Número de documento" required />
-  <input [(ngModel)]="client.businessName" name="businessName" placeholder="Razón social (si aplica)" />
-  <input [(ngModel)]="client.phoneNumber" name="phoneNumber" placeholder="Teléfono" required />
-  <input [(ngModel)]="client.email" name="email" type="email" placeholder="Correo" required />
+  <form (ngSubmit)="save()">
+    <div class="mb-3">
+      <label class="form-label">Tipo de Documento</label>
+      <select class="form-select" [(ngModel)]="client.typeDocument" name="typeDocument">
+        <option value="DNI">DNI</option>
+        <option value="RUC">RUC</option>
+      </select>
+    </div>
 
-  <button type="submit">{{ editing ? 'Actualizar' : 'Guardar' }}</button>
-</form>
+    <div class="mb-3">
+      <label class="form-label">Número de Documento</label>
+      <input type="text" class="form-control" [(ngModel)]="client.documentNumber" name="documentNumber" required />
+    </div>
+
+    <div class="mb-3" *ngIf="client.typeDocument === 'RUC'">
+      <label class="form-label">Razón Social</label>
+      <input type="text" class="form-control" [(ngModel)]="client.businessName" name="businessName" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Nombres</label>
+      <input type="text" class="form-control" [(ngModel)]="client.firstName" name="firstName" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Apellidos</label>
+      <input type="text" class="form-control" [(ngModel)]="client.lastName" name="lastName" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Teléfono</label>
+      <input type="text" class="form-control" [(ngModel)]="client.phoneNumber" name="phoneNumber" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Correo</label>
+      <input type="email" class="form-control" [(ngModel)]="client.email" name="email" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">{{ isEditMode ? 'Actualizar' : 'Guardar' }}</button>
+    <button class="btn btn-secondary ms-2" routerLink="/clientes">Cancelar</button>
+  </form>
+</div>
