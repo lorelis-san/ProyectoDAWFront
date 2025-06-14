@@ -1,0 +1,63 @@
+<form (ngSubmit)="onSubmit()" #registerForm="ngForm" id="registerForm">
+  <div>
+    <input
+      type="text"
+      name="nombre"
+      [(ngModel)]="nombre"
+      required
+      class="form-control"
+      placeholder="Nombre"
+    />
+
+    <input
+      type="text"
+      name="apellido"
+      [(ngModel)]="apellido"
+      required
+      class="form-control"
+      placeholder="Apellido"
+    />
+
+    <input
+      type="email"
+      name="email"
+      [(ngModel)]="email"
+      required
+      class="form-control"
+      placeholder="Correo"
+    />
+
+    <input
+      type="text"
+      name="username"
+      [(ngModel)]="username"
+      required
+      class="form-control"
+      placeholder="Usuario"
+    />
+
+    <input
+      type="password"
+      name="password"
+      [(ngModel)]="password"
+      required
+      class="form-control"
+      placeholder="Contraseña"
+    />
+  </div>
+
+  <button type="submit" id="registerBtn" [disabled]="loading">
+    <span class="btn-text">
+      <span *ngIf="loading" class="loading-spinner"></span>
+      {{ loading ? 'Registrando...' : 'Registrarse' }}
+    </span>
+  </button>
+</form>
+
+<div *ngIf="successMessage" style="color: green; margin-top: 1rem;">
+  {{ successMessage }}
+</div>
+
+<div *ngIf="errorMessage" style="color: red; margin-top: 1rem;">
+  {{ errorMessage }}
+</div>

@@ -1,0 +1,16 @@
+<h2>{{ editing ? 'Editar' : 'Nuevo' }} Cliente</h2>
+
+<form (ngSubmit)="onSubmit()">
+  <input [(ngModel)]="client.firstName" name="firstName" placeholder="Nombres" required />
+  <input [(ngModel)]="client.lastName" name="lastName" placeholder="Apellidos" required />
+  <select [(ngModel)]="client.typeDocument" name="typeDocument" required>
+    <option value="DNI">DNI</option>
+    <option value="RUC">RUC</option>
+  </select>
+  <input [(ngModel)]="client.documentNumber" name="documentNumber" placeholder="Número de documento" required />
+  <input [(ngModel)]="client.businessName" name="businessName" placeholder="Razón social (si aplica)" />
+  <input [(ngModel)]="client.phoneNumber" name="phoneNumber" placeholder="Teléfono" required />
+  <input [(ngModel)]="client.email" name="email" type="email" placeholder="Correo" required />
+
+  <button type="submit">{{ editing ? 'Actualizar' : 'Guardar' }}</button>
+</form>
