@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
@@ -18,6 +18,11 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AuthGuard } from './components/helpers/auth.guard';
+import { AuthInterceptor } from './components/helpers/auth.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -39,11 +44,17 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    ReactiveFormsModule,
+    FormsModule, 
+    AppRoutingModule,
+    RouterModule,
   ],
-  providers: [],
+  providers: [
+     {
+      provide : HTTP_INTERCEPTORS, useClass : AuthInterceptor, multi : true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

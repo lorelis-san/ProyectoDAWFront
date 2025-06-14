@@ -1,45 +1,43 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-interface LoginDTO {
-  username: string;
-  password: string;
-}
-
-interface RegisterDTO {
-  username: string;
-  password: string;
-  email: string;
-  // agrega más campos según tu `NewUserDto`
-}
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private baseUrl = 'http://localhost:8080/auth'; // cambia el puerto si tu backend usa otro
+ 
+  private login: string = 'http://localhost:8080/login';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  login(data: LoginDTO): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, data, { withCredentials: true });
+  ingresar(request : any): Observable<any> {
+    return this.http.post(`${this.login}`, request, {
+      observe: 'response'
+    }).pipe(map((response : HttpResponse<any>) => {
+      const body = response.body;
+      const headers = response.headers;
+
+      const beaberToken = headers.get('Authorization');
+      const token = beaberToken ? beaberToken.replace('Bearer ', '') : null;
+      if (token) {
+        localStorage.setItem('token', token);
+      } else {
+        console.error('Error al autentificarse');
+      }
+      return body;
+    }))
   }
 
-  register(data: RegisterDTO): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, data, { withCredentials: true });
-  }
+ token(){
+    return localStorage.getItem('token');
+ }
 
-  logout(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true });
-  }
-
-  checkAuth(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/check-auth`, { withCredentials: true });
-  }
-
-  getUserDetails(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/user/details`, { withCredentials: true });
-  }
+ logout() {
+  localStorage.removeItem('token');
+}
 }

@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-login',
@@ -8,54 +12,57 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
-  errorMessage: string = '';
-  loading: boolean = false;
-  buttonText: string = 'Validando...';
+  
+  usuario: any[] = []
+  formLogin: FormGroup
+  
+ constructor(
+    private _loginService : AuthService,
+    private route: Router,
+    private fb: FormBuilder
+  )
+{
+    this.formLogin = new FormGroup({
+      email: new FormControl(null, [Validators.required]),
+      password: new FormControl(null, [Validators.required])
+    })
+   }
 
-  constructor(private http: HttpClient, private router: Router) {}
+  ngOnInit(): void {
+    this.initForm()
+  }
 
-  onSubmit(): void {
-    this.loading = true;
-    this.errorMessage = '';
-    this.buttonText = 'Validando...';
+  initForm() {
+    this.formLogin = new FormGroup({
+      email: new FormControl(null, [Validators.required]),
+      password: new FormControl(null, [Validators.required])
+    })
+  }
 
-    const user = {
-      username: this.username,
-      password: this.password
-    };
+  login(){
+    if(this.formLogin.valid){
+      console.log("Acceso", this.formLogin.value)
+      this._loginService.ingresar(this.formLogin.value)
+      .subscribe({
+        next: (res) => {
+          console.log("Response: ", res)
+          this.route.navigate(['/clientes'])
+        },
+        error: (err: HttpErrorResponse) => {
+          this.alertaError("Correo o contraseña incorrecta ")
+        }
+      });
+    }
+  }
 
-    this.http.post<any>('http://localhost:8080/auth/login', user).subscribe({
-      next: (data) => {
-        const role = data.message;
-        this.buttonText = 'Accediendo...';
-
-        setTimeout(() => this.router.navigate(['/clientes']), 1500);
-      },
-      error: () => {
-        this.showError('Credenciales inválidas');
-      }
+  alertaError(message : string){
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: message,
+      showConfirmButton: false,
+      timer: 1500
     });
-  }
-
-  showError(message: string) {
-    this.errorMessage = message;
-    this.loading = false;
-    this.buttonText = 'Iniciar sesión';
-
-    setTimeout(() => {
-      this.errorMessage = '';
-    }, 5000);
-  }
-
-  onFocus(event: FocusEvent) {
-    const target = event.target as HTMLElement;
-    target.parentElement?.classList.add('focused');
-  }
-
-  onBlur(event: FocusEvent) {
-    const target = event.target as HTMLElement;
-    target.parentElement?.classList.remove('focused');
+    this.formLogin.reset();
   }
 }
