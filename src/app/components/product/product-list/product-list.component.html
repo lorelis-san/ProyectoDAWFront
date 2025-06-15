@@ -1,24 +1,59 @@
-<h2>Lista de Productos</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Código</th>
-      <th>Nombre</th>
-      <th>Marca</th>
-      <th>Precio</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let prod of products">
-      <td>{{ prod.cod }}</td>
-      <td>{{ prod.name }}</td>
-      <td>{{ prod.brand }}</td>
-      <td>{{ prod.salePrice | currency }}</td>
-      <td>
-       <button *ngIf="prod.id" (click)="editProduct(prod.id)">Editar</button>
-        <button *ngIf="prod.id" (click)="deleteProduct(prod.id)">Eliminar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="container mt-4">
+  <h2>Lista de Productos</h2>
+
+  <div class="mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar por código o nombre"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearch()"
+    />
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Imagen</th>
+         <th>Sede</th>
+        <th>Categoría</th>
+        <th>Proveedor</th>
+        <th>Precio Costo</th>
+        <th>Precio Distribuidor</th>
+        <th>Precio Venta</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.id }}</td>
+        <td>{{ product.cod }}</td>
+        <td>{{ product.name }}</td>
+        <td>
+          <img
+            *ngIf="product.imageUrl"
+            [src]="product.imageUrl"
+            alt="Imagen"
+            width="80"
+            height="80"
+          />
+        </td>
+        <td>{{ product.sede }}</td>
+        <td>{{ getCategoryName(product.categoryProductId) }}</td>
+        <td>{{ getSupplierName(product.supplierProductId) }}</td>
+        <td>{{ product.costPrice }}</td>
+        <td>{{ product.dealerPrice }}</td>
+        <td>{{ product.salePrice }}</td>
+        <td>
+         <button *ngIf="product.id" (click)="editProduct(product.id)">Editar</button> 
+         <button *ngIf="product.id" (click)="deleteProduct(product.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button class="btn btn-success mt-3" routerLink="/productos/nuevo">Nuevo Producto</button>
+</div>

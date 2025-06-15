@@ -15,6 +15,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthGuard } from './components/helpers/auth.guard';
+import { ProductFormComponent } from './components/product/product-form/product-form.component';
+import { ProductListComponent } from './components/product/product-list/product-list.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
@@ -35,7 +37,12 @@ const routes: Routes = [
       { path: 'categorias/editar/:id', component: CategoryFormComponent, canActivate: [AuthGuard] },
       { path: 'suppliers', component: SupplierListComponent, canActivate: [AuthGuard] },
       { path: 'suppliers/new', component: SupplierFormComponent, canActivate: [AuthGuard] },
-      { path: 'suppliers/edit/:id', component: SupplierFormComponent, canActivate: [AuthGuard] }
+      { path: 'suppliers/edit/:id', component: SupplierFormComponent, canActivate: [AuthGuard] },
+      { path: 'productos', component: ProductListComponent, canActivate: [AuthGuard] },
+      { path: 'productos/nuevo', component: ProductFormComponent, canActivate: [AuthGuard] },
+      { path: 'productos/editar/:id', component: ProductFormComponent, canActivate: [AuthGuard] }
+
+
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

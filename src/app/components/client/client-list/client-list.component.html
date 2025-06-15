@@ -9,8 +9,10 @@
     <thead class="table-dark">
       <tr>
         <th>#</th>
-        <th>Nombre</th>
         <th>Documento</th>
+        <th>Nro Documento</th>
+        <th>Nombre</th>
+        <th>Razón Social</th>
         <th>Teléfono</th>
         <th>Correo</th>
         <th>Acciones</th>
@@ -19,8 +21,10 @@
     <tbody>
       <tr *ngFor="let cliente of clients; let i = index">
         <td>{{ i + 1 }}</td>
-        <td>{{ cliente.firstName }} {{ cliente.lastName }}</td>
+        <td>{{ cliente.typeDocument }}</td>
         <td>{{ cliente.documentNumber }}</td>
+        <td>{{ cliente.firstName }} {{ cliente.lastName }}</td>
+        <td>{{ cliente.businessName }}</td>
         <td>{{ cliente.phoneNumber }}</td>
         <td>{{ cliente.email }}</td>
         <td>
