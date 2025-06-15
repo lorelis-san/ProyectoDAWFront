@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class CotizacionListComponent implements OnInit {
   cotizaciones: CotizacionResponse[] = [];
 
-  constructor(private cotizacionService: CotizacionService, private router: Router) {}
+  constructor(private cotizacionService: CotizacionService, private router: Router) { }
 
   ngOnInit(): void {
     this.cotizacionService.listarCotizaciones().subscribe(res => {

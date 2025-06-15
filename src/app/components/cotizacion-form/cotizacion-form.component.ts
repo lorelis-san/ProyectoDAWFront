@@ -2,7 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CotizacionService } from '../../services/cotizacion.service';
 import { CotizacionResponse } from '../../models/cotizacion-response.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DetalleCotizacion } from '../../models/detalle-cotizacion.model';
+import { Product } from '../../models/product.model';
+import { ProductService } from '../../services/product.service';
+import { ClientService } from '../../services/client.service';
+import { VehicleService } from '../../services/vehicle.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-cotizacion-form',
@@ -25,16 +31,27 @@ export class CotizacionFormComponent implements OnInit {
     subtotal: 0,
     igv: 0,
     total: 0,
-    cliente: { id: 0, firstName: '', lastName:'', typeDocument: '',documentNumber: '', phoneNumber: '', email: '' },
-    vehiculo: { id: 0, placa: '', marca: '', modelo: '', year: 0 },
+    cliente: { id: 0, firstName: '', lastName: '', typeDocument: '', businessName: '', documentNumber: '', phoneNumber: '', email: '' },
+    vehiculo: { id: 0, placa: '', marca: '', modelo: '', year: '' },
     detalles: []
   };
+
+  clienteEncontrado: boolean = false;
+  vehiculoEncontrado: boolean = false;
+  typeDocument: string[] = ['RUC', 'DNI'];
+  busquedaProducto: string = '';
+
+  productosFiltrados: Product[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private cotizacionService: CotizacionService
-  ) {}
+    private cotizacionService: CotizacionService,
+    private productService: ProductService,
+    private clientService: ClientService,
+    private vehicleService: VehicleService,
+    private cdRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -56,5 +73,122 @@ export class CotizacionFormComponent implements OnInit {
       });
     }
   }
+
+  buscarProducto() {
+    const termino = this.busquedaProducto.trim();
+
+    if (termino.length >= 2) { // opcional: evita buscar si hay muy pocos caracteres
+      this.productService.search(termino).subscribe({
+        next: (response) => {
+          this.productosFiltrados = response.data;
+          console.log(response.data)
+        },
+        error: (err) => {
+          console.error('Error al buscar productos', err);
+          this.productosFiltrados = [];
+        }
+      });
+    } else {
+      this.productosFiltrados = [];
+    }
+  }
+
+  agregarProducto(producto: Product) {
+    if (producto.id == null) {
+      console.error('El producto no tiene ID');
+      return;
+    }
+    const yaExiste = this.cotizacion.detalles.some(d => d.productoId === producto.id);
+
+    if (!yaExiste) {
+      const nuevoDetalle: DetalleCotizacion = {
+        productoId: producto.id,
+        nombreProducto: producto.name,
+        cantidad: 1,
+        precioUnitario: producto.salePrice!,
+        subtotal: producto.salePrice! * 1
+      };
+
+      this.cotizacion.detalles.push(nuevoDetalle);
+      this.actualizarTotales();
+    }
+
+    this.busquedaProducto = '';
+    this.productosFiltrados = [];
+  }
+
+  actualizarTotales() {
+    this.cotizacion.detalles.forEach(detalle => {
+      detalle.subtotal = detalle.precioUnitario * detalle.cantidad;
+    });
+    const subtotal = this.cotizacion.detalles.reduce((acc, d) => acc + d.subtotal, 0);
+    const igv = subtotal * 0.18;
+    const total = subtotal + igv;
+
+    this.cotizacion.subtotal = subtotal;
+    this.cotizacion.igv = igv;
+    this.cotizacion.total = total;
+  }
+
+  eliminarProducto(detalleAEliminar: DetalleCotizacion): void {
+    this.cotizacion.detalles = this.cotizacion.detalles.filter(
+      (detalle) => detalle !== detalleAEliminar
+    );
+    this.actualizarTotales();
+  }
+
+  buscarClientePorDocumento(): void {
+
+    const documento = this.cotizacion.cliente?.documentNumber;
+    if (!documento) return;
+
+    this.clientService.searchByDocument(documento).subscribe(
+      (response) => {
+        this.cotizacion.cliente = response.data;
+        this.clienteEncontrado = true;
+        console.log('Cliente encontrado:', response.data);
+
+        this.cdRef.detectChanges();
+      },
+      (error) => {
+        console.log("Cliente no encontrado, puedes crear uno nuevo");
+        this.clienteEncontrado = false;
+        this.cotizacion.cliente = {
+          typeDocument: '',
+          documentNumber: documento,
+          firstName: '',
+          lastName: '',
+          businessName: '',
+          email: '',
+          phoneNumber: ''
+        };
+      }
+    );
+
+  }
+  buscarVehiculoPorPlaca(): void {
+    const placa = this.cotizacion.vehiculo?.placa;
+    if (!placa) return;
+
+    this.vehicleService.getByPlaca(placa).subscribe(
+      (response) => {
+        this.cotizacion.vehiculo = response.data;
+        this.vehiculoEncontrado = true;
+      },
+      (error) => {
+        console.log("Vehículo no encontrado, se puede registrar uno nuevo");
+        this.vehiculoEncontrado = false;
+        this.cotizacion.vehiculo = {
+          placa: placa,
+          marca: '',
+          modelo: '',
+          year: ''
+        };
+      }
+    );
+  }
+
+
+
 }
 

@@ -3,6 +3,6 @@ id?: number;
   placa: string;
   marca: string;
   modelo: string;
-  year: number;
+  year: string;
   enabled?: boolean;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SupplierService, Supplier } from '../../../services/supplier.service';
-
+import { SupplierService } from '../../../services/supplier.service';
+import { Supplier } from '../../../models/supplier.model';
 @Component({
   selector: 'app-supplier-form',
   templateUrl: './supplier-form.component.html',

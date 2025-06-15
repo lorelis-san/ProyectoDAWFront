@@ -1,8 +1,8 @@
 // src/app/components/category/category-form/category-form.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CategoryService, Category } from '../../../services/category.service';
+import { CategoryService } from '../../../services/category.service';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Category } from '../../../models/category.model';
 @Component({
   selector: 'app-category-form',
   templateUrl: './category-form.component.html',

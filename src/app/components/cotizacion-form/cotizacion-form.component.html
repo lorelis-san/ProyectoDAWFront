@@ -1,16 +1,173 @@
 <h2>{{ cotizacion.id ? 'Editar Cotización' : 'Nueva Cotización' }}</h2>
-<form (ngSubmit)="guardar()">
-  <div>
-    <label>Cliente:</label>
-    <input [(ngModel)]="cotizacion.cliente?.lastName" name="clienteNombre" required />
-  </div>
-  <div>
-    <label>Vehículo:</label>
-    <input [(ngModel)]="cotizacion.vehiculo.placa" name="vehiculoPlaca" required />
-  </div>
-  <div>
-    <label>Observaciones:</label>
-    <textarea [(ngModel)]="cotizacion.observaciones" name="observaciones"></textarea>
-  </div>
-  <button type="submit">Guardar</button>
+<h2>Registrar Cotización</h2>
+
+<form (ngSubmit)="guardar()" #form="ngForm">
+
+<!--<div>
+        <label>Nro de Cotización:</label>
+        <input type="text" name="cliente" [(ngModel)]="cotizacion.numeroCotizacion" required />
+    </div> -->
+    <div>
+        <label>Elaborado por :</label>
+        <input type="text" name="userNombre" [(ngModel)]="cotizacion.userNombre" required />
+        <input type="text" name="userApellido" [(ngModel)]="cotizacion.userApellido" required />
+    </div>
+
+    <div>
+        <label>Modificado por :</label>
+        <input type="text" name="usuarioModificadorNombre" [(ngModel)]="cotizacion.usuarioModificadorNombre" required />
+        <input type="text" name="usuarioModificadorApellido" [(ngModel)]="cotizacion.usuarioModificadorApellido"
+            required />
+    </div>
+
+    <div>
+        <label>Estado</label>
+        <input type="text" name="estado" [(ngModel)]="cotizacion.estado" required />
+
+
+        <label>Fecha</label>
+        <input type="text" name="fecha" [(ngModel)]="cotizacion.fecha" required />
+
+        <input type="text" name="fechaCreacion" [(ngModel)]="cotizacion.fechaCreacion" required />
+
+        <input type="text" name="fechaModificacion" [(ngModel)]="cotizacion.fechaModificacion" required />
+    </div>
+
+
+    <!-- Cliente -->
+    <!-- CHat, aquí tiene que incluirse un botón de busca del nro del documento, si lo encuentra
+      llena los campos faltantes, si no lo encuentra, se activan para agregarlos y crear un nuevo cliente -->
+
+    <div>
+        <label>Tipo de documento:</label>
+        <select id="typeDocument" class="form-control" name="typeDocument"
+            [(ngModel)]="cotizacion.cliente!.typeDocument">
+            <option value="">Seleccione un tipo de documento</option>
+            <option *ngFor="let tipo of typeDocument" [value]="tipo">
+                {{ tipo }}
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Nro de Documento:</label>
+        <input type="text" name="documentNumber" [(ngModel)]="cotizacion.cliente!.documentNumber" required
+            [readonly]="clienteEncontrado" />
+        <button type="button" (click)="buscarClientePorDocumento()">Buscar</button>
+    </div>
+
+    <div>
+        <label>Nombre:</label>
+        <input type="text" name="firstName" [(ngModel)]="cotizacion.cliente!.firstName"
+            [readonly]="clienteEncontrado" />
+    </div>
+    <div>
+        <label>Apellido:</label>
+        <input type="text" name="lastName" [(ngModel)]="cotizacion.cliente!.lastName" [readonly]="clienteEncontrado" />
+    </div>
+    <div>
+        <label>Razón Social:</label>
+        <input type="text" name="businessName" [(ngModel)]="cotizacion.cliente!.businessName"
+            [readonly]="clienteEncontrado" />
+    </div>
+
+    <div>
+        <label>Email:</label>
+        <input type="text" name="email" [(ngModel)]="cotizacion.cliente!.email" [readonly]="clienteEncontrado" />
+    </div>
+    <div>
+        <label>Celular:</label>
+        <input type="text" name="phoneNumber" [(ngModel)]="cotizacion.cliente!.phoneNumber"
+            [readonly]="clienteEncontrado" />
+    </div>
+
+
+    <!-- CHat, aquí tiene que incluirse un botón de buscar la placa del vehículo, si lo encuentra
+      llena los campos faltantes, si no lo encuentra, se activan para agregarlos y crear un nuevo vehículo -->
+    <div>
+        <label>Placa del vehículo:</label>
+        <input type="text" name="placa" [(ngModel)]="cotizacion.vehiculo!.placa" required
+            [readonly]="vehiculoEncontrado" />
+        <button type="button" (click)="buscarVehiculoPorPlaca()">Buscar</button>
+    </div>
+
+    <div>
+        <label>Marca:</label>
+        <input type="text" name="brand" [(ngModel)]="cotizacion.vehiculo!.marca" required />
+    </div>
+
+    <div>
+        <label>Modelo:</label>
+        <input type="text" name="model" [(ngModel)]="cotizacion.vehiculo!.modelo" required />
+    </div>
+
+    <div>
+        <label>Año:</label>
+        <input type="text" name="year" [(ngModel)]="cotizacion.vehiculo!.year" required />
+    </div>
+
+    <hr />
+
+    <!-- Input para buscar productos -->
+    <div class="form-group">
+        <label for="busquedaProducto">Buscar producto</label>
+        <input type="text" class="form-control" id="busquedaProducto" [(ngModel)]="busquedaProducto"
+            (ngModelChange)="buscarProducto()" name="busquedaProducto" placeholder="Escribe el nombre del producto" />
+
+        <!-- Lista de sugerencias -->
+        <ul *ngIf="productosFiltrados.length > 0" class="list-group mt-1">
+            <li class="list-group-item list-group-item-action" *ngFor="let producto of productosFiltrados"
+                (click)="agregarProducto(producto)" style="cursor: pointer;">
+                {{ producto.name }} - S/. {{ producto.salePrice }}
+            </li>
+        </ul>
+    </div>
+
+    <hr />
+
+    <!-- Lista de productos añadidos (detalles) -->
+    <h5>Productos seleccionados</h5>
+    <table class="table table-bordered" *ngIf="cotizacion.detalles.length > 0">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let detalle of cotizacion.detalles">
+                <td>{{ detalle.nombreProducto }}</td>
+                <td>
+                    <input type="number" [(ngModel)]="detalle.cantidad" (change)="actualizarTotales()"
+                        class="form-control" min="1" name="cantidad-{{detalle.productoId}}" />
+                </td>
+                <td>{{ detalle.precioUnitario | currency:'PEN' }}</td>
+                <td>{{ detalle.subtotal | currency:'PEN' }}</td>
+
+                <td>
+                    <button class="btn btn-danger btn-sm" (click)="eliminarProducto(detalle)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Total -->
+    <div class="mt-3" *ngIf="cotizacion.total">
+        <strong>Total:</strong> {{ cotizacion.total | currency:'PEN' }}
+    </div>
+
+    <div>
+        <label>Observaciones:</label>
+        <textarea name="observaciones" [(ngModel)]="cotizacion.observaciones" required></textarea>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-success">
+        Registrar Cotización
+    </button>
 </form>

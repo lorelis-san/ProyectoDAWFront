@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { VehicleService, Vehicle } from '../../../services/vehicle.service';
+import { VehicleService} from '../../../services/vehicle.service';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Vehicle } from '../../../models/vehicle.model';
 @Component({
   selector: 'app-vehicle-form',
   templateUrl: './vehicle-form.component.html',

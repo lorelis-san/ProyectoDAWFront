@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { VehicleService, Vehicle } from '../../../services/vehicle.service';
-
+import { VehicleService} from '../../../services/vehicle.service';
+import { Vehicle } from '../../../models/vehicle.model';
 @Component({
   selector: 'app-vehicle-list',
   templateUrl: './vehicle-list.component.html',

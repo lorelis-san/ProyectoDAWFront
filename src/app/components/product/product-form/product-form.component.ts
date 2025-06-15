@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService, Product } from '../../../services/product.service';
+import { ProductService } from '../../../services/product.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Product } from '../../../models/product.model';
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html'
@@ -20,7 +21,7 @@ export class ProductFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient
-  )  {
+  ) {
     this.productForm = this.fb.group({
       id: [null],
       cod: ['', Validators.required],
@@ -46,23 +47,21 @@ export class ProductFormComponent implements OnInit {
 
 
   ngOnInit(): void {
-      this.loadCategorias();
-      this.loadProveedores();
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
+    this.loadCategorias();
+    this.loadProveedores();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
       this.isEdit = true;
       this.id = +id;
       console.log('Editando producto con ID:', this.id);
       this.productService.getById(this.id).subscribe(response => {
-      const prod = response.producto;
-      this.productForm.patchValue({
-        ...prod,
-        categoryProductId: prod.categoryProductId?.id,
-        supplierProductId: prod.supplierProductId?.id
+        const prod = response.producto;
+        this.productForm.patchValue({
+          ...prod,
+        });
+        this.imagePreviewUrl = prod.imageUrl ?? null;
       });
-      this.imagePreviewUrl = prod.imageUrl ?? null;
-  });
-}
+    }
 
   }
 
@@ -83,13 +82,13 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-loadCategorias() {
-  this.http.get<any>('http://localhost:8080/api/categorias')
-    .subscribe(response => this.categorias = response.data);
-}
-loadProveedores() {
-  this.http.get<any>('http://localhost:8080/api/suppliers')
-    .subscribe(response => this.proveedores = response.data);
-}
+  loadCategorias() {
+    this.http.get<any>('http://localhost:8080/api/categorias')
+      .subscribe(response => this.categorias = response.data);
+  }
+  loadProveedores() {
+    this.http.get<any>('http://localhost:8080/api/suppliers')
+      .subscribe(response => this.proveedores = response.data);
+  }
 
 }

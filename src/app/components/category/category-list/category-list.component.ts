@@ -1,7 +1,8 @@
 // src/app/components/category/category-list/category-list.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CategoryService, Category } from '../../../services/category.service';
+import { CategoryService} from '../../../services/category.service';
 import { Router } from '@angular/router';
+import { Category } from '../../../models/category.model';
 
 @Component({
   selector: 'app-category-list',
