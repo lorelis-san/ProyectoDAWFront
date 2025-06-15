@@ -1,0 +1,25 @@
+<h2>Listado de Cotizaciones</h2>
+<button (click)="router.navigate(['/cotizaciones/nueva'])">Nueva Cotización</button>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Cliente</th>
+      <th>Vehículo</th>
+      <th>Total</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of cotizaciones">
+      <td>{{ c.id }}</td>
+      <td>{{ c.cliente?.firstName }}</td>
+      <td>{{ c.vehiculo?.placa }}</td>
+      <td>{{ c.total | currency }}</td>
+      <td>
+        <button (click)="editar(c.id)">Editar</button>
+        <button (click)="eliminar(c.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

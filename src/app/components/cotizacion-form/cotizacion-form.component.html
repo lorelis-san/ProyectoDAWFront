@@ -1,0 +1,16 @@
+<h2>{{ cotizacion.id ? 'Editar Cotización' : 'Nueva Cotización' }}</h2>
+<form (ngSubmit)="guardar()">
+  <div>
+    <label>Cliente:</label>
+    <input [(ngModel)]="cotizacion.cliente?.lastName" name="clienteNombre" required />
+  </div>
+  <div>
+    <label>Vehículo:</label>
+    <input [(ngModel)]="cotizacion.vehiculo.placa" name="vehiculoPlaca" required />
+  </div>
+  <div>
+    <label>Observaciones:</label>
+    <textarea [(ngModel)]="cotizacion.observaciones" name="observaciones"></textarea>
+  </div>
+  <button type="submit">Guardar</button>
+</form>

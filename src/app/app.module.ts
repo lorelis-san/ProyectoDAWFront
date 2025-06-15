@@ -24,6 +24,8 @@ import { AuthGuard } from './components/helpers/auth.guard';
 import { AuthInterceptor } from './components/helpers/auth.interceptor';
 import { ProductListComponent } from './components/product/product-list/product-list.component';
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
+import { CotizacionFormComponent } from './components/cotizacion-form/cotizacion-form.component';
+import { CotizacionListComponent } from './components/cotizacion-list/cotizacion-list.component';
 
 
 @NgModule({
@@ -44,7 +46,9 @@ import { ProductFormComponent } from './components/product/product-form/product-
     NavbarComponent,
     DashboardComponent,
     ProductListComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    CotizacionFormComponent,
+    CotizacionListComponent
   ],
   imports: [
     BrowserModule,

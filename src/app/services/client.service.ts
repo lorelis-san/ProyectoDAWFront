@@ -1,18 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Client } from '../models/client.model'; 
 
-export interface Client {
-  id?: number;
-  firstName?: string;
-  lastName?: string;
-  typeDocument: string;
-  documentNumber: string;
-  businessName?: string;
-  phoneNumber: string;
-  email: string;
-  enabled?: boolean;
-}
 
 @Injectable({
   providedIn: 'root'

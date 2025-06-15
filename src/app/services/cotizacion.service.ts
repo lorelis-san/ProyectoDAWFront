@@ -1,0 +1,55 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { CotizacionResponse } from '../models/cotizacion-response.model';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CotizacionService {
+
+  private baseUrl = 'http://localhost:8080/api/cotizaciones';
+
+  constructor(private http: HttpClient) { }
+
+  crearCotizacion(dto: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}`, dto);
+  }
+
+  listarCotizaciones(): Observable<any> {
+    return this.http.get(`${this.baseUrl}`);
+  }
+
+  obtenerCotizacionPorId(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`);
+  }
+
+  actualizarCotizacion(id: number, dto: CotizacionResponse): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, dto);
+  }
+
+  eliminarCotizacion(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  buscarVehiculoPorPlaca(placa: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/vehiculo/placa/${placa}`);
+  }
+
+  guardarVehiculo(dto: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/vehiculo`, dto);
+  }
+
+  buscarClientePorDocumento(dni: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/cliente/documento/${dni}`);
+  }
+
+  guardarCliente(dto: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cliente`, dto);
+  }
+
+  buscarProductos(termino: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/productos/buscar/${termino}`);
+  }
+
+}

@@ -1,15 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-export interface Vehicle {
-  id?: number;
-  placa: string;
-  marca: string;
-  modelo: string;
-  year: number;
-  enabled?: boolean;
-}
+import { Vehicle } from '../models/vehicle.model';
 
 @Injectable({
   providedIn: 'root'
