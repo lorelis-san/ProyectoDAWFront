@@ -49,6 +49,8 @@
      <td>
          <button *ngIf="cot.id" (click)="editCotizacion(cot.id)">Editar</button> 
          <button *ngIf="cot.id" (click)="deleteCotizacion(cot.id)">Eliminar</button>
+         <button (click)="verPDF(cot.id!)">📄 Ver PDF</button>
+
         </td>
   </div>
 </div>

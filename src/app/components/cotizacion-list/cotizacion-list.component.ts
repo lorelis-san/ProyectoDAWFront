@@ -131,4 +131,11 @@ export class CotizacionListComponent implements OnInit {
     this.searchTerm = 0;
     this.cargarCotizaciones();
   }
+
+
+  verPDF(id: number): void {
+   const url = `http://localhost:8080/api/pdf/cotizacion/${id}`;
+  window.open(url, '_blank');
+}
+
 }

@@ -53,4 +53,10 @@ export class CotizacionService {
     return this.http.get(`${this.baseUrl}/productos/buscar/${termino}`);
   }
 
+
+  verPDF(id: number): void {
+  const url = `http://localhost:8080/api/pdf/cotizacion/${id}`;
+  window.open(url, '_blank');
+}
+
 }

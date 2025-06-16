@@ -104,9 +104,6 @@ export class CotizacionFormComponent implements OnInit {
     }
 
     const dto = this.convertirACotizacionDTO();
-    console.log('📤 COTIZACIÓN DTO A ENVIAR:', JSON.stringify(dto, null, 2));
-    console.log('🔄 Modo edición:', this.isEdit, 'ID de cotización:', this.idCotizacion);
-
     if (this.isEdit && this.idCotizacion !== null) {
       this.actualizarTotales();
       this.cotizacionService.actualizarCotizacion(this.idCotizacion, dto).subscribe({
@@ -141,7 +138,7 @@ export class CotizacionFormComponent implements OnInit {
       vehiculoId: this.cotizacion.vehiculo!.id!,
       observaciones: this.cotizacion.observaciones!,
       detalles: this.cotizacion.detalles
-        .filter(det => det.cantidad > 0) // ✅ Solo incluir detalles con cantidad > 0
+        .filter(det => det.cantidad > 0) 
         .map(det => ({
           productoId: det.productoId!,
           cantidad: det.cantidad,
@@ -149,7 +146,6 @@ export class CotizacionFormComponent implements OnInit {
         }))
     };
     
-    console.log('🔄 DTO convertido:', dto);
     return dto;
   }
 
@@ -160,10 +156,8 @@ export class CotizacionFormComponent implements OnInit {
       this.productService.search(termino).subscribe({
         next: (response) => {
           this.productosFiltrados = response.data;
-          console.log('🔍 Productos encontrados:', response.data);
         },
         error: (err) => {
-          console.error('❌ Error al buscar productos', err);
           this.productosFiltrados = [];
         }
       });
@@ -327,15 +321,15 @@ export class CotizacionFormComponent implements OnInit {
         this.cotizacion.cliente = response.data;
         this.clienteEncontrado = true;
 
-        const modal = document.getElementById('modalAgregarCliente');
+       const modal = document.getElementById('modalAgregarCliente');
         if (modal) {
           const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
-          modalInstance.hide();
+          modalInstance?.hide();
 
           setTimeout(() => {
             const backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
-              backdrop.remove();
+              backdrop?.remove();
             }
        
             document.body.classList.remove('modal-open');
@@ -391,11 +385,11 @@ export class CotizacionFormComponent implements OnInit {
             if (backdrop) {
               backdrop.remove();
             }
-
+       
             document.body.classList.remove('modal-open');
             document.body.style.overflow = '';
             document.body.style.paddingRight = '';
-          }, 300); 
+          }, 300);
         }
       },
       error: (err) => {
@@ -404,3 +398,5 @@ export class CotizacionFormComponent implements OnInit {
     });
   }
 }
+
+
