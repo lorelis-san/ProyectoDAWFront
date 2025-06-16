@@ -4,7 +4,6 @@ export interface DetalleCotizacion {
   cantidad: number;
   precioUnitario: number;
   subtotal: number;
-  enabled?: boolean;
 }
 
 

@@ -50,7 +50,7 @@ export class ProductService {
       }
     }
     if (imageUrl) {
-      formData.append('imageUrl', imageUrl);
+      formData.append('imageFile', imageUrl); 
     }
     return formData;
   }

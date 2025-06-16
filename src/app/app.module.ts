@@ -56,7 +56,11 @@ import { CotizacionListComponent } from './components/cotizacion-list/cotizacion
     ReactiveFormsModule,
     FormsModule, 
     AppRoutingModule,
-    RouterModule,
+    RouterModule.forRoot([
+      {path: 'productos', component: ProductListComponent, canActivate: [AuthGuard]},
+      {path: 'login', component: LoginComponent},
+      {path: '', component: LoginComponent},
+    ]),
   ],
   providers: [
      {

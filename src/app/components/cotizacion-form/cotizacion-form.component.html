@@ -66,7 +66,7 @@
     <!-- Si cliente no fue encontrado -->
     <div *ngIf="clienteEncontrado === false && busquedaRealizada" class="mt-3">
         <p class="text-danger">Cliente no encontrado.</p>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
             Agregar cliente
         </button>
     </div>
@@ -75,7 +75,7 @@
     <div>
         <label>Placa del vehículo:</label>
         <input type="text" name="placa" [(ngModel)]="cotizacion.vehiculo!.placa" required
-            [readonly]="vehiculoEncontrado" />
+             />
         <button type="button" (click)="buscarVehiculoPorPlaca()">Buscar</button>
     </div>
     <div *ngIf="vehiculoEncontrado === true && busquedaVehiculoRealizada" class="mt-3">
@@ -96,7 +96,7 @@
     </div>
     <div *ngIf="vehiculoEncontrado === false && busquedaVehiculoRealizada" class="mt-3">
         <p class="text-danger">Vehículo no encontrado.</p>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarVehículo">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarVehículo">
             Agregar Vehículo
         </button>
     </div>
@@ -142,9 +142,10 @@
                 <td>{{ detalle.subtotal | currency:'PEN' }}</td>
 
                 <td>
-                    <button class="btn btn-danger btn-sm" (click)="eliminarProducto(detalle)">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="eliminarProducto(detalle)">
                         Eliminar
                     </button>
+
                 </td>
             </tr>
         </tbody>
@@ -200,23 +201,25 @@
                         <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.documentNumber"
                             name="documentNumber" [readonly]="true" [ngModelOptions]="{standalone: true}" />
                     </div>
+                    <div *ngIf="cotizacion.cliente?.typeDocument === 'DNI'">
+                        <div class="mb-3">
+                            <label>Nombre:</label>
+                            <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.firstName"
+                                name="firstName" [ngModelOptions]="{standalone: true}" />
+                        </div>
 
-                    <div class="mb-3">
-                        <label>Nombre:</label>
-                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.firstName"
-                            name="firstName" [ngModelOptions]="{standalone: true}" />
+                        <div class="mb-3">
+                            <label>Apellido:</label>
+                            <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.lastName"
+                                name="lastName" [ngModelOptions]="{standalone: true}" />
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label>Apellido:</label>
-                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.lastName"
-                            name="lastName" [ngModelOptions]="{standalone: true}" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Razón Social:</label>
-                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.businessName"
-                            name="businessName" [ngModelOptions]="{standalone: true}" />
+                    <div *ngIf="cotizacion.cliente?.typeDocument === 'RUC'">
+                        <div class="mb-3">
+                            <label>Razón Social:</label>
+                            <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.businessName"
+                                name="businessName" [ngModelOptions]="{standalone: true}" />
+                        </div>
                     </div>
 
                     <div class="mb-3">
