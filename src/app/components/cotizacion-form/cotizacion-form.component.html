@@ -3,7 +3,7 @@
 
 <form (ngSubmit)="guardar()" #form="ngForm">
 
-<!--<div>
+    <!--<div>
         <label>Nro de Cotización:</label>
         <input type="text" name="cliente" [(ngModel)]="cotizacion.numeroCotizacion" required />
     </div> -->
@@ -37,11 +37,11 @@
     <!-- Cliente -->
     <!-- CHat, aquí tiene que incluirse un botón de busca del nro del documento, si lo encuentra
       llena los campos faltantes, si no lo encuentra, se activan para agregarlos y crear un nuevo cliente -->
-
+    <!-- Tipo de documento -->
     <div>
         <label>Tipo de documento:</label>
         <select id="typeDocument" class="form-control" name="typeDocument"
-            [(ngModel)]="cotizacion.cliente!.typeDocument">
+            [(ngModel)]="cotizacion.cliente!.typeDocument" [ngModelOptions]="{standalone: true}">
             <option value="">Seleccione un tipo de documento</option>
             <option *ngFor="let tipo of typeDocument" [value]="tipo">
                 {{ tipo }}
@@ -49,63 +49,75 @@
         </select>
     </div>
 
-    <div>
+    <!-- Número de documento -->
+    <div class="mt-2">
         <label>Nro de Documento:</label>
-        <input type="text" name="documentNumber" [(ngModel)]="cotizacion.cliente!.documentNumber" required
-            [readonly]="clienteEncontrado" />
-        <button type="button" (click)="buscarClientePorDocumento()">Buscar</button>
+        <input type="text" name="documentNumber" [(ngModel)]="cotizacion.cliente!.documentNumber" required />
+        <button type="button" class="btn btn-sm btn-secondary" (click)="buscarClientePorDocumento()">
+            Buscar
+        </button>
     </div>
 
-    <div>
-        <label>Nombre:</label>
-        <input type="text" name="firstName" [(ngModel)]="cotizacion.cliente!.firstName"
-            [readonly]="clienteEncontrado" />
-    </div>
-    <div>
-        <label>Apellido:</label>
-        <input type="text" name="lastName" [(ngModel)]="cotizacion.cliente!.lastName" [readonly]="clienteEncontrado" />
-    </div>
-    <div>
-        <label>Razón Social:</label>
-        <input type="text" name="businessName" [(ngModel)]="cotizacion.cliente!.businessName"
-            [readonly]="clienteEncontrado" />
+    <!-- Si cliente fue encontrado -->
+    <div *ngIf="clienteEncontrado === true && busquedaRealizada" class="mt-3">
+        <div *ngIf="cotizacion.cliente?.typeDocument === 'DNI'">
+            <label>Nombre:</label>
+            <input type="text" name="firstName" [(ngModel)]="cotizacion.cliente!.firstName" [readonly]="true" />
+
+            <label>Apellido:</label>
+            <input type="text" name="lastName" [(ngModel)]="cotizacion.cliente!.lastName" [readonly]="true" />
+        </div>
+        <div *ngIf="cotizacion.cliente?.typeDocument === 'RUC'">
+            <label>Razón Social:</label>
+            <input type="text" name="businessName" [(ngModel)]="cotizacion.cliente!.businessName" [readonly]="true" />
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="text" name="email" [(ngModel)]="cotizacion.cliente!.email" [readonly]="true" />
+        </div>
+        <div>
+            <label>Celular:</label>
+            <input type="text" name="phoneNumber" [(ngModel)]="cotizacion.cliente!.phoneNumber" [readonly]="true" />
+        </div>
     </div>
 
-    <div>
-        <label>Email:</label>
-        <input type="text" name="email" [(ngModel)]="cotizacion.cliente!.email" [readonly]="clienteEncontrado" />
-    </div>
-    <div>
-        <label>Celular:</label>
-        <input type="text" name="phoneNumber" [(ngModel)]="cotizacion.cliente!.phoneNumber"
-            [readonly]="clienteEncontrado" />
+    <!-- Si cliente no fue encontrado -->
+    <div *ngIf="clienteEncontrado === false && busquedaRealizada" class="mt-3">
+        <p class="text-danger">Cliente no encontrado.</p>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
+            Agregar cliente
+        </button>
     </div>
 
 
-    <!-- CHat, aquí tiene que incluirse un botón de buscar la placa del vehículo, si lo encuentra
-      llena los campos faltantes, si no lo encuentra, se activan para agregarlos y crear un nuevo vehículo -->
     <div>
         <label>Placa del vehículo:</label>
         <input type="text" name="placa" [(ngModel)]="cotizacion.vehiculo!.placa" required
             [readonly]="vehiculoEncontrado" />
         <button type="button" (click)="buscarVehiculoPorPlaca()">Buscar</button>
     </div>
+    <div *ngIf="vehiculoEncontrado === true && busquedaVehiculoRealizada" class="mt-3">
+        <div>
+            <label>Marca:</label>
+            <input type="text" name="brand" [(ngModel)]="cotizacion.vehiculo!.marca" required />
+        </div>
 
-    <div>
-        <label>Marca:</label>
-        <input type="text" name="brand" [(ngModel)]="cotizacion.vehiculo!.marca" required />
+        <div>
+            <label>Modelo:</label>
+            <input type="text" name="model" [(ngModel)]="cotizacion.vehiculo!.modelo" required />
+        </div>
+
+        <div>
+            <label>Año:</label>
+            <input type="text" name="year" [(ngModel)]="cotizacion.vehiculo!.year" required />
+        </div>
     </div>
-
-    <div>
-        <label>Modelo:</label>
-        <input type="text" name="model" [(ngModel)]="cotizacion.vehiculo!.modelo" required />
+    <div *ngIf="vehiculoEncontrado === false && busquedaVehiculoRealizada" class="mt-3">
+        <p class="text-danger">Vehículo no encontrado.</p>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarVehículo">
+            Agregar Vehículo
+        </button>
     </div>
-
-    <div>
-        <label>Año:</label>
-        <input type="text" name="year" [(ngModel)]="cotizacion.vehiculo!.year" required />
-    </div>
-
     <hr />
 
     <!-- Input para buscar productos -->
@@ -171,3 +183,113 @@
         Registrar Cotización
     </button>
 </form>
+
+
+<!-- Modal para agregar cliente -->
+<div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalAgregarClienteLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarClienteLabel">Agregar nuevo cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Aquí va tu formulario de cliente -->
+                <form>
+
+                    <div class="mb-3">
+                        <label>Tipo de documento:</label>
+                        <select class="form-control" [(ngModel)]="cotizacion.cliente!.typeDocument" name="typeDocument"
+                            [ngModelOptions]="{standalone: true}">
+                            <option value="">Seleccione un tipo</option>
+                            <option *ngFor="let tipo of typeDocument" [value]="tipo">{{ tipo }}</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Nro de Documento:</label>
+                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.documentNumber"
+                            name="documentNumber" [readonly]="true" [ngModelOptions]="{standalone: true}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Nombre:</label>
+                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.firstName"
+                            name="firstName" [ngModelOptions]="{standalone: true}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Apellido:</label>
+                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.lastName"
+                            name="lastName" [ngModelOptions]="{standalone: true}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Razón Social:</label>
+                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.businessName"
+                            name="businessName" [ngModelOptions]="{standalone: true}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Email:</label>
+                        <input type="email" class="form-control" [(ngModel)]="cotizacion.cliente!.email" name="email"
+                            [ngModelOptions]="{standalone: true}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Celular:</label>
+                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.phoneNumber"
+                            name="phoneNumber" [ngModelOptions]="{standalone: true}" />
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" (click)="guardarCliente()">Guardar cliente</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal Agregar Vehículo -->
+<div class="modal fade" id="modalAgregarVehículo" tabindex="-1" aria-labelledby="modalAgregarVehículoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarVehículoLabel">Agregar Vehículo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label>Placa:</label>
+          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.placa" name="placa" />
+        </div>
+        <div class="mb-3">
+          <label>Marca:</label>
+          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.marca" name="marca" />
+        </div>
+        <div class="mb-3">
+          <label>Modelo:</label>
+          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.modelo" name="modelo" />
+        </div>
+        <div class="mb-3">
+          <label>Año:</label>
+          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.year" name="year" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="guardarVehiculo()">Guardar Vehículo</button>
+      </div>
+    </div>
+  </div>
+</div>

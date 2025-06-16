@@ -9,6 +9,7 @@ import { ProductService } from '../../services/product.service';
 import { ClientService } from '../../services/client.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { ChangeDetectorRef } from '@angular/core';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-cotizacion-form',
@@ -36,8 +37,10 @@ export class CotizacionFormComponent implements OnInit {
     detalles: []
   };
 
-  clienteEncontrado: boolean = false;
-  vehiculoEncontrado: boolean = false;
+  clienteEncontrado: boolean | null=null;
+  busquedaRealizada: boolean = false;
+  vehiculoEncontrado: boolean | null=null;
+  busquedaVehiculoRealizada: boolean = false;
   typeDocument: string[] = ['RUC', 'DNI'];
   busquedaProducto: string = '';
 
@@ -138,34 +141,67 @@ export class CotizacionFormComponent implements OnInit {
   }
 
   buscarClientePorDocumento(): void {
+  const documento = this.cotizacion.cliente?.documentNumber;
+  if (!documento) return;
 
-    const documento = this.cotizacion.cliente?.documentNumber;
-    if (!documento) return;
+  this.clientService.searchByDocument(documento).subscribe(
+    (response) => {
+      this.cotizacion.cliente = response.data;
+      typeDocument: this.cotizacion.cliente?.typeDocument || '';
+      this.clienteEncontrado = true;
+      this.busquedaRealizada = true;
+      this.cdRef.detectChanges();
+    },
+    (error) => {
+      console.log("Cliente no encontrado, puedes crear uno nuevo");
+      this.clienteEncontrado = false;
+      this.busquedaRealizada = true;
+      this.cotizacion.cliente = {
+        typeDocument: this.cotizacion.cliente?.typeDocument || '',
+        documentNumber: documento,
+        firstName: '',
+        lastName: '',
+        businessName: '',
+        email: '',
+        phoneNumber: ''
+      };
+    }
+  );
+}
 
-    this.clientService.searchByDocument(documento).subscribe(
-      (response) => {
+  guardarCliente() {
+    this.clientService.create(this.cotizacion.cliente!).subscribe({
+      next: (response) => {
+        console.log('Cliente guardado', response);
         this.cotizacion.cliente = response.data;
         this.clienteEncontrado = true;
-        console.log('Cliente encontrado:', response.data);
 
-        this.cdRef.detectChanges();
-      },
-      (error) => {
-        console.log("Cliente no encontrado, puedes crear uno nuevo");
-        this.clienteEncontrado = false;
-        this.cotizacion.cliente = {
-          typeDocument: '',
-          documentNumber: documento,
-          firstName: '',
-          lastName: '',
-          businessName: '',
-          email: '',
-          phoneNumber: ''
-        };
+         // Cierra el modal manualmente y limpia backdrop
+      const modal = document.getElementById('modalAgregarCliente');
+      if (modal) {
+        const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+        modalInstance.hide();
+
+        // Espera un poco antes de limpiar por si hay animación
+        setTimeout(() => {
+          const backdrop = document.querySelector('.modal-backdrop');
+          if (backdrop) {
+            backdrop.remove();
+          }
+          // Remueve clase modal-open y estilos que bloquean scroll
+          document.body.classList.remove('modal-open');
+          document.body.style.overflow = '';
+          document.body.style.paddingRight = '';// por si Bootstrap añadió scroll fix
+        }, 300); // tiempo suficiente para la animación
       }
-    );
-
+    },
+      error: (err) => {
+        console.error('Error al guardar cliente', err);
+      }
+    });
   }
+
+
   buscarVehiculoPorPlaca(): void {
     const placa = this.cotizacion.vehiculo?.placa;
     if (!placa) return;
@@ -174,10 +210,12 @@ export class CotizacionFormComponent implements OnInit {
       (response) => {
         this.cotizacion.vehiculo = response.data;
         this.vehiculoEncontrado = true;
+        this.busquedaVehiculoRealizada = true;
       },
       (error) => {
         console.log("Vehículo no encontrado, se puede registrar uno nuevo");
         this.vehiculoEncontrado = false;
+        this.busquedaVehiculoRealizada = true;
         this.cotizacion.vehiculo = {
           placa: placa,
           marca: '',
@@ -188,6 +226,35 @@ export class CotizacionFormComponent implements OnInit {
     );
   }
 
+ guardarVehiculo() {
+    this.vehicleService.create(this.cotizacion.vehiculo!).subscribe({
+      next: (response) => {
+        console.log('Vehículo guardado', response);
+        this.cotizacion.vehiculo = response.data;
+        this.vehiculoEncontrado = true;
+
+      const modal = document.getElementById('modalAgregarVehículo');
+      if (modal) {
+        const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+        modalInstance.hide();
+
+        setTimeout(() => {
+          const backdrop = document.querySelector('.modal-backdrop');
+          if (backdrop) {
+            backdrop.remove();
+          }
+          
+          document.body.classList.remove('modal-open');
+          document.body.style.overflow = '';
+          document.body.style.paddingRight = '';
+        }, 300); // tiempo suficiente para la animación
+      }
+    },
+      error: (err) => {
+        console.error('Error al guardar vehículo', err);
+      }
+    });
+  }
 
 
 }
