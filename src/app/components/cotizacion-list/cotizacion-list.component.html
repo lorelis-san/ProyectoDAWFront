@@ -1,0 +1,54 @@
+<div class="container">
+  <h2>Listado de Cotizaciones</h2>
+<button class="btn btn-success mt-3" routerLink="/cotizaciones/nueva">Nueva Cotización</button>
+<div class="mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar cotizaciones"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearch()"
+    />
+  </div>
+
+  <div *ngIf="cotizaciones.length === 0">
+    <p>No hay cotizaciones registradas.</p>
+  </div>
+
+  <div *ngFor="let cot of cotizaciones" class="card mb-3 p-3 shadow-sm">
+    <h5>Cotización Nº: {{ cot.numeroCotizacion }}</h5>
+     <p><strong>Creador por:</strong> {{ cot.userNombre }} {{ cot.userApellido}}</p>
+    <p><strong>Modificado por:</strong> {{ cot.usuarioModificadorNombre }} {{ cot.usuarioModificadorApellido}}</p>
+    <p><strong>Cliente:</strong> {{ cot.cliente?.firstName }} {{ cot.cliente?.lastName}}</p>
+    <p><strong>Vehículo:</strong> {{ cot.vehiculo?.marca }} {{ cot.vehiculo?.modelo}} - {{ cot.vehiculo?.placa }}</p>
+    <p><strong>Estado:</strong> {{ cot.estado }}</p>
+    <p><strong>Fecha:</strong> {{ cot.fecha | date:'shortDate' }}</p>
+    <p><strong>Total:</strong> S/ {{ cot.total | number:'1.2-2' }}</p>
+
+    <details>
+      <summary>Detalles</summary>
+      <table class="table table-sm mt-2">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of cot.detalles">
+            <td>{{ d.nombreProducto }}</td>
+            <td>{{ d.cantidad }}</td>
+            <td>S/ {{ d.precioUnitario | number:'1.2-2' }}</td>
+            <td>S/ {{ d.subtotal | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </details>
+     <td>
+         <button *ngIf="cot.id" (click)="editCotizacion(cot.id)">Editar</button> 
+         <button *ngIf="cot.id" (click)="deleteCotizacion(cot.id)">Eliminar</button>
+        </td>
+  </div>
+</div>

@@ -1,38 +1,20 @@
 <h2>{{ cotizacion.id ? 'Editar Cotización' : 'Nueva Cotización' }}</h2>
-<h2>Registrar Cotización</h2>
+
 
 <form (ngSubmit)="guardar()" #form="ngForm">
+    <div>
+        <label>Estado</label>
+        <input type="text" name="estado" [(ngModel)]="cotizacion.estado" [readonly]="true" />
 
+        <label>Fecha</label>
+        <input type="text" name="fecha" [(ngModel)]="cotizacion.fecha" [readonly]="true" />
+    </div>
     <!--<div>
         <label>Nro de Cotización:</label>
         <input type="text" name="cliente" [(ngModel)]="cotizacion.numeroCotizacion" required />
     </div> -->
-    <div>
-        <label>Elaborado por :</label>
-        <input type="text" name="userNombre" [(ngModel)]="cotizacion.userNombre" required />
-        <input type="text" name="userApellido" [(ngModel)]="cotizacion.userApellido" required />
-    </div>
-
-    <div>
-        <label>Modificado por :</label>
-        <input type="text" name="usuarioModificadorNombre" [(ngModel)]="cotizacion.usuarioModificadorNombre" required />
-        <input type="text" name="usuarioModificadorApellido" [(ngModel)]="cotizacion.usuarioModificadorApellido"
-            required />
-    </div>
-
-    <div>
-        <label>Estado</label>
-        <input type="text" name="estado" [(ngModel)]="cotizacion.estado" required />
-
-
-        <label>Fecha</label>
-        <input type="text" name="fecha" [(ngModel)]="cotizacion.fecha" required />
-
-        <input type="text" name="fechaCreacion" [(ngModel)]="cotizacion.fechaCreacion" required />
-
-        <input type="text" name="fechaModificacion" [(ngModel)]="cotizacion.fechaModificacion" required />
-    </div>
-
+    <input type="text" name="clienteId" [(ngModel)]="cotizacion.cliente!.id" hidden />
+    <input type="text" name="vehiculoId" [(ngModel)]="cotizacion.vehiculo!.id" hidden />
 
     <!-- Cliente -->
     <!-- CHat, aquí tiene que incluirse un botón de busca del nro del documento, si lo encuentra
@@ -99,17 +81,17 @@
     <div *ngIf="vehiculoEncontrado === true && busquedaVehiculoRealizada" class="mt-3">
         <div>
             <label>Marca:</label>
-            <input type="text" name="brand" [(ngModel)]="cotizacion.vehiculo!.marca" required />
+            <input type="text" name="marca" [(ngModel)]="cotizacion.vehiculo!.marca" [readonly]="true" />
         </div>
 
         <div>
             <label>Modelo:</label>
-            <input type="text" name="model" [(ngModel)]="cotizacion.vehiculo!.modelo" required />
+            <input type="text" name="modelo" [(ngModel)]="cotizacion.vehiculo!.modelo" [readonly]="true" />
         </div>
 
         <div>
             <label>Año:</label>
-            <input type="text" name="year" [(ngModel)]="cotizacion.vehiculo!.year" required />
+            <input type="text" name="year" [(ngModel)]="cotizacion.vehiculo!.year" [readonly]="true" />
         </div>
     </div>
     <div *ngIf="vehiculoEncontrado === false && busquedaVehiculoRealizada" class="mt-3">
@@ -168,20 +150,24 @@
         </tbody>
     </table>
 
-    <!-- Total -->
-    <div class="mt-3" *ngIf="cotizacion.total">
-        <strong>Total:</strong> {{ cotizacion.total | currency:'PEN' }}
+    <div class="mt-4">
+        <p><strong>Subtotal:</strong> {{ cotizacion.subtotal | currency:'PEN' }}</p>
+        <p><strong>IGV (18%):</strong> {{ cotizacion.igv | currency:'PEN' }}</p>
+        <p><strong>Total:</strong> {{ cotizacion.total | currency:'PEN' }}</p>
     </div>
+
 
     <div>
         <label>Observaciones:</label>
-        <textarea name="observaciones" [(ngModel)]="cotizacion.observaciones" required></textarea>
+        <textarea name="observaciones" [(ngModel)]="cotizacion.observaciones"></textarea>
     </div>
 
     <br />
     <button type="submit" class="btn btn-success">
-        Registrar Cotización
+        {{ cotizacion.id ? 'Actualizar Cotización' : 'Registrar Cotización' }}
     </button>
+    <button type="button" class="btn btn-secondary" routerLink="/cotizaciones">Cancelar</button>
+
 </form>
 
 
@@ -261,35 +247,36 @@
 
 
 <!-- Modal Agregar Vehículo -->
-<div class="modal fade" id="modalAgregarVehículo" tabindex="-1" aria-labelledby="modalAgregarVehículoLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalAgregarVehículoLabel">Agregar Vehículo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label>Placa:</label>
-          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.placa" name="placa" />
+<div class="modal fade" id="modalAgregarVehículo" tabindex="-1" aria-labelledby="modalAgregarVehículoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarVehículoLabel">Agregar Vehículo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label>Placa:</label>
+                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.placa" name="placa" />
+                </div>
+                <div class="mb-3">
+                    <label>Marca:</label>
+                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.marca" name="marca" />
+                </div>
+                <div class="mb-3">
+                    <label>Modelo:</label>
+                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.modelo" name="modelo" />
+                </div>
+                <div class="mb-3">
+                    <label>Año:</label>
+                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.year" name="year" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" (click)="guardarVehiculo()">Guardar Vehículo</button>
+            </div>
         </div>
-        <div class="mb-3">
-          <label>Marca:</label>
-          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.marca" name="marca" />
-        </div>
-        <div class="mb-3">
-          <label>Modelo:</label>
-          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.modelo" name="modelo" />
-        </div>
-        <div class="mb-3">
-          <label>Año:</label>
-          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.year" name="year" />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-success" (click)="guardarVehiculo()">Guardar Vehículo</button>
-      </div>
     </div>
-  </div>
 </div>

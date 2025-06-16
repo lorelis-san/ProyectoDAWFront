@@ -6,3 +6,5 @@ export interface DetalleCotizacion {
   subtotal: number;
   enabled?: boolean;
 }
+
+

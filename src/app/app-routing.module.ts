@@ -13,12 +13,15 @@ import { ClientFormComponent } from './components/client/client-form/client-form
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AppComponent } from './app.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthGuard } from './components/helpers/auth.guard';
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
 import { ProductListComponent } from './components/product/product-list/product-list.component';
 import { CotizacionFormComponent } from './components/cotizacion-form/cotizacion-form.component';
 import { CotizacionListComponent } from './components/cotizacion-list/cotizacion-list.component';
+import { AuthInterceptor } from './components/helpers/auth.interceptor';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -44,9 +47,9 @@ const routes: Routes = [
       { path: 'productos', component: ProductListComponent, canActivate: [AuthGuard] },
       { path: 'productos/nuevo', component: ProductFormComponent, canActivate: [AuthGuard] },
       { path: 'productos/editar/:id', component: ProductFormComponent, canActivate: [AuthGuard] },
-      { path: 'cotizaciones', component: CotizacionListComponent },
-      { path: 'cotizaciones/nueva', component: CotizacionFormComponent },
-      { path: 'cotizaciones/editar/:id', component: CotizacionFormComponent },
+      { path: 'cotizaciones', component: CotizacionListComponent,canActivate: [AuthGuard] },
+      { path: 'cotizaciones/nueva', component: CotizacionFormComponent,canActivate: [AuthGuard] },
+      { path: 'cotizaciones/editar/:id', component: CotizacionFormComponent ,canActivate: [AuthGuard]},
      
     ]
   },
@@ -55,6 +58,14 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
+   bootstrap: [AppComponent]
 })
 export class AppRoutingModule { }

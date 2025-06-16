@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CotizacionResponse } from '../models/cotizacion-response.model';
 import { Observable } from 'rxjs';
+import { CotizacionDto } from '../models/CotizacionDTO.model.';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ export class CotizacionService {
 
   constructor(private http: HttpClient) { }
 
-  crearCotizacion(dto: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}`, dto);
-  }
-
+  crearCotizacion(dto: CotizacionDto): Observable<any> {
+  console.log('COTIZACION A ENVIAR:', JSON.stringify(dto, null, 2));
+  return this.http.post(`${this.baseUrl}`, dto);
+}
   listarCotizaciones(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
   }
@@ -24,7 +25,7 @@ export class CotizacionService {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
 
-  actualizarCotizacion(id: number, dto: CotizacionResponse): Observable<any> {
+  actualizarCotizacion(id: number, dto: CotizacionDto): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, dto);
   }
 

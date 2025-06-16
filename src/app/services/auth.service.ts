@@ -22,8 +22,10 @@ export class AuthService {
       const body = response.body;
       const headers = response.headers;
 
-      const beaberToken = headers.get('Authorization');
-      const token = beaberToken ? beaberToken.replace('Bearer ', '') : null;
+      const bearerToken = headers.get('Authorization');
+      const token = bearerToken ? bearerToken.replace('Bearer ', '') : null;
+console.log("Token recibido:", token);
+
       if (token) {
         localStorage.setItem('token', token);
       } else {

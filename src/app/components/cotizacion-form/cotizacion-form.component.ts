@@ -10,7 +10,7 @@ import { ClientService } from '../../services/client.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { ChangeDetectorRef } from '@angular/core';
 import * as bootstrap from 'bootstrap';
-
+import { CotizacionDto } from '../../models/CotizacionDTO.model.';
 @Component({
   selector: 'app-cotizacion-form',
   templateUrl: './cotizacion-form.component.html',
@@ -35,16 +35,25 @@ export class CotizacionFormComponent implements OnInit {
     cliente: { id: 0, firstName: '', lastName: '', typeDocument: '', businessName: '', documentNumber: '', phoneNumber: '', email: '' },
     vehiculo: { id: 0, placa: '', marca: '', modelo: '', year: '' },
     detalles: []
+    //detalles: {productoId: 0, nombreProducto: '', cantidad: 0 , precioUnitario: 0.0, subtotal: 0.0}
   };
 
-  clienteEncontrado: boolean | null=null;
+  clienteEncontrado: boolean | null = null;
   busquedaRealizada: boolean = false;
-  vehiculoEncontrado: boolean | null=null;
+  vehiculoEncontrado: boolean | null = null;
   busquedaVehiculoRealizada: boolean = false;
   typeDocument: string[] = ['RUC', 'DNI'];
   busquedaProducto: string = '';
-
+  isEdit = false;
   productosFiltrados: Product[] = [];
+
+cotizacionDTO: CotizacionDto = {
+  clienteId: 0,
+  vehiculoId: 0,
+  observaciones: '',
+  detalles: [] // Esto es un array
+};
+
 
   constructor(
     private route: ActivatedRoute,
@@ -53,29 +62,82 @@ export class CotizacionFormComponent implements OnInit {
     private productService: ProductService,
     private clientService: ClientService,
     private vehicleService: VehicleService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
   ) { }
 
+
+
   ngOnInit(): void {
+
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.isEdit = true;
       this.cotizacionService.obtenerCotizacionPorId(+id).subscribe(res => {
         this.cotizacion = res;
+        this.actualizarTotales(); // Recalcula totales si los detalles vienen con cantidades
+        this.cdRef.detectChanges(); // refresca el HTML
+      });
+    }
+
+  }
+
+
+  guardar() {
+    if (!this.cotizacion.cliente || !this.cotizacion.vehiculo || this.cotizacion.detalles.length === 0) {
+      alert('Debe completar cliente, vehículo y al menos un producto antes de guardar.');
+      return;
+    }
+
+    const dto = this.convertirACotizacionDTO();
+    console.log('COTIZACION DTO A ENVIAR:', JSON.stringify(dto, null, 2));
+
+    if (this.isEdit) {
+      const id = this.route.snapshot.paramMap.get('id');
+      console.log(id);
+      if (id !== null) {
+        const idNumber = Number(id); // ✅ Conversión
+        this.cotizacionService.actualizarCotizacion(idNumber, dto).subscribe({
+          next: (res) => {
+            alert('✅ Cotización actualizada con éxito');
+            this.router.navigate(['/cotizaciones']);
+          },
+          error: (err) => {
+            console.error('Error al actualizar cotización:', err);
+            alert('❌ Error al actualizar cotización');
+          }
+        });
+      }
+    } else {
+      this.cotizacionService.crearCotizacion(dto).subscribe({
+        next: (res) => {
+          alert('✅ Cotización creada con éxito');
+          this.router.navigate(['/cotizaciones']);
+        },
+        error: (err) => {
+          console.error('Error al crear cotización:', err);
+          alert('❌ Error al crear cotización');
+        }
       });
     }
   }
 
-  guardar() {
-    if (this.cotizacion.id) {
-      this.cotizacionService.actualizarCotizacion(this.cotizacion.id, this.cotizacion).subscribe(() => {
-        this.router.navigate(['/cotizaciones']);
-      });
-    } else {
-      this.cotizacionService.crearCotizacion(this.cotizacion).subscribe(() => {
-        this.router.navigate(['/cotizaciones']);
-      });
-    }
+
+
+  convertirACotizacionDTO(): CotizacionDto {
+    return {
+      clienteId: this.cotizacion.cliente!.id!,
+      vehiculoId: this.cotizacion.vehiculo!.id!,
+      observaciones: this.cotizacion.observaciones!,
+      detalles: this.cotizacion.detalles.map(det => ({
+        productoId: det.productoId!,
+        cantidad: det.cantidad,
+        precioUnitario: det.precioUnitario
+      }))
+    };
   }
+
+
 
   buscarProducto() {
     const termino = this.busquedaProducto.trim();
@@ -101,21 +163,24 @@ export class CotizacionFormComponent implements OnInit {
       console.error('El producto no tiene ID');
       return;
     }
-    const yaExiste = this.cotizacion.detalles.some(d => d.productoId === producto.id);
+    const existente = this.cotizacion.detalles.find(d => d.productoId === producto.id);
 
-    if (!yaExiste) {
+    if (existente) {
+      existente.cantidad += 1;
+      existente.subtotal = existente.cantidad * existente.precioUnitario;
+    } else {
       const nuevoDetalle: DetalleCotizacion = {
         productoId: producto.id,
         nombreProducto: producto.name,
         cantidad: 1,
         precioUnitario: producto.salePrice!,
-        subtotal: producto.salePrice! * 1
+        subtotal: producto.salePrice!
       };
 
       this.cotizacion.detalles.push(nuevoDetalle);
-      this.actualizarTotales();
-    }
 
+    }
+    this.actualizarTotales();
     this.busquedaProducto = '';
     this.productosFiltrados = [];
   }
@@ -141,33 +206,33 @@ export class CotizacionFormComponent implements OnInit {
   }
 
   buscarClientePorDocumento(): void {
-  const documento = this.cotizacion.cliente?.documentNumber;
-  if (!documento) return;
+    const documento = this.cotizacion.cliente?.documentNumber;
+    if (!documento) return;
 
-  this.clientService.searchByDocument(documento).subscribe(
-    (response) => {
-      this.cotizacion.cliente = response.data;
-      typeDocument: this.cotizacion.cliente?.typeDocument || '';
-      this.clienteEncontrado = true;
-      this.busquedaRealizada = true;
-      this.cdRef.detectChanges();
-    },
-    (error) => {
-      console.log("Cliente no encontrado, puedes crear uno nuevo");
-      this.clienteEncontrado = false;
-      this.busquedaRealizada = true;
-      this.cotizacion.cliente = {
-        typeDocument: this.cotizacion.cliente?.typeDocument || '',
-        documentNumber: documento,
-        firstName: '',
-        lastName: '',
-        businessName: '',
-        email: '',
-        phoneNumber: ''
-      };
-    }
-  );
-}
+    this.clientService.searchByDocument(documento).subscribe(
+      (response) => {
+        this.cotizacion.cliente = response.data;
+        this.cotizacion.cliente!.typeDocument = this.cotizacion.cliente?.typeDocument || '';
+        this.clienteEncontrado = true;
+        this.busquedaRealizada = true;
+        this.cdRef.detectChanges();
+      },
+      (error) => {
+        console.log("Cliente no encontrado, puedes crear uno nuevo");
+        this.clienteEncontrado = false;
+        this.busquedaRealizada = true;
+        this.cotizacion.cliente = {
+          typeDocument: this.cotizacion.cliente?.typeDocument || '',
+          documentNumber: documento,
+          firstName: '',
+          lastName: '',
+          businessName: '',
+          email: '',
+          phoneNumber: ''
+        };
+      }
+    );
+  }
 
   guardarCliente() {
     this.clientService.create(this.cotizacion.cliente!).subscribe({
@@ -176,25 +241,25 @@ export class CotizacionFormComponent implements OnInit {
         this.cotizacion.cliente = response.data;
         this.clienteEncontrado = true;
 
-         // Cierra el modal manualmente y limpia backdrop
-      const modal = document.getElementById('modalAgregarCliente');
-      if (modal) {
-        const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
-        modalInstance.hide();
+        // Cierra el modal manualmente y limpia backdrop
+        const modal = document.getElementById('modalAgregarCliente');
+        if (modal) {
+          const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+          modalInstance.hide();
 
-        // Espera un poco antes de limpiar por si hay animación
-        setTimeout(() => {
-          const backdrop = document.querySelector('.modal-backdrop');
-          if (backdrop) {
-            backdrop.remove();
-          }
-          // Remueve clase modal-open y estilos que bloquean scroll
-          document.body.classList.remove('modal-open');
-          document.body.style.overflow = '';
-          document.body.style.paddingRight = '';// por si Bootstrap añadió scroll fix
-        }, 300); // tiempo suficiente para la animación
-      }
-    },
+          // Espera un poco antes de limpiar por si hay animación
+          setTimeout(() => {
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+              backdrop.remove();
+            }
+            // Remueve clase modal-open y estilos que bloquean scroll
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';// por si Bootstrap añadió scroll fix
+          }, 300); // tiempo suficiente para la animación
+        }
+      },
       error: (err) => {
         console.error('Error al guardar cliente', err);
       }
@@ -226,30 +291,30 @@ export class CotizacionFormComponent implements OnInit {
     );
   }
 
- guardarVehiculo() {
+  guardarVehiculo() {
     this.vehicleService.create(this.cotizacion.vehiculo!).subscribe({
       next: (response) => {
         console.log('Vehículo guardado', response);
         this.cotizacion.vehiculo = response.data;
         this.vehiculoEncontrado = true;
 
-      const modal = document.getElementById('modalAgregarVehículo');
-      if (modal) {
-        const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
-        modalInstance.hide();
+        const modal = document.getElementById('modalAgregarVehículo');
+        if (modal) {
+          const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+          modalInstance.hide();
 
-        setTimeout(() => {
-          const backdrop = document.querySelector('.modal-backdrop');
-          if (backdrop) {
-            backdrop.remove();
-          }
-          
-          document.body.classList.remove('modal-open');
-          document.body.style.overflow = '';
-          document.body.style.paddingRight = '';
-        }, 300); // tiempo suficiente para la animación
-      }
-    },
+          setTimeout(() => {
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+              backdrop.remove();
+            }
+
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+          }, 300); // tiempo suficiente para la animación
+        }
+      },
       error: (err) => {
         console.error('Error al guardar vehículo', err);
       }
