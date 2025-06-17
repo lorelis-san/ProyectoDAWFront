@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ClientService } from '../../../services/client.service';
 import { Router } from '@angular/router';
 import { Client } from '../../../models/client.model';
+import { AlertService } from '../../../services/alert.service';
+
 
 @Component({
   selector: 'app-client-list',
@@ -11,7 +13,7 @@ import { Client } from '../../../models/client.model';
 export class ClientListComponent implements OnInit {
   clients: Client[] = [];
 
-  constructor(private clientService: ClientService, private router: Router) {}
+  constructor(private clientService: ClientService, private router: Router, private alertService: AlertService) { }
 
   ngOnInit(): void {
     this.loadClients();
@@ -28,13 +30,36 @@ export class ClientListComponent implements OnInit {
     });
   }
 
-  edit(id: number): void {
-    this.router.navigate(['/clientes/editar', id]);
-  }
 
-  delete(id: number): void {
-    if (confirm('¿Deseas eliminar este cliente?')) {
-      this.clientService.delete(id).subscribe(() => this.loadClients());
+  async edit(id: number): Promise<void> {
+    const confirmed = await this.alertService.confirmEdit(
+      '¿Editar cliente?',
+      'Estás a punto de editar esta cliente.'
+    );
+
+    if (confirmed) {
+      this.router.navigate(['/clientes/editar', id]);
     }
   }
+
+
+
+  delete(id: number): void {
+    this.alertService.confirmDelete('cliente').then(confirmed => {
+      if (confirmed) {
+        this.clientService.delete(id).subscribe({
+          next: () => {
+            this.alertService.success('Cliente eliminado', 'El cliente fue eliminado correctamente.');
+            this.loadClients();
+          },
+          error: (err) => {
+            this.alertService.error('Error', 'No se pudo eliminar el cliente.');
+            console.error(err);
+          }
+        });
+      }
+    });
+  }
+
+
 }

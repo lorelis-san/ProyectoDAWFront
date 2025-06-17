@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../../../models/product.model';
+import { AlertService } from '../../../services/alert.service';
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html'
@@ -20,7 +21,8 @@ export class ProductFormComponent implements OnInit {
     private productService: ProductService,
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private alertService: AlertService
   ) {
     this.productForm = this.fb.group({
       id: [null],
@@ -71,24 +73,51 @@ export class ProductFormComponent implements OnInit {
 
   onSubmit(): void {
     const productData: Partial<Product> = this.productForm.value;
+
     if (this.isEdit && this.id) {
-      this.productService.updateProduct(this.id, productData, this.imageUrl).subscribe(() => {
-        this.router.navigate(['/productos']);
+      this.productService.updateProduct(this.id, productData, this.imageUrl).subscribe({
+        next: () => {
+          this.alertService.success('Producto actualizado', 'El producto fue actualizado correctamente');
+          this.router.navigate(['/productos']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al actualizar el producto', err);
+        }
       });
     } else {
-      this.productService.saveProduct(productData, this.imageUrl).subscribe(() => {
-        this.router.navigate(['/productos']);
+      this.productService.saveProduct(productData, this.imageUrl).subscribe({
+        next: () => {
+          this.alertService.success('Producto registrado', 'El producto fue registrado correctamente');
+          this.router.navigate(['/productos']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al registrar el producto', err);
+        }
       });
     }
   }
 
   loadCategorias() {
     this.http.get<any>('http://localhost:8080/api/categorias')
-      .subscribe(response => this.categorias = response.data);
-  }
-  loadProveedores() {
-    this.http.get<any>('http://localhost:8080/api/suppliers')
-      .subscribe(response => this.proveedores = response.data);
+      .subscribe({
+        next: response => this.categorias = response.data,
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al cargar categorías', err);
+        }
+      });
   }
 
+  loadProveedores() {
+    this.http.get<any>('http://localhost:8080/api/suppliers')
+      .subscribe({
+        next: response => this.proveedores = response.data,
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al cargar proveedores', err);
+        }
+      });
+  }
 }

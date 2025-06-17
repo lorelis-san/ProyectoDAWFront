@@ -19,7 +19,8 @@
         <td>{{ supplier.email }}</td>
         <td>{{ supplier.phone }}</td>
         <td>
-          <a [routerLink]="['/suppliers/edit', supplier.id]" class="btn btn-warning btn-sm">Editar</a>
+           <button class="btn btn-warning btn-sm me-2" (click)="edit(supplier.id!)">Editar</button>
+      
           <button class="btn btn-danger btn-sm" (click)="deleteSupplier(supplier.id!)">Eliminar</button>
         </td>
       </tr>

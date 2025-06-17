@@ -11,7 +11,7 @@ import { VehicleService } from '../../services/vehicle.service';
 import { ChangeDetectorRef } from '@angular/core';
 import * as bootstrap from 'bootstrap';
 import { CotizacionDto } from '../../models/CotizacionDTO.model.';
-
+import { AlertService } from '../../services/alert.service';
 @Component({
   selector: 'app-cotizacion-form',
   templateUrl: './cotizacion-form.component.html',
@@ -56,6 +56,7 @@ export class CotizacionFormComponent implements OnInit {
     private clientService: ClientService,
     private vehicleService: VehicleService,
     private cdRef: ChangeDetectorRef,
+    private alertService: AlertService
   ) { }
 
   ngOnInit(): void {
@@ -63,43 +64,35 @@ export class CotizacionFormComponent implements OnInit {
     if (id) {
       this.idCotizacion = +id;
       this.isEdit = true;
-      
-      console.log('🔍 Cargando cotización para editar, ID:', id);
-      
+
       this.cotizacionService.obtenerCotizacionPorId(+id).subscribe({
         next: (res) => {
-          console.log('📥 Datos recibidos del backend:', res.data);
-          
-          this.cotizacion = { ...res.data }; // Crear una nueva referencia
-          
+
+          this.cotizacion = { ...res.data };
+
           if (!this.cotizacion.detalles) {
             this.cotizacion.detalles = [];
           }
-          
-          console.log('📋 Detalles cargados:', this.cotizacion.detalles);
+
           this.actualizarTotales();
           this.cdRef.detectChanges();
         },
         error: (err) => {
-          console.error('❌ Error al cargar cotización:', err);
+          console.error('Error al cargar cotización:', err);
         }
       });
     }
   }
 
   guardar() {
-    console.log('💾 Iniciando proceso de guardado...');
-    console.log('📋 Detalles antes de convertir a DTO:', this.cotizacion.detalles);
-    
-    // ✅ Validar que tengamos detalles
+
     if (!this.cotizacion.detalles || this.cotizacion.detalles.length === 0) {
-      alert('⚠️ Debe agregar al menos un producto a la cotización');
+      this.alertService.error('Debe agregar al menos un producto a la cotización', '');
       return;
     }
 
-    // ✅ Validar IDs obligatorios
     if (!this.cotizacion.cliente?.id || !this.cotizacion.vehiculo?.id) {
-      alert('⚠️ Debe seleccionar un cliente y un vehículo');
+      this.alertService.error('Complete todos los campos', 'Debe seleccionar un cliente y un vehículo');
       return;
     }
 
@@ -108,29 +101,27 @@ export class CotizacionFormComponent implements OnInit {
       this.actualizarTotales();
       this.cotizacionService.actualizarCotizacion(this.idCotizacion, dto).subscribe({
         next: (res) => {
-          console.log('✅ Respuesta de actualización:', res);
-          alert('✅ Cotización actualizada con éxito');
+          this.alertService.success('Cotización actualizada', 'La cotización fue actualizada con éxito');
           this.router.navigate(['/cotizaciones']);
         },
         error: (err) => {
-          console.error('❌ Error al actualizar cotización:', err);
-          alert('❌ Error al actualizar cotización: ' + (err.error?.message || err.message));
+          this.alertService.error('Error al actualizar cotización: ', err + (err.error?.message || err.message));
         }
       });
     } else {
       this.cotizacionService.crearCotizacion(dto).subscribe({
         next: (res) => {
-          console.log('✅ Respuesta de creación:', res);
-          alert('✅ Cotización creada con éxito');
+          this.alertService.success('Cotización creada ', 'La cotización fue creada con éxito');
           this.router.navigate(['/cotizaciones']);
         },
         error: (err) => {
-          console.error('❌ Error al crear cotización:', err);
-          alert('❌ Error al crear cotización: ' + (err.error?.message || err.message));
+          console.error('Error al crear cotización:', err);
+          this.alertService.error('Error al crear cotización: ', err + (err.error?.message || err.message));
         }
       });
     }
   }
+
 
   convertirACotizacionDTO(): CotizacionDto {
     const dto = {
@@ -138,14 +129,14 @@ export class CotizacionFormComponent implements OnInit {
       vehiculoId: this.cotizacion.vehiculo!.id!,
       observaciones: this.cotizacion.observaciones!,
       detalles: this.cotizacion.detalles
-        .filter(det => det.cantidad > 0) 
+        .filter(det => det.cantidad > 0)
         .map(det => ({
           productoId: det.productoId!,
           cantidad: det.cantidad,
           precioUnitario: det.precioUnitario
         }))
     };
-    
+
     return dto;
   }
 
@@ -168,20 +159,15 @@ export class CotizacionFormComponent implements OnInit {
 
   agregarProducto(producto: Product) {
     if (producto.id == null) {
-      console.error('❌ El producto no tiene ID');
       return;
     }
 
-    console.log('➕ Agregando producto:', producto.name, 'ID:', producto.id);
-    
     const existente = this.cotizacion.detalles.find(d => d.productoId === producto.id);
 
     if (existente) {
-      console.log('📈 Producto ya existe, aumentando cantidad');
       existente.cantidad += 1;
       existente.subtotal = existente.cantidad * existente.precioUnitario;
     } else {
-      console.log('🆕 Agregando nuevo producto');
       const nuevoDetalle: DetalleCotizacion = {
         productoId: producto.id,
         nombreProducto: producto.name,
@@ -190,26 +176,20 @@ export class CotizacionFormComponent implements OnInit {
         subtotal: producto.salePrice!
       };
 
-      this.cotizacion.detalles = [...this.cotizacion.detalles, nuevoDetalle]; // ✅ Crear nueva referencia
+      this.cotizacion.detalles = [...this.cotizacion.detalles, nuevoDetalle];
     }
 
     this.actualizarTotales();
     this.busquedaProducto = '';
     this.productosFiltrados = [];
-    this.cdRef.detectChanges(); // ✅ Forzar detección de cambios
+    this.cdRef.detectChanges();
   }
 
-  // ✅ Método mejorado para actualizar cantidad
   actualizarCantidad(detalle: DetalleCotizacion, nuevaCantidad: number): void {
-    console.log('📊 Actualizando cantidad:', detalle.nombreProducto, 'Nueva cantidad:', nuevaCantidad);
-    
     if (nuevaCantidad <= 0) {
-      // Si la cantidad es 0 o negativa, eliminar el producto
       this.eliminarProducto(detalle);
       return;
     }
-
-    // Buscar el detalle y actualizar
     const index = this.cotizacion.detalles.findIndex(d => d.productoId === detalle.productoId);
     if (index !== -1) {
       this.cotizacion.detalles[index] = {
@@ -217,22 +197,16 @@ export class CotizacionFormComponent implements OnInit {
         cantidad: nuevaCantidad,
         subtotal: nuevaCantidad * this.cotizacion.detalles[index].precioUnitario
       };
-      
-      // ✅ Crear nueva referencia del array para que Angular detecte el cambio
       this.cotizacion.detalles = [...this.cotizacion.detalles];
-      
+
       this.actualizarTotales();
       this.cdRef.detectChanges();
     }
   }
 
   actualizarTotales() {
-    console.log('🧮 Calculando totales...');
-    
-    // ✅ Filtrar solo detalles con cantidad > 0
     const detallesValidos = this.cotizacion.detalles.filter(d => d.cantidad > 0);
-    
-    // Actualizar subtotales individuales
+
     detallesValidos.forEach(detalle => {
       detalle.subtotal = detalle.precioUnitario * detalle.cantidad;
     });
@@ -241,78 +215,74 @@ export class CotizacionFormComponent implements OnInit {
     const igv = subtotal * 0.18;
     const total = subtotal + igv;
 
-    this.cotizacion.subtotal = Math.round(subtotal * 100) / 100; // ✅ Redondear a 2 decimales
+    this.cotizacion.subtotal = Math.round(subtotal * 100) / 100;
     this.cotizacion.igv = Math.round(igv * 100) / 100;
     this.cotizacion.total = Math.round(total * 100) / 100;
 
-    console.log('💰 Totales calculados:', {
-      subtotal: this.cotizacion.subtotal,
-      igv: this.cotizacion.igv,
-      total: this.cotizacion.total
+
+  }
+
+  eliminarProducto(detalleAEliminar: DetalleCotizacion): void {
+    this.alertService.confirmDelete(detalleAEliminar.nombreProducto).then(confirmado => {
+      if (confirmado) {
+        this.cotizacion.detalles = this.cotizacion.detalles.filter(
+          (detalle) => detalle.productoId !== detalleAEliminar.productoId
+        );
+
+        this.actualizarTotales();
+        this.cdRef.detectChanges();
+
+        this.alertService.success('Producto eliminado', `"${detalleAEliminar.nombreProducto}" fue eliminado correctamente.`);
+      }
     });
   }
 
-  // ✅ Método mejorado para eliminar producto
-  eliminarProducto(detalleAEliminar: DetalleCotizacion): void {
-    console.log('🗑️ Eliminando producto:', detalleAEliminar.nombreProducto);
-    
-    if (confirm(`¿Estás seguro de eliminar "${detalleAEliminar.nombreProducto}" de la cotización?`)) {
-      // ✅ Crear nuevo array sin el elemento eliminado
-      this.cotizacion.detalles = this.cotizacion.detalles.filter(
-        (detalle) => detalle.productoId !== detalleAEliminar.productoId
-      );
-      
-      console.log('📋 Detalles después de eliminar:', this.cotizacion.detalles);
-      
-      this.actualizarTotales();
-      this.cdRef.detectChanges();
-    }
-  }
-
-  // ✅ Método para limpiar detalles con cantidad 0
   limpiarDetallesVacios(): void {
     const detallesOriginales = this.cotizacion.detalles.length;
-    
+
     this.cotizacion.detalles = this.cotizacion.detalles.filter(d => d.cantidad > 0);
-    
+
     const detallesEliminados = detallesOriginales - this.cotizacion.detalles.length;
-    
+
     if (detallesEliminados > 0) {
-      console.log(`🧹 Eliminados ${detallesEliminados} detalles con cantidad 0`);
       this.actualizarTotales();
       this.cdRef.detectChanges();
     }
   }
 
-  // Resto de métodos (cliente y vehículo) permanecen igual...
   buscarClientePorDocumento(): void {
-    const documento = this.cotizacion.cliente?.documentNumber;
-    if (!documento) return;
+  const documento = this.cotizacion.cliente?.documentNumber;
+  if (!documento) return;
 
-    this.clientService.searchByDocument(documento).subscribe(
-      (response) => {
-        this.cotizacion.cliente = response.data;
-        this.cotizacion.cliente!.typeDocument = this.cotizacion.cliente?.typeDocument || '';
-        this.clienteEncontrado = true;
-        this.busquedaRealizada = true;
-        this.cdRef.detectChanges();
-      },
-      (error) => {
-        console.log("Cliente no encontrado, puedes crear uno nuevo");
-        this.clienteEncontrado = false;
-        this.busquedaRealizada = true;
-        this.cotizacion.cliente = {
-          typeDocument: this.cotizacion.cliente?.typeDocument || '',
-          documentNumber: documento,
-          firstName: '',
-          lastName: '',
-          businessName: '',
-          email: '',
-          phoneNumber: ''
-        };
-      }
-    );
-  }
+  this.clientService.searchByDocument(documento).subscribe(
+    (response) => {
+      this.cotizacion.cliente = response.data;
+      this.cotizacion.cliente!.typeDocument = this.cotizacion.cliente?.typeDocument || '';
+      this.clienteEncontrado = true;
+      this.busquedaRealizada = true;
+      this.cdRef.detectChanges();
+
+      this.alertService.success('Cliente encontrado', 'Los datos del cliente han sido cargados.');
+    },
+    (error) => {
+     
+      this.clienteEncontrado = false;
+      this.busquedaRealizada = true;
+      this.cotizacion.cliente = {
+        typeDocument: this.cotizacion.cliente?.typeDocument || '',
+        documentNumber: documento,
+        firstName: '',
+        lastName: '',
+        businessName: '',
+        email: '',
+        phoneNumber: ''
+      };
+
+      this.alertService.warning('Cliente no encontrado', 'Puede registrar uno nuevo.');
+    }
+  );
+}
+
 
   guardarCliente() {
     this.clientService.create(this.cotizacion.cliente!).subscribe({
@@ -321,17 +291,17 @@ export class CotizacionFormComponent implements OnInit {
         this.cotizacion.cliente = response.data;
         this.clienteEncontrado = true;
 
-       const modal = document.getElementById('modalAgregarCliente');
+        this.alertService.success('Cliente guardado', 'El cliente ha sido registrado correctamente.');
+
+        const modal = document.getElementById('modalAgregarCliente');
         if (modal) {
           const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
           modalInstance?.hide();
 
           setTimeout(() => {
             const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-              backdrop?.remove();
-            }
-       
+            if (backdrop) backdrop.remove();
+
             document.body.classList.remove('modal-open');
             document.body.style.overflow = '';
             document.body.style.paddingRight = '';
@@ -339,34 +309,37 @@ export class CotizacionFormComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error al guardar cliente', err);
+        this.alertService.error('Error al guardar cliente', err);
       }
     });
   }
 
   buscarVehiculoPorPlaca(): void {
-    const placa = this.cotizacion.vehiculo?.placa;
-    if (!placa) return;
+  const placa = this.cotizacion.vehiculo?.placa;
+  if (!placa) return;
 
-    this.vehicleService.getByPlaca(placa).subscribe(
-      (response) => {
-        this.cotizacion.vehiculo = response.data;
-        this.vehiculoEncontrado = true;
-        this.busquedaVehiculoRealizada = true;
-      },
-      (error) => {
-        console.log("Vehículo no encontrado, se puede registrar uno nuevo");
-        this.vehiculoEncontrado = false;
-        this.busquedaVehiculoRealizada = true;
-        this.cotizacion.vehiculo = {
-          placa: placa,
-          marca: '',
-          modelo: '',
-          year: ''
-        };
-      }
-    );
-  }
+  this.vehicleService.getByPlaca(placa).subscribe(
+    (response) => {
+      this.cotizacion.vehiculo = response.data;
+      this.vehiculoEncontrado = true;
+      this.busquedaVehiculoRealizada = true;
+
+      this.alertService.success('Vehículo encontrado', `Se ha cargado el vehículo con placa ${placa}.`);
+    },
+    (error) => {
+      this.vehiculoEncontrado = false;
+      this.busquedaVehiculoRealizada = true;
+      this.cotizacion.vehiculo = {
+        placa: placa,
+        marca: '',
+        modelo: '',
+        year: ''
+      };
+
+      this.alertService.warning('Vehículo no encontrado', `No se encontró ningún vehículo con la placa ${placa}. Puede registrar uno nuevo.`);
+    }
+  );
+}
 
   guardarVehiculo() {
     this.vehicleService.create(this.cotizacion.vehiculo!).subscribe({
@@ -375,6 +348,8 @@ export class CotizacionFormComponent implements OnInit {
         this.cotizacion.vehiculo = response.data;
         this.vehiculoEncontrado = true;
 
+        this.alertService.success('Vehículo guardado', 'El vehículo ha sido registrado correctamente.');
+
         const modal = document.getElementById('modalAgregarVehículo');
         if (modal) {
           const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
@@ -382,10 +357,8 @@ export class CotizacionFormComponent implements OnInit {
 
           setTimeout(() => {
             const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-              backdrop.remove();
-            }
-       
+            if (backdrop) backdrop.remove();
+
             document.body.classList.remove('modal-open');
             document.body.style.overflow = '';
             document.body.style.paddingRight = '';
@@ -393,10 +366,11 @@ export class CotizacionFormComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error al guardar vehículo', err);
+        this.alertService.error('Error al guardar vehículo', err);
       }
     });
   }
+
 }
 
 

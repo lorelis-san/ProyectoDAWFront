@@ -3,6 +3,7 @@ import { ProductService } from '../../../services/product.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../../../models/product.model';
+import { AlertService } from '../../../services/alert.service';
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html'
@@ -13,7 +14,7 @@ export class ProductListComponent implements OnInit {
   categorias: any[] = [];
   proveedores: any[] = [];
 
-  constructor(private productService: ProductService, private router: Router, private http: HttpClient) {}
+  constructor(private productService: ProductService, private router: Router, private http: HttpClient, private alertService: AlertService) { }
 
   ngOnInit() {
     this.loadCategorias();
@@ -22,19 +23,28 @@ export class ProductListComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.getEnabled().subscribe(response => {
-      this.products = response.data; // asegúrate de que coincide con tu backend
+    this.productService.getEnabled().subscribe({
+      next: response => {
+        this.products = response.data;
+      },
+      error: (err) => {
+        console.error(err);
+        this.alertService.error('Error al cargar productos', err);
+      }
     });
   }
 
   onSearch(): void {
-  if (this.searchTerm.trim()) {
-    this.productService.search(this.searchTerm).subscribe({
-      next: (response) => {
-        this.products = response.data || [];
-      },
-      error: (err) => console.error(err)
-    });
+    if (this.searchTerm.trim()) {
+      this.productService.search(this.searchTerm).subscribe({
+        next: (response) => {
+          this.products = response.data || [];
+        },
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al buscar productos', err);
+        }
+      });
     } else {
       this.getProducts();
     }
@@ -42,12 +52,24 @@ export class ProductListComponent implements OnInit {
 
   loadCategorias() {
     this.http.get<any>('http://localhost:8080/api/categorias')
-      .subscribe(res => this.categorias = res.data);
+      .subscribe({
+        next: res => this.categorias = res.data,
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al cargar categorías', err);
+        }
+      });
   }
 
   loadProveedores() {
     this.http.get<any>('http://localhost:8080/api/suppliers')
-      .subscribe(res => this.proveedores = res.data);
+      .subscribe({
+        next: res => this.proveedores = res.data,
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al cargar proveedores', err);
+        }
+      });
   }
 
   getCategoryName(categoryId: number): string {
@@ -61,15 +83,31 @@ export class ProductListComponent implements OnInit {
   }
 
   deleteProduct(id: number) {
-    if (confirm('¿Estás seguro de eliminar este producto?')) {
-      this.productService.deleteProduct(id).subscribe(() => {
-        this.getProducts(); // recargar lista
+     this.alertService.confirmDelete('producto').then(confirmed => {
+    if (confirmed){
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          this.alertService.success('Producto eliminado', 'Se eliminó el producto correctamente');
+          this.getProducts();
+        },
+        error: (err) => {
+          console.error(err);
+          this.alertService.error('Error al eliminar el producto', err);
+        }
       });
-    }
-  }
-  editProduct(id: number): void {
-  this.router.navigate(['/productos/editar', id]);
+    }})
   }
 
-  
+  async editProduct(id: number): Promise<void> {
+    const confirmed = await this.alertService.confirmEdit(
+      '¿Editar producto?',
+      'Estás a punto de editar este producto.'
+    );
+
+    if (confirmed) {
+      this.router.navigate(['/productos/editar', id]);
+    }
+  }
+
+
 }

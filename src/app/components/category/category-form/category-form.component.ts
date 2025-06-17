@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../../services/category.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../../models/category.model';
+import { AlertService } from '../../../services/alert.service';
+
+
 @Component({
   selector: 'app-category-form',
   templateUrl: './category-form.component.html',
@@ -19,8 +22,9 @@ export class CategoryFormComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private alertService: AlertService
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -32,15 +36,30 @@ export class CategoryFormComponent implements OnInit {
       });
     }
   }
-
   save(): void {
+    if (!this.category.name || !this.category.description) {
+      this.alertService.requiredFields();
+      return;
+    }
     if (this.isEditMode && this.category.id) {
-      this.categoryService.update(this.category.id, this.category).subscribe(() => {
-        this.router.navigate(['/categorias']);
+      this.categoryService.update(this.category.id, this.category).subscribe({
+        next: () => {
+          this.alertService.success('Categoría actualizada', 'La categoría fue modificada exitosamente');
+          this.router.navigate(['/categorias']);
+        },
+        error: () => {
+          this.alertService.error('Error', 'No se pudo actualizar la categoría');
+        }
       });
     } else {
-      this.categoryService.create(this.category).subscribe(() => {
-        this.router.navigate(['/categorias']);
+      this.categoryService.create(this.category).subscribe({
+        next: () => {
+          this.alertService.success('Categoría creada', 'La categoría fue registrada correctamente');
+          this.router.navigate(['/categorias']);
+        },
+        error: () => {
+          this.alertService.error('Error', 'No se pudo crear la categoría');
+        }
       });
     }
   }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClientService} from '../../../services/client.service';
+import { ClientService } from '../../../services/client.service';
 import { Client } from '../../../models/client.model';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-client-form',
@@ -25,8 +26,9 @@ export class ClientFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private clientService: ClientService
-  ) {}
+    private clientService: ClientService,
+    private alertService: AlertService
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
@@ -38,14 +40,31 @@ export class ClientFormComponent implements OnInit {
     }
   }
 
-  save(): void {
+   save(): void {
+     if (!this.client.typeDocument || !this.client.documentNumber) {
+    this.alertService.requiredFields();
+    return;
+  }
+
     if (this.isEditMode) {
-      this.clientService.update(this.client.id!, this.client).subscribe(() => {
-        this.router.navigate(['/clientes']);
+      this.clientService.update(this.client.id!, this.client).subscribe({
+        next: () => {
+          this.alertService.success('Cliente actualizado', 'Los datos fueron guardados correctamente');
+          this.router.navigate(['/clientes']);
+        },
+        error: () => {
+          this.alertService.error('Error', 'No se pudo actualizar el cliente');
+        }
       });
     } else {
-      this.clientService.create(this.client).subscribe(() => {
-        this.router.navigate(['/clientes']);
+      this.clientService.create(this.client).subscribe({
+        next: () => {
+          this.alertService.success('Cliente creado', 'El cliente fue registrado exitosamente');
+          this.router.navigate(['/clientes']);
+        },
+        error: () => {
+          this.alertService.error('Error', 'No se pudo crear el cliente');
+        }
       });
     }
   }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { VehicleService} from '../../../services/vehicle.service';
+import { VehicleService } from '../../../services/vehicle.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Vehicle } from '../../../models/vehicle.model';
+import { AlertService } from '../../../services/alert.service';
 @Component({
   selector: 'app-vehicle-form',
   templateUrl: './vehicle-form.component.html',
@@ -17,7 +18,8 @@ export class VehicleFormComponent implements OnInit {
     private fb: FormBuilder,
     private vehicleService: VehicleService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {
     this.form = this.fb.group({
       placa: ['', Validators.required],
@@ -45,18 +47,34 @@ export class VehicleFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.alertService.requiredFields();
+      return;
+    }
 
     const vehicle: Vehicle = this.form.value;
 
     if (this.isEditMode && this.vehicleId !== undefined) {
-      this.vehicleService.update(this.vehicleId, vehicle).subscribe(() => {
-        this.router.navigate(['/vehiculos']);
+      this.vehicleService.update(this.vehicleId, vehicle).subscribe({
+        next: () => {
+          this.alertService.success('Vehículo actualizado', 'El vehículo fue actualizado correctamente.');
+          this.router.navigate(['/vehiculos']);
+        },
+        error: () => {
+          this.alertService.error('Error', 'No se pudo actualizar el vehículo.');
+        }
       });
     } else {
-      this.vehicleService.create(vehicle).subscribe(() => {
-        this.router.navigate(['/vehiculos']);
+      this.vehicleService.create(vehicle).subscribe({
+        next: () => {
+          this.alertService.success('Vehículo registrado', 'El vehículo fue creado exitosamente.');
+          this.router.navigate(['/vehiculos']);
+        },
+        error: () => {
+          this.alertService.error('Error', 'No se pudo registrar el vehículo.');
+        }
       });
     }
   }
+
 }
