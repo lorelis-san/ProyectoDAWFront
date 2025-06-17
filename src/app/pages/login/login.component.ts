@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
       this._loginService.ingresar(this.formLogin.value)
       .subscribe({
         next: (res) => {
-          console.log("Response: ", res)
+       
           this.route.navigate(['/clientes'])
         },
         error: (err: HttpErrorResponse) => {

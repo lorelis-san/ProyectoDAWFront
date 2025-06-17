@@ -1,29 +1,123 @@
-<div class="container">
-  <h2>Proveedores</h2>
-  <a routerLink="/suppliers/new" class="btn btn-primary mb-3">Registrar proveedor</a>
+<div class="main-content container-fluid mt-4">
+  <div class="text-center mb-4">
+    <h2 class="section-title text-white">Gestión de Proveedores</h2>
+  </div>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>RUC</th>
-        <th>Email</th>
-        <th>Teléfono</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let supplier of suppliers">
-        <td>{{ supplier.name }}</td>
-        <td>{{ supplier.ruc }}</td>
-        <td>{{ supplier.email }}</td>
-        <td>{{ supplier.phone }}</td>
-        <td>
-           <button class="btn btn-warning btn-sm me-2" (click)="edit(supplier.id!)">Editar</button>
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-add-category" (click)="openModal()">+ Nuevo Proveedor</button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table category-table text-white rounded overflow-hidden">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>RUC</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let supplier of suppliers; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.ruc }}</td>
+          <td>{{ supplier.email || '-' }}</td>
+          <td>{{ supplier.phone }}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-warning me-2" 
+                    (click)="openModal(supplier)" 
+                    title="Editar">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" 
+                    (click)="deleteSupplier(supplier.id!)" 
+                    title="Eliminar">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="supplierModalLabel">
+          {{ isEditMode ? 'Editar Proveedor' : 'Nuevo Proveedor' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
       
-          <button class="btn btn-danger btn-sm" (click)="deleteSupplier(supplier.id!)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <form (ngSubmit)="save()" #supplierForm="ngForm">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nombre <span class="text-danger">*</span></label>
+              <input type="text" 
+                     class="form-control" 
+                     [(ngModel)]="supplier.name" 
+                     name="name" 
+                     required 
+                     placeholder="Nombre del proveedor" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">RUC <span class="text-danger">*</span></label>
+              <input type="text" 
+                     class="form-control" 
+                     [(ngModel)]="supplier.ruc" 
+                     name="ruc" 
+                     required 
+                     maxlength="11" 
+                     (keypress)="onlyNumbers($event)"
+                     placeholder="20123456789" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Teléfono <span class="text-danger">*</span></label>
+              <input type="tel" 
+                     class="form-control" 
+                     [(ngModel)]="supplier.phone" 
+                     name="phone" 
+                     required 
+                     maxlength="9"
+                     (keypress)="onlyNumbers($event)"
+                     placeholder="987654321" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" 
+                     class="form-control" 
+                     [(ngModel)]="supplier.email" 
+                     name="email" 
+                     placeholder="proveedor@ejemplo.com" />
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="submit" 
+                  class="btn btn-success" 
+                  [disabled]="!isFormValid()">
+            {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+          </button>
+          <button type="button" 
+                  class="btn btn-secondary" 
+                  data-bs-dismiss="modal">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

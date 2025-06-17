@@ -1,0 +1,77 @@
+.main-content {
+  width: 80%;
+  margin-left: 260px;
+}
+
+.section-title {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn-add-category {
+  background-color: #2d215c;
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+.btn-add-category:hover {
+  background-color: #341d88;
+}
+/* Estilos de la tabla */
+.category-table {
+  background-color: #0e0c28 !important;
+  border: 1px solid #2e2a5a;
+}
+.category-table thead {
+  background-color: #2e2a5a !important;
+}
+.category-table th,
+.category-table td {
+  color: #ffffff !important;
+  background-color: #0e0c28 !important;
+  vertical-align: middle;
+}
+
+
+.btn-edit {
+  background-color: #f2be22;
+  color: #0e0c28;
+  border: none;
+}
+.btn-edit:hover {
+  background-color: #e2ae10;
+}
+
+.btn-delete {
+  background-color: #c63d2f;
+  color: white;
+  border: none;
+}
+.btn-delete:hover {
+  background-color: #a63025;
+}
+.category-modal {
+  background-color: #1a1833;
+  color: white;
+  border: 1px solid #2e2a5a;
+  border-radius: 10px;
+}
+
+/* Inputs del modal */
+.category-input {
+  background-color: #2e2a5a;
+  color: white;
+  border: none;
+}
+.category-input::placeholder {
+  color: #ccc;
+}
+
+.btn-save {
+  background-color: #2e2a5a;
+  color: white;
+  border: none;
+}
+.btn-save:hover {
+  background-color: #251486;
+}

@@ -1,29 +1,68 @@
-<div class="container mt-4">
-  <h2>Categorías</h2>
+<div class="main-content container-fluid mt-4">
+  <div class="text-center mb-4">
+    <h2 class="section-title text-white">Gestión de Categorías</h2>
+  </div>
 
-  <button routerLink="/categorias/nuevo" class="btn btn-primary mb-3">
-    Nueva Categoría
-  </button>
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-add-category" (click)="openModal()">+ Nueva Categoría</button>
+  </div>
 
-  <table class="table table-bordered table-striped">
-    <thead class="table-dark">
-      <tr>
-        <th>#</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let categoria of categories; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ categoria.name }}</td>
-        <td>{{ categoria.description }}</td>
-        <td>
-          <button class="btn btn-warning btn-sm me-2" (click)="edit(categoria.id!)">Editar</button>
-          <button class="btn btn-danger btn-sm" (click)="delete(categoria.id!)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table category-table text-white rounded overflow-hidden">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let categoria of categories; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ categoria.name }}</td>
+          <td>{{ categoria.description || 'Sin descripción' }}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-warning me-2" (click)="openModal(categoria)"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="btn btn-sm btn-outline-danger" (click)="delete(categoria.id!)"> <i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal fade show d-block" tabindex="-1" *ngIf="showModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content category-modal">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">{{ isEditMode ? 'Editar Categoría' : 'Nueva Categoría' }}</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="save()">
+            <div class="mb-3">
+              <label for="name" class="form-label">Nombre</label>
+              <input type="text" class="form-control category-input" id="name" [(ngModel)]="category.name" name="name" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea class="form-control category-input" id="description" [(ngModel)]="category.description" name="description" rows="3"></textarea>
+            </div>
+
+            <div class="modal-footer border-0">
+              <button type="submit" class="btn btn-save">
+                {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fondo oscuro del modal -->
+  <div class="modal-backdrop fade show" *ngIf="showModal"></div>
 </div>

@@ -8,23 +8,23 @@ import { map } from 'rxjs/operators';
 })
 export class AuthService {
 
- 
+
   private login: string = 'http://localhost:8080/login';
 
   constructor(
     private http: HttpClient
   ) { }
 
-  ingresar(request : any): Observable<any> {
+  ingresar(request: any): Observable<any> {
     return this.http.post(`${this.login}`, request, {
       observe: 'response'
-    }).pipe(map((response : HttpResponse<any>) => {
+    }).pipe(map((response: HttpResponse<any>) => {
       const body = response.body;
       const headers = response.headers;
 
       const bearerToken = headers.get('Authorization');
       const token = bearerToken ? bearerToken.replace('Bearer ', '') : null;
-console.log("Token recibido:", token);
+      console.log("Token recibido:", token);
 
       if (token) {
         localStorage.setItem('token', token);
@@ -35,11 +35,11 @@ console.log("Token recibido:", token);
     }))
   }
 
- token(){
+  token() {
     return localStorage.getItem('token');
- }
+  }
 
- logout() {
-  localStorage.removeItem('token');
-}
+  logout() {
+    localStorage.removeItem('token');
+  }
 }

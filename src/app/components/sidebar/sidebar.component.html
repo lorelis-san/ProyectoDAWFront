@@ -1,31 +1,45 @@
-<div class="nav-left-sidebar sidebar-dark bg-dark text-white">
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="collapse navbar-collapse show" id="navbarNav">
+<div class="nav-left-sidebar sidebar-custom text-white">
+  <nav class="navbar navbar-expand-lg navbar-dark flex-column">
+    <div class="collapse navbar-collapse show w-100" id="navbarNav">
       <ul class="navbar-nav flex-column w-100">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+          <a class="nav-link text-white" routerLink="/dashboard">
+            <i class="fa-solid fa-house me-2"></i> Dashboard
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/cotizaciones"><i class="fa-solid fa-file-invoice"></i> Cotizaciones</a>
+          <a class="nav-link text-white" routerLink="/cotizaciones">
+            <i class="fa-solid fa-file-invoice me-2"></i> Cotizaciones
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/productos"><i class="fa-solid fa-toolbox"></i> Productos</a>
+          <a class="nav-link text-white" routerLink="/productos">
+            <i class="fa-solid fa-toolbox me-2"></i> Productos
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/categorias"><i class="fa-solid fa-toolbox"></i> Categorías</a>
+          <a class="nav-link text-white" routerLink="/categorias">
+            <i class="fa-solid fa-tags me-2"></i> Categorías
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/vehiculos"><i class="fa-solid fa-users"></i> Vehículos</a>
+          <a class="nav-link text-white" routerLink="/vehiculos">
+            <i class="fa-solid fa-car me-2"></i> Vehículos
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/clientes"><i class="fa-solid fa-users"></i> Clientes</a>
+          <a class="nav-link text-white" routerLink="/clientes">
+            <i class="fa-solid fa-user me-2"></i> Clientes
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/suppliers"><i class="fa-solid fa-users"></i> Proveedores</a>
+          <a class="nav-link text-white" routerLink="/suppliers">
+            <i class="fa-solid fa-truck me-2"></i> Proveedores
+          </a>
         </li>
-        <li class="nav-item">
-          <button type="submit" class="btn btn-danger" (click)="logout()">
-              Cerrar sesion
+        <li class="nav-item mt-4">
+          <button class="btn btn-outline-light w-100" (click)="logout()">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar sesión
           </button>
         </li>
       </ul>

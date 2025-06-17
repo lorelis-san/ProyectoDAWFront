@@ -1,37 +1,152 @@
-<div class="container mt-4">
-  <h2>Clientes</h2>
+<div class="main-content container-fluid mt-4">
+  <div class="text-center mb-4">
+    <h2 class="section-title text-white">Gestión de Clientes</h2>
+  </div>
 
-  <button routerLink="/clientes/nuevo" class="btn btn-primary mb-3">
-    Nuevo Cliente
-  </button>
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-add-category" (click)="openModal()">+ Nuevo Cliente</button>
+  </div>
 
-  <table class="table table-bordered">
-    <thead class="table-dark">
-      <tr>
-        <th>#</th>
-        <th>Documento</th>
-        <th>Nro Documento</th>
-        <th>Nombre</th>
-        <th>Razón Social</th>
-        <th>Teléfono</th>
-        <th>Correo</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let cliente of clients; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ cliente.typeDocument }}</td>
-        <td>{{ cliente.documentNumber }}</td>
-        <td>{{ cliente.firstName }} {{ cliente.lastName }}</td>
-        <td>{{ cliente.businessName }}</td>
-        <td>{{ cliente.phoneNumber }}</td>
-        <td>{{ cliente.email }}</td>
-        <td>
-          <button class="btn btn-warning btn-sm me-2" (click)="edit(cliente.id!)">Editar</button>
-          <button class="btn btn-danger btn-sm" (click)="delete(cliente.id!)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table category-table text-white rounded overflow-hidden">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Documento</th>
+          <th>Nro Documento</th>
+          <th>Nombre</th>
+          <th>Razón Social</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clients">
+          <td>{{ cliente.id }}</td>
+          <td>{{ cliente.typeDocument }}</td>
+          <td>{{ cliente.documentNumber }}</td>
+          <td>{{ cliente.firstName }} {{ cliente.lastName }}</td>
+          <td>{{ cliente.businessName || '-' }}</td>
+          <td>{{ cliente.phoneNumber }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-warning me-2" (click)="openModal(cliente)">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button *ngIf="cliente.id !== undefined" class="btn btn-sm btn-outline-danger" (click)="delete(cliente.id)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<!-- MODAL -->
+<div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content category-modal">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="clienteModalLabel">{{ isEditMode ? 'Editar Cliente' : 'Nuevo Cliente' }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #clientForm="ngForm" (ngSubmit)="save()">
+
+          <!-- Tipo Documento y Documento -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Tipo de Documento <span class="text-danger">*</span></label>
+              <select class="form-select" [(ngModel)]="client.typeDocument" name="typeDocument" required
+                #typeDocument="ngModel" (change)="onDocumentTypeChange()">
+                <option value="">Seleccionar...</option>
+                <option value="DNI">DNI</option>
+                <option value="RUC">RUC</option>
+              </select>
+              <div *ngIf="typeDocument.invalid && typeDocument.touched" class="text-danger small">
+                El tipo de documento es requerido
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">N° Documento <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="documentNumber" [(ngModel)]="client.documentNumber"
+                [maxlength]="client.typeDocument === 'DNI' ? 8 : 11"
+                [pattern]="client.typeDocument === 'DNI' ? '^[0-9]{8}$' : '^[0-9]{11}$'" #documentNumber="ngModel"
+                required />
+              <div *ngIf="documentNumber.invalid && documentNumber.touched" class="text-danger small">
+                <div *ngIf="documentNumber.errors?.['required']">Número de documento es requerido.</div>
+                <div *ngIf="documentNumber.errors?.['pattern']">Debe tener {{ client.typeDocument === 'DNI' ? '8' : '11' }} dígitos numéricos.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Razón Social -->
+          <div class="row" *ngIf="client.typeDocument === 'RUC'">
+            <div class="col-12 mb-3">
+              <label class="form-label">Razón Social <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="client.businessName" name="businessName"
+                [required]="client.typeDocument === 'RUC'" #businessName="ngModel" />
+              <div *ngIf="businessName.invalid && businessName.touched" class="text-danger small">
+                La razón social es requerida
+              </div>
+            </div>
+          </div>
+
+          <!-- Nombres y Apellidos -->
+          <div class="row" *ngIf="client.typeDocument === 'DNI'">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nombres <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="client.firstName" name="firstName" required
+                #firstName="ngModel" />
+              <div *ngIf="firstName.invalid && firstName.touched" class="text-danger small">
+                Los nombres son requeridos
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Apellidos <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="client.lastName" name="lastName" required
+                #lastName="ngModel" />
+              <div *ngIf="lastName.invalid && lastName.touched" class="text-danger small">
+                Los apellidos son requeridos
+              </div>
+            </div>
+          </div>
+
+          <!-- Teléfono y Correo -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Teléfono <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" [(ngModel)]="client.phoneNumber" name="phoneNumber" required
+                pattern="[0-9]{9}" maxlength="9" #phoneNumber="ngModel" />
+              <div *ngIf="phoneNumber.invalid && phoneNumber.touched" class="text-danger small">
+                El teléfono es requerido y debe tener 9 dígitos
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Correo <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" [(ngModel)]="client.email" name="email" required
+                #email="ngModel" />
+              <div *ngIf="email.invalid && email.touched" class="text-danger small">
+                El correo es requerido y debe ser válido
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones -->
+          <div class="modal-footer">
+            <button [disabled]="clientForm.invalid" type="submit" class="btn btn-success">
+              Guardar
+            </button>
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
