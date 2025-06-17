@@ -6,7 +6,8 @@ import { Product } from '../../../models/product.model';
 import { AlertService } from '../../../services/alert.service';
 @Component({
   selector: 'app-product-list',
-  templateUrl: './product-list.component.html'
+  templateUrl: './product-list.component.html',
+   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
