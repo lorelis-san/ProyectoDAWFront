@@ -1,0 +1,72 @@
+body {
+    background-color: #0e0c28;
+    color: white;
+}
+
+.container {
+    width: 80%;
+    margin-left: 260px;
+}
+
+strong {
+    color: white;
+}
+
+.col-md-6 {
+    color: white;
+}
+
+.cotizacion-card {
+    background-color: #1d1b3f;
+    border: 1px solid #2a2850;
+    border-radius: 12px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+}
+
+details summary {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.detalle-cotizacion-table {
+    width: 100%;
+    background-color: #0e0c28;
+    /* fondo base */
+    border: 1px solid #2e2a5a;
+    color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.detalle-cotizacion-table thead {
+    background-color: #2e2a5a;
+}
+
+.detalle-cotizacion-table th,
+.detalle-cotizacion-table td {
+    color: #ffffff;
+    background-color: #0e0c28;
+    border: 1px solid #3a3660;
+    padding: 10px 14px;
+    text-align: center;
+}
+
+.detalle-cotizacion-table tbody tr:nth-child(even) {
+    background-color: #181636;
+}
+
+.detalle-cotizacion-table tbody tr:nth-child(odd) {
+    background-color: #1e1c3e;
+}
+
+.detalle-cotizacion-table th {
+    font-weight: 600;
+}

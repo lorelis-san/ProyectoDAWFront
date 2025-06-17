@@ -1,0 +1,36 @@
+.main-content{
+    width: 80%;
+    margin-left: 260px;
+}
+.form-card {
+  background-color: #0e0c28;
+  color: white;
+  border: 1px solid #2e2a5a;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.form-header {
+  background-color: #2e2a5a;
+  border-bottom: 1px solid #2e2a5a;
+  padding: 1rem 1.5rem;
+  color: #ffffff;
+}
+
+.category-input {
+  background-color: #2e2a5a;
+  color: white;
+  border: none;
+}
+.category-input::placeholder {
+  color: #ccc;
+}
+
+.btn-save {
+  background-color: #2e2a5a;
+  color: white;
+  border: none;
+}
+.btn-save:hover {
+  background-color: #251486;
+}

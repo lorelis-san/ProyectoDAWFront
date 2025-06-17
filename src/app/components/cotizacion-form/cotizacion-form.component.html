@@ -1,285 +1,261 @@
-<h2>{{ cotizacion.id ? 'Editar Cotización' : 'Nueva Cotización' }}</h2>
+<div class="container py-4">
+  <h2 class="text-white mb-4">{{ cotizacion.id ? 'Editar Cotización' : 'Nueva Cotización' }}</h2>
 
-
-<form (ngSubmit)="guardar()" #form="ngForm">
-    <div>
-        <label>Estado</label>
-        <input type="text" name="estado" [(ngModel)]="cotizacion.estado" [readonly]="true" />
-
-        <label>Fecha</label>
-        <input type="text" name="fecha" [(ngModel)]="cotizacion.fecha" [readonly]="true" />
+  <form (ngSubmit)="guardar()" #form="ngForm">
+    <!-- Estado y Fecha -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label text-white">Estado</label>
+        <input type="text" name="estado" [(ngModel)]="cotizacion.estado" readonly class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-white">Fecha</label>
+        <input type="text" name="fecha" [(ngModel)]="cotizacion.fecha" readonly class="form-control" />
+      </div>
     </div>
-    <!--<div>
-        <label>Nro de Cotización:</label>
-        <input type="text" name="cliente" [(ngModel)]="cotizacion.numeroCotizacion" required />
-    </div> -->
-    <input type="text" name="clienteId" [(ngModel)]="cotizacion.cliente!.id" hidden />
-    <input type="text" name="vehiculoId" [(ngModel)]="cotizacion.vehiculo!.id" hidden />
 
     <!-- Cliente -->
-    <!-- CHat, aquí tiene que incluirse un botón de busca del nro del documento, si lo encuentra
-      llena los campos faltantes, si no lo encuentra, se activan para agregarlos y crear un nuevo cliente -->
-    <!-- Tipo de documento -->
-    <div>
-        <label>Tipo de documento:</label>
-        <select id="typeDocument" class="form-control" name="typeDocument"
-            [(ngModel)]="cotizacion.cliente!.typeDocument" [ngModelOptions]="{standalone: true}">
-            <option value="">Seleccione un tipo de documento</option>
-            <option *ngFor="let tipo of typeDocument" [value]="tipo">
-                {{ tipo }}
-            </option>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label text-white">Tipo de documento</label>
+        <select class="form-select" [(ngModel)]="cotizacion.cliente!.typeDocument" name="tipoDoc">
+          <option value="">Seleccionar</option>
+          <option value="DNI">DNI</option>
+          <option value="RUC">RUC</option>
         </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-white">Número de documento</label>
+        <div class="input-group">
+          <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.documentNumber" name="documentNumber" />
+          <button type="button" class="btn btn-secondary" (click)="buscarClientePorDocumento()">Buscar</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Número de documento -->
-    <div class="mt-2">
-        <label>Nro de Documento:</label>
-        <input type="text" name="documentNumber" [(ngModel)]="cotizacion.cliente!.documentNumber" required />
-        <button type="button" class="btn btn-sm btn-secondary" (click)="buscarClientePorDocumento()">
-            Buscar
-        </button>
+    <!-- Cliente encontrado -->
+    <div *ngIf="clienteEncontrado && busquedaRealizada" class="row mb-3">
+      <div *ngIf="cotizacion.cliente!.typeDocument === 'DNI'" class="col-md-6">
+        <label class="form-label text-white">Nombre</label>
+        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.firstName" name="firstName" readonly />
+      </div>
+      <div *ngIf="cotizacion.cliente!.typeDocument === 'DNI'" class="col-md-6">
+        <label class="form-label text-white">Apellido</label>
+        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.lastName" name="lastName" readonly />
+      </div>
+      <div *ngIf="cotizacion.cliente!.typeDocument === 'RUC'" class="col-12">
+        <label class="form-label text-white">Razón social</label>
+        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.businessName" name="businessName" readonly />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-white">Email</label>
+        <input type="text" class="form-control" name="email" [(ngModel)]="cotizacion.cliente!.email" readonly />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-white">Celular</label>
+        <input type="text" class="form-control" name="phoneNumber" [(ngModel)]="cotizacion.cliente!.phoneNumber" readonly />
+      </div>
     </div>
 
-    <!-- Si cliente fue encontrado -->
-    <div *ngIf="clienteEncontrado === true && busquedaRealizada" class="mt-3">
-        <div *ngIf="cotizacion.cliente?.typeDocument === 'DNI'">
-            <label>Nombre:</label>
-            <input type="text" name="firstName" [(ngModel)]="cotizacion.cliente!.firstName" [readonly]="true" />
-
-            <label>Apellido:</label>
-            <input type="text" name="lastName" [(ngModel)]="cotizacion.cliente!.lastName" [readonly]="true" />
-        </div>
-        <div *ngIf="cotizacion.cliente?.typeDocument === 'RUC'">
-            <label>Razón Social:</label>
-            <input type="text" name="businessName" [(ngModel)]="cotizacion.cliente!.businessName" [readonly]="true" />
-        </div>
-        <div>
-            <label>Email:</label>
-            <input type="text" name="email" [(ngModel)]="cotizacion.cliente!.email" [readonly]="true" />
-        </div>
-        <div>
-            <label>Celular:</label>
-            <input type="text" name="phoneNumber" [(ngModel)]="cotizacion.cliente!.phoneNumber" [readonly]="true" />
-        </div>
-    </div>
-
-    <!-- Si cliente no fue encontrado -->
+    <!-- Cliente no encontrado -->
     <div *ngIf="clienteEncontrado === false && busquedaRealizada" class="mt-3">
-        <p class="text-danger">Cliente no encontrado.</p>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
-            Agregar cliente
-        </button>
+      <p class="text-danger">Cliente no encontrado.</p>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
+        Agregar cliente
+      </button>
     </div>
 
+    <hr class="border-secondary" />
 
-    <div>
-        <label>Placa del vehículo:</label>
-        <input type="text" name="placa" [(ngModel)]="cotizacion.vehiculo!.placa" required
-             />
-        <button type="button" (click)="buscarVehiculoPorPlaca()">Buscar</button>
+    <!-- Vehículo -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label text-white">Placa del vehículo</label>
+        <div class="input-group">
+          <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.placa" name="placa" />
+          <button type="button" class="btn btn-secondary" (click)="buscarVehiculoPorPlaca()">Buscar</button>
+        </div>
+      </div>
     </div>
-    <div *ngIf="vehiculoEncontrado === true && busquedaVehiculoRealizada" class="mt-3">
-        <div>
-            <label>Marca:</label>
-            <input type="text" name="marca" [(ngModel)]="cotizacion.vehiculo!.marca" [readonly]="true" />
-        </div>
 
-        <div>
-            <label>Modelo:</label>
-            <input type="text" name="modelo" [(ngModel)]="cotizacion.vehiculo!.modelo" [readonly]="true" />
-        </div>
-
-        <div>
-            <label>Año:</label>
-            <input type="text" name="year" [(ngModel)]="cotizacion.vehiculo!.year" [readonly]="true" />
-        </div>
+    <!-- Vehículo encontrado -->
+    <div *ngIf="vehiculoEncontrado" class="row mb-3">
+      <div class="col-md-4">
+        <label class="form-label text-white">Marca</label>
+        <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.marca" name="marca" readonly />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-white">Modelo</label>
+        <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.modelo" name="modelo" readonly />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-white">Año</label>
+        <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.year" name="year" readonly />
+      </div>
     </div>
+
+    <!-- Vehículo no encontrado -->
     <div *ngIf="vehiculoEncontrado === false && busquedaVehiculoRealizada" class="mt-3">
-        <p class="text-danger">Vehículo no encontrado.</p>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarVehículo">
-            Agregar Vehículo
-        </button>
-    </div>
-    <hr />
-
-    <!-- Input para buscar productos -->
-    <div class="form-group">
-        <label for="busquedaProducto">Buscar producto</label>
-        <input type="text" class="form-control" id="busquedaProducto" [(ngModel)]="busquedaProducto"
-            (ngModelChange)="buscarProducto()" name="busquedaProducto" placeholder="Escribe el nombre del producto" />
-
-        <!-- Lista de sugerencias -->
-        <ul *ngIf="productosFiltrados.length > 0" class="list-group mt-1">
-            <li class="list-group-item list-group-item-action" *ngFor="let producto of productosFiltrados"
-                (click)="agregarProducto(producto)" style="cursor: pointer;">
-                {{ producto.name }} - S/. {{ producto.salePrice }}
-            </li>
-        </ul>
+      <p class="text-danger">Vehículo no encontrado.</p>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarVehículo">
+        Agregar Vehículo
+      </button>
     </div>
 
-    <hr />
+    <hr class="border-secondary" />
 
-    <!-- Lista de productos añadidos (detalles) -->
-    <h5>Productos seleccionados</h5>
-    <table class="table table-bordered" *ngIf="cotizacion.detalles.length > 0">
+    <!-- Productos -->
+    <div class="mb-3">
+      <label class="form-label text-white">Buscar producto</label>
+      <input type="text" class="form-control" [(ngModel)]="busquedaProducto" name="buscarProducto" (input)="buscarProducto()" placeholder="Ingrese nombre del producto" />
+      <ul class="list-group mt-2" *ngIf="productosFiltrados.length">
+        <li class="list-group-item list-group-item-action" *ngFor="let p of productosFiltrados" (click)="agregarProducto(p)">
+          {{ p.name }} - S/ {{ p.salePrice }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-dark table-bordered">
         <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-                <th>Subtotal</th>
-                <th>Acciones</th>
-            </tr>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+          </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let detalle of cotizacion.detalles">
-                <td>{{ detalle.nombreProducto }}</td>
-                <td>
-                    <input type="number" [(ngModel)]="detalle.cantidad" (change)="actualizarTotales()"
-                        class="form-control" min="1" name="cantidad-{{detalle.productoId}}" />
-                </td>
-                <td>{{ detalle.precioUnitario | currency:'PEN' }}</td>
-                <td>{{ detalle.subtotal | currency:'PEN' }}</td>
-
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="eliminarProducto(detalle)">
-                        Eliminar
-                    </button>
-
-                </td>
-            </tr>
+          <tr *ngFor="let d of cotizacion.detalles">
+            <td>{{ d.nombreProducto }}</td>
+            <td><input type="number" [(ngModel)]="d.cantidad" (change)="actualizarTotales()" name="cantidad-{{d.productoId}}" class="form-control" min="1" /></td>
+            <td>{{ d.precioUnitario | currency:'PEN' }}</td>
+            <td>{{ d.subtotal | currency:'PEN' }}</td>
+            <td><button type="button" class="btn btn-danger btn-sm" (click)="eliminarProducto(d)">Eliminar</button></td>
+          </tr>
         </tbody>
-    </table>
-
-    <div class="mt-4">
-        <p><strong>Subtotal:</strong> {{ cotizacion.subtotal | currency:'PEN' }}</p>
-        <p><strong>IGV (18%):</strong> {{ cotizacion.igv | currency:'PEN' }}</p>
-        <p><strong>Total:</strong> {{ cotizacion.total | currency:'PEN' }}</p>
+      </table>
     </div>
 
-
-    <div>
-        <label>Observaciones:</label>
-        <textarea name="observaciones" [(ngModel)]="cotizacion.observaciones"></textarea>
+    <!-- Totales -->
+    <div class="text-white mt-3">
+      <p><strong>Subtotal:</strong> {{ cotizacion.subtotal | currency:'PEN' }}</p>
+      <p><strong>IGV:</strong> {{ cotizacion.igv | currency:'PEN' }}</p>
+      <p><strong>Total:</strong> {{ cotizacion.total | currency:'PEN' }}</p>
     </div>
 
-    <br />
-    <button type="submit" class="btn btn-success">
-        {{ cotizacion.id ? 'Actualizar Cotización' : 'Registrar Cotización' }}
-    </button>
-    <button type="button" class="btn btn-secondary" routerLink="/cotizaciones">Cancelar</button>
-
-</form>
-
-
-<!-- Modal para agregar cliente -->
-<div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalAgregarClienteLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalAgregarClienteLabel">Agregar nuevo cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-
-            <div class="modal-body">
-                <!-- Aquí va tu formulario de cliente -->
-                <form>
-
-                    <div class="mb-3">
-                        <label>Tipo de documento:</label>
-                        <select class="form-control" [(ngModel)]="cotizacion.cliente!.typeDocument" name="typeDocument"
-                            [ngModelOptions]="{standalone: true}">
-                            <option value="">Seleccione un tipo</option>
-                            <option *ngFor="let tipo of typeDocument" [value]="tipo">{{ tipo }}</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Nro de Documento:</label>
-                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.documentNumber"
-                            name="documentNumber" [readonly]="true" [ngModelOptions]="{standalone: true}" />
-                    </div>
-                    <div *ngIf="cotizacion.cliente?.typeDocument === 'DNI'">
-                        <div class="mb-3">
-                            <label>Nombre:</label>
-                            <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.firstName"
-                                name="firstName" [ngModelOptions]="{standalone: true}" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Apellido:</label>
-                            <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.lastName"
-                                name="lastName" [ngModelOptions]="{standalone: true}" />
-                        </div>
-                    </div>
-                    <div *ngIf="cotizacion.cliente?.typeDocument === 'RUC'">
-                        <div class="mb-3">
-                            <label>Razón Social:</label>
-                            <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.businessName"
-                                name="businessName" [ngModelOptions]="{standalone: true}" />
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Email:</label>
-                        <input type="email" class="form-control" [(ngModel)]="cotizacion.cliente!.email" name="email"
-                            [ngModelOptions]="{standalone: true}" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Celular:</label>
-                        <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.phoneNumber"
-                            name="phoneNumber" [ngModelOptions]="{standalone: true}" />
-                    </div>
-
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" (click)="guardarCliente()">Guardar cliente</button>
-            </div>
-
-        </div>
+    <!-- Observaciones -->
+    <div class="mb-3">
+      <label class="form-label text-white">Observaciones</label>
+      <textarea class="form-control" [(ngModel)]="cotizacion.observaciones" name="observaciones"></textarea>
     </div>
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-success">{{ cotizacion.id ? 'Actualizar' : 'Registrar' }}</button>
+      <button type="button" class="btn btn-secondary" routerLink="/cotizaciones">Cancelar</button>
+    </div>
+  </form>
 </div>
 
 
+<!-- ============================= -->
+<!-- Modal Agregar Cliente -->
+<!-- ============================= -->
+<div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalAgregarClienteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content text-white" style="background-color: #1c1b3a;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarClienteLabel">Agregar Cliente</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="guardarCliente()" #clienteForm="ngForm">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Tipo de Documento</label>
+              <select class="form-select" [(ngModel)]="cotizacion.cliente!.typeDocument" name="tipoDocumento" required>
+                <option value="DNI">DNI</option>
+                <option value="RUC">RUC</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">N° Documento</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.documentNumber" name="documento" required />
+            </div>
 
+            <div class="col-md-6" *ngIf="cotizacion.cliente!.typeDocument === 'DNI'">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.firstName" name="nombre" required />
+            </div>
+            <div class="col-md-6" *ngIf="cotizacion.cliente!.typeDocument === 'DNI'">
+              <label class="form-label">Apellido</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.lastName" name="apellido" required />
+            </div>
 
-<!-- Modal Agregar Vehículo -->
-<div class="modal fade" id="modalAgregarVehículo" tabindex="-1" aria-labelledby="modalAgregarVehículoLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalAgregarVehículoLabel">Agregar Vehículo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <div class="col-12" *ngIf="cotizacion.cliente!.typeDocument === 'RUC'">
+              <label class="form-label">Razón Social</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.businessName" name="razonSocial" required />
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label>Placa:</label>
-                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.placa" name="placa" />
-                </div>
-                <div class="mb-3">
-                    <label>Marca:</label>
-                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.marca" name="marca" />
-                </div>
-                <div class="mb-3">
-                    <label>Modelo:</label>
-                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.modelo" name="modelo" />
-                </div>
-                <div class="mb-3">
-                    <label>Año:</label>
-                    <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.year" name="year" />
-                </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" [(ngModel)]="cotizacion.cliente!.email" name="email" />
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" (click)="guardarVehiculo()">Guardar Vehículo</button>
+            <div class="col-md-6">
+              <label class="form-label">Celular</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.phoneNumber" name="celular" />
             </div>
-        </div>
+          </div>
+
+          <div class="mt-3 d-flex justify-content-end">
+            <button type="submit" class="btn btn-success me-2">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- ============================= -->
+<!-- Modal Agregar Vehículo -->
+<!-- ============================= -->
+<div class="modal fade" id="modalAgregarVehículo" tabindex="-1" aria-labelledby="modalAgregarVehiculoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content text-white" style="background-color: #1c1b3a;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAgregarVehiculoLabel">Agregar Vehículo</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="guardarVehiculo()" #vehiculoForm="ngForm">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Placa</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.placa" name="placa" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Marca</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.marca" name="marca" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Modelo</label>
+              <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.modelo" name="modelo" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Año</label>
+              <input type="number" class="form-control" [(ngModel)]="cotizacion.vehiculo!.year" name="year" required />
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex justify-content-end">
+            <button type="submit" class="btn btn-success me-2">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,56 +1,84 @@
-<div class="container">
-  <h2>Listado de Cotizaciones</h2>
-<button class="btn btn-success mt-3" routerLink="/cotizaciones/nueva">Nueva Cotización</button>
-<div class="mb-3">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Buscar cotizaciones"
-      [(ngModel)]="searchTerm"
-      (ngModelChange)="onSearch()"
-    />
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-white">Listado de Cotizaciones</h2>
+    <button class="btn btn-success" routerLink="/cotizaciones/nueva">
+      + Nueva Cotización
+    </button>
   </div>
 
-  <div *ngIf="cotizaciones.length === 0">
-    <p>No hay cotizaciones registradas.</p>
+  <div class="mb-4">
+    <input type="text" class="form-control" placeholder="Buscar cotizaciones" [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearch()" />
   </div>
 
-  <div *ngFor="let cot of cotizaciones" class="card mb-3 p-3 shadow-sm">
-    <h5>Cotización Nº: {{ cot.numeroCotizacion }}</h5>
-     <p><strong>Creador por:</strong> {{ cot.userNombre }} {{ cot.userApellido}}</p>
-    <p><strong>Modificado por:</strong> {{ cot.usuarioModificadorNombre }} {{ cot.usuarioModificadorApellido}}</p>
-    <p><strong>Cliente:</strong> {{ cot.cliente?.firstName }} {{ cot.cliente?.lastName}}</p>
-    <p><strong>Vehículo:</strong> {{ cot.vehiculo?.marca }} {{ cot.vehiculo?.modelo}} - {{ cot.vehiculo?.placa }}</p>
-    <p><strong>Estado:</strong> {{ cot.estado }}</p>
-    <p><strong>Fecha:</strong> {{ cot.fecha | date:'shortDate' }}</p>
-    <p><strong>Total:</strong> S/ {{ cot.total | number:'1.2-2' }}</p>
+  <div *ngIf="cotizaciones.length === 0" class="alert alert-warning">
+    No hay cotizaciones registradas.
+  </div>
 
-    <details>
-      <summary>Detalles</summary>
-      <table class="table table-sm mt-2">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let d of cot.detalles">
-            <td>{{ d.nombreProducto }}</td>
-            <td>{{ d.cantidad }}</td>
-            <td>S/ {{ d.precioUnitario | number:'1.2-2' }}</td>
-            <td>S/ {{ d.subtotal | number:'1.2-2' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </details>
-     <td>
-         <button *ngIf="cot.id" (click)="editCotizacion(cot.id)">Editar</button> 
-         <button *ngIf="cot.id" (click)="deleteCotizacion(cot.id)">Eliminar</button>
-         <button (click)="verPDF(cot.id!)">📄 Ver PDF</button>
+  <div *ngFor="let cot of cotizaciones" class="card cotizacion-card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-2">
+        <strong class="text-primary">#{{ cot.numeroCotizacion }}</strong>
+      </h5>
 
-        </td>
+      <div class="row mb-2">
+        <div class="col-md-6"><strong>Creado por:</strong> {{ cot.userNombre }} {{ cot.userApellido }}</div>
+        <div class="col-md-6"><strong>Modificado por:</strong> {{ cot.usuarioModificadorNombre }} {{
+          cot.usuarioModificadorApellido }}</div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6"><strong>Cliente:</strong> {{ cot.cliente?.firstName }} {{ cot.cliente?.lastName }}</div>
+        <div class="col-md-6"><strong>Vehículo:</strong> {{ cot.vehiculo?.marca }} {{ cot.vehiculo?.modelo }} - {{
+          cot.vehiculo?.placa }}</div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6"><strong>Estado:</strong> {{ cot.estado }}</div>
+        <div class="col-md-6"><strong>Fecha:</strong> {{ cot.fecha | date:'shortDate' }}</div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6"><strong>Total:</strong> <span class="text-success">S/ {{ cot.total | number:'1.2-2'
+            }}</span></div>
+      </div>
+
+      <details class="mb-3">
+        <summary class="text-info">Ver Detalles de Productos</summary>
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered detalle-cotizacion-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of cot.detalles">
+                <td>{{ d.nombreProducto }}</td>
+                <td>{{ d.cantidad }}</td>
+                <td>S/ {{ d.precioUnitario | number:'1.2-2' }}</td>
+                <td>S/ {{ d.subtotal | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+
+      <div class="text-end">
+        <button class="btn btn-outline-warning me-2" *ngIf="cot.id" (click)="editCotizacion(cot.id)">
+          ✏️ Editar
+        </button>
+        <button class="btn btn-outline-danger me-2" *ngIf="cot.id" (click)="deleteCotizacion(cot.id)">
+          🗑️ Eliminar
+        </button>
+        <button class="btn btn-outline-info" (click)="verPDF(cot.id!)">
+          📄 Ver PDF
+        </button>
+      </div>
+    </div>
   </div>
 </div>

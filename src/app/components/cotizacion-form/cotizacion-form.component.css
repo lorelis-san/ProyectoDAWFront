@@ -1,0 +1,32 @@
+body {
+    background-color: #0e0c28;
+    color: white;
+}
+
+.container {
+    width: 80%;
+    margin-left: 260px;
+
+
+}
+.form-control,
+.form-select {
+  background-color: #1c1b3a;
+  border: 1px solid #444;
+  color: white;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #5ac9d8;
+  box-shadow: 0 0 0 0.2rem rgba(90, 103, 216, 0.25);
+}
+
+.list-group-item {
+  background-color: #23224b;
+  color: white;
+}
+
+.list-group-item:hover {
+  background-color: #2e2d5f;
+}

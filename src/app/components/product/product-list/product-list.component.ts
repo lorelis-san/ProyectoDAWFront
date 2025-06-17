@@ -7,7 +7,7 @@ import { AlertService } from '../../../services/alert.service';
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
-   styleUrl: './product-list.component.css'
+  styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
@@ -84,19 +84,20 @@ export class ProductListComponent implements OnInit {
   }
 
   deleteProduct(id: number) {
-     this.alertService.confirmDelete('producto').then(confirmed => {
-    if (confirmed){
-      this.productService.deleteProduct(id).subscribe({
-        next: () => {
-          this.alertService.success('Producto eliminado', 'Se eliminó el producto correctamente');
-          this.getProducts();
-        },
-        error: (err) => {
-          console.error(err);
-          this.alertService.error('Error al eliminar el producto', err);
-        }
-      });
-    }})
+    this.alertService.confirmDelete('producto').then(confirmed => {
+      if (confirmed) {
+        this.productService.deleteProduct(id).subscribe({
+          next: () => {
+            this.alertService.success('Producto eliminado', 'Se eliminó el producto correctamente');
+            this.getProducts();
+          },
+          error: (err) => {
+            console.error(err);
+            this.alertService.error('Error al eliminar el producto', err);
+          }
+        });
+      }
+    })
   }
 
   async editProduct(id: number): Promise<void> {

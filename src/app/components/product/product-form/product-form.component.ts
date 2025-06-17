@@ -7,7 +7,8 @@ import { Product } from '../../../models/product.model';
 import { AlertService } from '../../../services/alert.service';
 @Component({
   selector: 'app-product-form',
-  templateUrl: './product-form.component.html'
+  templateUrl: './product-form.component.html',
+  styleUrl: './product-form.component.css'
 })
 export class ProductFormComponent implements OnInit {
   productForm!: FormGroup;
