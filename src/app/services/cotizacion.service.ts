@@ -1,22 +1,23 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CotizacionResponse } from '../models/cotizacion-response.model';
 import { Observable } from 'rxjs';
 import { CotizacionDto } from '../models/CotizacionDTO.model.';
-
+import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
+
 export class CotizacionService {
 
   private baseUrl = 'http://localhost:8080/api/cotizaciones';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   crearCotizacion(dto: CotizacionDto): Observable<any> {
-  console.log('COTIZACION A ENVIAR:', JSON.stringify(dto, null, 2));
-  return this.http.post(`${this.baseUrl}`, dto);
-}
+    console.log('COTIZACION A ENVIAR:', JSON.stringify(dto, null, 2));
+    return this.http.post(`${this.baseUrl}`, dto);
+  }
   listarCotizaciones(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
   }
@@ -54,9 +55,6 @@ export class CotizacionService {
   }
 
 
-  verPDF(id: number): void {
-  const url = `http://localhost:8080/api/pdf/cotizacion/${id}`;
-  window.open(url, '_blank');
-}
+
 
 }

@@ -3,7 +3,7 @@ import { CotizacionService } from '../../services/cotizacion.service';
 import { CotizacionResponse } from '../../models/cotizacion-response.model';
 import { CotizacionDto } from '../../models/CotizacionDTO.model.';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AlertService } from '../../services/alert.service';
 
 @Component({
@@ -14,6 +14,7 @@ import { AlertService } from '../../services/alert.service';
 export class CotizacionListComponent implements OnInit {
   cotizaciones: CotizacionResponse[] = [];
   searchTerm: number = 0;
+  token: string | null = localStorage.getItem('token');
 
   constructor(
     private cotizacionService: CotizacionService,
@@ -122,14 +123,14 @@ export class CotizacionListComponent implements OnInit {
   }
 
 
- editCotizacion(id: number): void {
-  this.alertService.confirmEdit('Editar cotización', '¿Deseas editar esta cotización?').then((confirmed) => {
-    if (confirmed) {
-      console.log('✏️ Editando cotización ID:', id);
-      this.router.navigate(['/cotizaciones/editar', id]);
-    }
-  });
-}
+  editCotizacion(id: number): void {
+    this.alertService.confirmEdit('Editar cotización', '¿Deseas editar esta cotización?').then((confirmed) => {
+      if (confirmed) {
+        console.log('✏️ Editando cotización ID:', id);
+        this.router.navigate(['/cotizaciones/editar', id]);
+      }
+    });
+  }
 
 
   limpiarBusqueda(): void {
@@ -139,8 +140,24 @@ export class CotizacionListComponent implements OnInit {
 
 
   verPDF(id: number): void {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
     const url = `http://localhost:8080/api/pdf/cotizacion/${id}`;
-    window.open(url, '_blank');
+
+    this.http.get(url, { headers, responseType: 'blob' }).subscribe({
+      next: (response) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, '_blank');
+      },
+      error: (err) => {
+        console.error('Error al obtener el PDF:', err);
+      }
+    });
   }
 
 }

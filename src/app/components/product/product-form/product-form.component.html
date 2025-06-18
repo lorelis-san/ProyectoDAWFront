@@ -51,62 +51,87 @@
           <!-- Año -->
           <div class="col-md-6 mb-3">
             <label for="year" class="form-label">Año</label>
-            <input type="text" id="year" class="form-control category-input" formControlName="year" />
-          </div>
+           <input
+  type="number"
+  id="year"
+  class="form-control category-input"
+  formControlName="year"
+  min="1900"
+  [max]="currentYear"
+/>
+            <div *ngIf="productForm.get('year')?.invalid && productForm.get('year')?.touched" class="text-danger">
 
-          <!-- Precio de Costo -->
-          <div class="col-md-6 mb-3">
-            <label for="costPrice" class="form-label">Precio de Costo</label>
-            <input type="number" id="costPrice" class="form-control category-input" formControlName="costPrice" />
-          </div>
+              <div *ngIf="productForm.get('year')?.errors?.['invalidYear']" class="text-danger">
+                <div *ngIf="productForm.get('year')?.errors?.['invalidYearRange']" class="text-danger">
+                  El año no es válido.
+                </div>
 
-          <!-- Precio Dealer -->
-          <div class="col-md-6 mb-3">
-            <label for="dealerPrice" class="form-label">Precio Dealer</label>
-            <input type="number" id="dealerPrice" class="form-control category-input" formControlName="dealerPrice" />
-          </div>
+              </div>
 
-          <!-- Precio Venta -->
-          <div class="col-md-6 mb-3">
-            <label for="salePrice" class="form-label">Precio de Venta</label>
-            <input type="number" id="salePrice" class="form-control category-input" formControlName="salePrice" />
-          </div>
+            </div>
 
-          <!-- Sede -->
-          <div class="col-md-6 mb-3">
-            <label for="sede" class="form-label">Sede</label>
-            <select id="sede" class="form-control category-input" formControlName="sede">
-              <option value="">Seleccione una sede</option>
-              <option *ngFor="let sede of sedes" [value]="sede">{{ sede }}</option>
-            </select>
-          </div>
+            <!-- Precio de Costo -->
+            <div class="col-md-6 mb-3">
+              <label for="costPrice" class="form-label">Precio de Costo</label>
+              <input type="number" id="costPrice" class="form-control category-input" formControlName="costPrice" />
+            </div>
 
-          <!-- Descripción -->
-          <div class="col-md-12 mb-3">
-            <label for="description" class="form-label">Descripción</label>
-            <textarea id="description" class="form-control category-input" rows="3" formControlName="description"></textarea>
-          </div>
+            <!-- Precio Dealer -->
+            <div class="col-md-6 mb-3">
+              <label for="dealerPrice" class="form-label">Precio Dealer</label>
+              <input type="number" id="dealerPrice" class="form-control category-input" formControlName="dealerPrice" />
+            </div>
 
-          <!-- Imagen actual -->
-          <div *ngIf="imagePreviewUrl" class="col-md-6 mb-3">
-            <label class="form-label">Imagen actual</label>
-            <div>
-              <img [src]="imagePreviewUrl" alt="Imagen del producto" width="150" class="img-thumbnail border-0" />
+            <!-- Precio Venta -->
+            <div class="col-md-6 mb-3">
+              <label for="salePrice" class="form-label">Precio de Venta</label>
+              <input type="number" id="salePrice" class="form-control category-input" formControlName="salePrice" />
+            </div>
+            <div *ngIf="productForm.errors?.['invalidPriceOrder']" class="text-danger">
+              El orden de los precios no es válido. El precio de costo debe ser menor que el dealer y este menor que el
+              de venta.
+            </div>
+
+
+            <!-- Sede -->
+            <div class="col-md-6 mb-3">
+              <label for="sede" class="form-label">Sede</label>
+              <select id="sede" class="form-control category-input" formControlName="sede">
+                <option value="">Seleccione una sede</option>
+                <option *ngFor="let sede of sedes" [value]="sede">{{ sede }}</option>
+              </select>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-md-12 mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea id="description" class="form-control category-input" rows="3"
+                formControlName="description"></textarea>
+            </div>
+
+            <!-- Imagen actual -->
+            <div *ngIf="imagePreviewUrl" class="col-md-6 mb-3">
+              <label class="form-label">Imagen actual</label>
+              <div>
+                <img [src]="imagePreviewUrl" alt="Imagen del producto" width="150" class="img-thumbnail border-0" />
+              </div>
+            </div>
+
+            <!-- Subir nueva imagen -->
+            <div class="col-md-6 mb-3">
+              <label for="imageUrl" class="form-label">Subir Imagen</label>
+              <input type="file" id="imageUrl" class="form-control category-input" (change)="onFileSelected($event)" />
             </div>
           </div>
 
-          <!-- Subir nueva imagen -->
-          <div class="col-md-6 mb-3">
-            <label for="imageUrl" class="form-label">Subir Imagen</label>
-            <input type="file" id="imageUrl" class="form-control category-input" (change)="onFileSelected($event)" />
-          </div>
-        </div>
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-save me-2" [disabled]="productForm.invalid">
+              {{ productForm.get('id')?.value ? 'Actualizar' : 'Guardar' }}
+            </button>
 
-        <div class="text-end mt-3">
-          <button type="submit" class="btn btn-save me-2">
-            {{ productForm.get('id')?.value ? 'Actualizar' : 'Guardar' }}
-          </button>
-          <button type="button" class="btn btn-secondary" routerLink="/productos">Cancelar</button>
+
+            <button type="button" class="btn btn-secondary" routerLink="/productos">Cancelar</button>
+          </div>
         </div>
       </form>
     </div>

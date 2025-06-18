@@ -1,0 +1,39 @@
+.container {
+  width: 80%;
+  margin-left: 260px;
+  color: whitesmoke;
+}
+
+.card {
+  background-color: #0e0c28;
+  border-left: 6px solid #0ba2bd;
+  transition: all 0.3s ease;
+  color: whitesmoke;
+}
+
+.card:hover {
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.2);
+}
+
+h2 {
+  font-weight: bold;
+  color: #0ba2bd;
+}
+
+.lead {
+  font-size: 1.2rem;
+ color: whitesmoke;
+}
+
+p {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+hr {
+  border-top: 1px solid #dee2e6;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}

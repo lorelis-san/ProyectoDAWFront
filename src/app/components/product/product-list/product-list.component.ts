@@ -43,7 +43,6 @@ export class ProductListComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.alertService.error('Error al buscar productos', err);
         }
       });
     } else {

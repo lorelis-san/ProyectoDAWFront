@@ -27,7 +27,6 @@ import { ProductFormComponent } from './components/product/product-form/product-
 import { CotizacionFormComponent } from './components/cotizacion-form/cotizacion-form.component';
 import { CotizacionListComponent } from './components/cotizacion-list/cotizacion-list.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
