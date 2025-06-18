@@ -41,12 +41,11 @@ export class LoginComponent implements OnInit {
 
   login(){
     if(this.formLogin.valid){
-      console.log("Acceso", this.formLogin.value)
       this._loginService.ingresar(this.formLogin.value)
       .subscribe({
         next: (res) => {
        
-          this.route.navigate(['/clientes'])
+          this.route.navigate(['/dashboard'])
         },
         error: (err: HttpErrorResponse) => {
           this.alertaError("Correo o contraseña incorrecta ")

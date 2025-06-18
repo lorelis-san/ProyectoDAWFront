@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -13,26 +13,28 @@ export class RegisterComponent {
   email: string = '';
   username: string = '';
   password: string = '';
+  role: string = 'USER';
   errorMessage: string = '';
   successMessage: string = '';
   loading: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) { }
 
   onSubmit(): void {
     this.loading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    const newUser = {
+    const usuario = {
       nombre: this.nombre,
       apellido: this.apellido,
       email: this.email,
       username: this.username,
-      password: this.password
+      password: this.password,
+      role: { name: this.role }
     };
 
-    this.http.post<any>('http://localhost:8080/auth/register', newUser).subscribe({
+    this.authService.registrarUsuario(usuario).subscribe({
       next: () => {
         this.successMessage = '¡Registro exitoso! Redirigiendo al login...';
         this.loading = false;

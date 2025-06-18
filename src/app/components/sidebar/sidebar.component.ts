@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router'; // 👈 importante
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,10 +10,15 @@ import Swal from 'sweetalert2';
 })
 export class SidebarComponent {
 
+  username: string | null = '';
+
   constructor(
     private _loginService: AuthService,
-    private route: Router // 👈 se llama Router, no Route
-  ) {}
+    private route: Router
+  ) { }
+  ngOnInit(): void {
+    this.username = this._loginService.getUserNameFromToken() || 'Usuario';
+  }
 
   logout() {
     Swal.fire({

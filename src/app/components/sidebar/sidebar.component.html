@@ -1,7 +1,12 @@
+
 <div class="nav-left-sidebar sidebar-custom text-white">
   <nav class="navbar navbar-expand-lg navbar-dark flex-column">
     <div class="collapse navbar-collapse show w-100" id="navbarNav">
       <ul class="navbar-nav flex-column w-100">
+        <div class="sidebar-user p-3 text-white border-bottom border-secondary">
+  <strong>Bienvenido, {{ username }}</strong>
+</div>
+
         <li class="nav-item">
           <a class="nav-link text-white" routerLink="/dashboard">
             <i class="fa-solid fa-house me-2"></i> Dashboard
@@ -38,7 +43,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#" (click)="logout()">
+          <a class="nav-link text-white" (click)="logout()">
             <i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar sesión
           </a>
         </li>

@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'app-cotizacionWeb';
+  showSidebar = true;
+  private noSidebarRoutes = ['/login', '/register']; // Rutas donde NO se debe mostrar
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.showSidebar = !this.noSidebarRoutes.includes(event.urlAfterRedirects);
+      }
+    });
+  }
 }
