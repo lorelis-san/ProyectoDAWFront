@@ -8,7 +8,7 @@
       [(ngModel)]="searchTerm" (ngModelChange)="onSearch()" />
   </div>
   <div class="text-end mt-4">
-    <button class="btn btn-add-category" routerLink="/productos/nuevo">+ Nuevo Producto</button>
+    <button class="btn btn-add-category" routerLink="/productos/nuevo"  *ngIf="role === 'ROLE_ADMIN'">+ Nuevo Producto</button>
   </div>
   <div class="row">
     <div class="col-md-4 mb-4" *ngFor="let product of products">
@@ -30,8 +30,8 @@
             <p class="mb-1 text-light-emphasis">Venta: <strong>S/ {{ product.salePrice }}</strong></p>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-end">
-          <button class="btn btn-edit btn-sm" *ngIf="product.id" (click)="editProduct(product.id)"><i
+        <div class="card-footer d-flex justify-content-end"  *ngIf="role === 'ROLE_ADMIN'">
+          <button class="btn btn-edit btn-sm" *ngIf="product.id " (click)="editProduct(product.id)" ><i
               class="fa-solid fa-pen-to-square"></i></button>
           <button class="btn btn-delete btn-sm" *ngIf="product.id" (click)="deleteProduct(product.id)"
             style="margin-left: 15px;"> <i class="fa-solid fa-trash"></i></button>

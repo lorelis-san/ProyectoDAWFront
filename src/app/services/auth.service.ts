@@ -62,4 +62,15 @@ export class AuthService {
     return this.http.post<any>(this.register, usuario);
   }
 
+  getUserRole(): string | null {
+    const token = this.token();
+    if (!token) return null;
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.role || decoded.rol || null;
+    } catch (error) {
+      console.error('Error al decodificar token', error);
+      return null;
+    }
+  }
 }

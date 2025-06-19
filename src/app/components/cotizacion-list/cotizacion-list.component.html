@@ -21,47 +21,48 @@
         <strong class="text-primary">#{{ cot.numeroCotizacion }}</strong>
       </h5>
 
-    <div class="row mb-2">
-  <div class="col-md-6">
-    <strong>Creado por:</strong> {{ cot.userNombre }} {{ cot.userApellido }}
-  </div>
-  <div class="col-md-6" *ngIf="cot.estado === 'MODIFICADA'">
-    <strong>Modificado por:</strong> {{ cot.usuarioModificadorNombre }} {{ cot.usuarioModificadorApellido }}
-  </div>
-</div>
-<div class="row mb-2">
-  <div class="col-md-6">
-    <strong>Fecha de Creación:</strong> {{ cot.fechaCreacion | date: 'short' }}
-  </div>
-  <div class="col-md-6" *ngIf="cot.estado === 'MODIFICADA'">
-    <strong>Fecha de Modificación:</strong> {{ cot.fechaModificacion | date: 'short' }}
-  </div>
-</div>
-<div class="row mb-2">
-  <div class="col-md-6">
-    <strong>Tipo de Documento:</strong> {{ cot.cliente?.typeDocument }}
-  </div>
-  <div class="col-md-6">
-    <strong>Cliente:</strong>
-    {{ cot.cliente?.typeDocument === 'DNI' ? cot.cliente?.firstName + ' ' + cot.cliente?.lastName : cot.cliente?.businessName }}
-  </div>
-</div>
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <strong>Creado por:</strong> {{ cot.userNombre }} {{ cot.userApellido }}
+        </div>
+        <div class="col-md-6" *ngIf="cot.estado === 'MODIFICADA'">
+          <strong>Modificado por:</strong> {{ cot.usuarioModificadorNombre }} {{ cot.usuarioModificadorApellido }}
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <strong>Fecha de Creación:</strong> {{ cot.fechaCreacion | date: 'short' }}
+        </div>
+        <div class="col-md-6" *ngIf="cot.estado === 'MODIFICADA'">
+          <strong>Fecha de Modificación:</strong> {{ cot.fechaModificacion | date: 'short' }}
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <strong>Tipo de Documento:</strong> {{ cot.cliente?.typeDocument }}
+        </div>
+        <div class="col-md-6">
+          <strong>Cliente:</strong>
+          {{ cot.cliente?.typeDocument === 'DNI' ? cot.cliente?.firstName + ' ' + cot.cliente?.lastName :
+          cot.cliente?.businessName }}
+        </div>
+      </div>
 
-<div class="row mb-2">
-  <div class="col-md-6">
-    <strong>Vehículo:</strong> {{ cot.vehiculo?.marca }} {{ cot.vehiculo?.modelo }} - {{ cot.vehiculo?.placa }}
-  </div>
-  <div class="col-md-6">
-    <strong>Estado:</strong> {{ cot.estado }}
-  </div>
-</div>
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <strong>Vehículo:</strong> {{ cot.vehiculo?.marca }} {{ cot.vehiculo?.modelo }} - {{ cot.vehiculo?.placa }}
+        </div>
+        <div class="col-md-6">
+          <strong>Estado:</strong> {{ cot.estado }}
+        </div>
+      </div>
 
-<div class="row mb-3">
-  <div class="col-md-6">
-    <strong>Total:</strong>
-    <span class="text-success">S/ {{ cot.total | number:'1.2-2' }}</span>
-  </div>
-</div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <strong>Total:</strong>
+          <span class="text-success">S/ {{ cot.total | number:'1.2-2' }}</span>
+        </div>
+      </div>
 
 
       <details class="mb-3">
@@ -93,11 +94,12 @@
         <button class="btn btn-outline-warning me-2" *ngIf="cot.id" (click)="editCotizacion(cot.id)">
           <i class="fa-solid fa-pen-to-square"></i>
         </button>
-        <button class="btn btn-outline-danger me-2" *ngIf="cot.id" (click)="deleteCotizacion(cot.id)">
+        <button class="btn btn-outline-danger me-2" *ngIf="cot.id && role === 'ROLE_ADMIN'"
+          (click)="deleteCotizacion(cot.id)">
           <i class="fa-solid fa-trash"></i>
         </button>
         <button class="btn btn-outline-info" (click)="verPDF(cot.id!)">
-         <i class="fa-solid fa-file-pdf"></i>
+          <i class="fa-solid fa-file-pdf"></i>
         </button>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../../../models/product.model';
 import { AlertService } from '../../../services/alert.service';
+import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
@@ -15,12 +16,29 @@ export class ProductListComponent implements OnInit {
   categorias: any[] = [];
   proveedores: any[] = [];
 
-  constructor(private productService: ProductService, private router: Router, private http: HttpClient, private alertService: AlertService) { }
-
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private http: HttpClient,
+    private alertService: AlertService,
+    private authService: AuthService
+  ) { }
+  role: string | null = null;
   ngOnInit() {
     this.loadCategorias();
     this.loadProveedores();
     this.getProducts();
+    this.role = this.authService.getUserRole();
+
+  }
+
+
+  isAdmin(): boolean {
+    return this.role === 'ROLE_ADMIN';
+  }
+
+  isUser(): boolean {
+    return this.role === 'ROLE_USER';
   }
 
   getProducts() {

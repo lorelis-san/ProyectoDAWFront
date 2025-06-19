@@ -5,7 +5,7 @@ import { CotizacionDto } from '../../models/CotizacionDTO.model.';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AlertService } from '../../services/alert.service';
-import { saveAs } from 'file-saver';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-cotizacion-list',
   templateUrl: './cotizacion-list.component.html',
@@ -20,12 +20,24 @@ export class CotizacionListComponent implements OnInit {
     private cotizacionService: CotizacionService,
     private router: Router,
     private http: HttpClient,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private authService: AuthService
   ) { }
-
+  role: string | null = null;
   ngOnInit(): void {
     this.cargarCotizaciones();
+    this.role = this.authService.getUserRole();
+
   }
+
+  isAdmin(): boolean {
+    return this.role === 'ROLE_ADMIN';
+  }
+
+  isUser(): boolean {
+    return this.role === 'ROLE_USER';
+  }
+
 
   onSearch(): void {
     if (this.searchTerm && this.searchTerm > 0) {
@@ -139,11 +151,11 @@ export class CotizacionListComponent implements OnInit {
   }
 
 
-verPDF(id: number): void {
-  const token = localStorage.getItem('token');
-  const url = `http://localhost:8080/api/pdf/cotizacion/${id}?token=${token}`;
-  window.open(url, '_blank');
-}
+  verPDF(id: number): void {
+    const token = localStorage.getItem('token');
+    const url = `http://localhost:8080/api/pdf/cotizacion/${id}?token=${token}`;
+    window.open(url, '_blank');
+  }
 
 
 }
