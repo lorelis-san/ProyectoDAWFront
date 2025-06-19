@@ -5,7 +5,7 @@ import { CotizacionDto } from '../../models/CotizacionDTO.model.';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AlertService } from '../../services/alert.service';
-
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-cotizacion-list',
   templateUrl: './cotizacion-list.component.html',
@@ -139,25 +139,11 @@ export class CotizacionListComponent implements OnInit {
   }
 
 
-  verPDF(id: number): void {
-    const token = localStorage.getItem('token');
+verPDF(id: number): void {
+  const token = localStorage.getItem('token');
+  const url = `http://localhost:8080/api/pdf/cotizacion/${id}?token=${token}`;
+  window.open(url, '_blank');
+}
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    const url = `http://localhost:8080/api/pdf/cotizacion/${id}`;
-
-    this.http.get(url, { headers, responseType: 'blob' }).subscribe({
-      next: (response) => {
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const blobUrl = URL.createObjectURL(blob);
-        window.open(blobUrl, '_blank');
-      },
-      error: (err) => {
-        console.error('Error al obtener el PDF:', err);
-      }
-    });
-  }
 
 }

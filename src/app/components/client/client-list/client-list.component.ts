@@ -80,7 +80,7 @@ export class ClientListComponent implements OnInit {
     }
   }
 
-  // Resetear el formulario del cliente
+
   private resetClient(): void {
     this.client = {
       id: undefined,
@@ -95,7 +95,7 @@ export class ClientListComponent implements OnInit {
     };
   }
 
-  // Método para manejar el cambio de tipo de documento
+
   onDocumentTypeChange(): void {
     if (this.client.typeDocument === 'DNI') {
       this.client.businessName = ''; // Limpiar razón social si cambia a DNI
@@ -104,45 +104,67 @@ export class ClientListComponent implements OnInit {
 
   // Método para guardar (crear o actualizar)
   save(): void {
-    // Validaciones básicas
-    if (!this.client.typeDocument || !this.client.documentNumber) {
-      this.alertService.requiredFields();
-      return;
-    }
+  // Validación inicial de campos vacíos
+  if (!this.client.typeDocument || !this.client.documentNumber) {
+    this.alertService.requiredFields();
+    return;
+  }
 
+  // Validación de formato de documento
+  if (this.client.typeDocument === 'DNI' && !/^\d{8}$/.test(this.client.documentNumber)) {
+    this.alertService.error('Error', 'El DNI debe tener 8 dígitos numéricos');
+    return;
+  }
+
+  if (this.client.typeDocument === 'RUC' && !/^\d{11}$/.test(this.client.documentNumber)) {
+    this.alertService.error('Error', 'El RUC debe tener 11 dígitos numéricos');
+    return;
+  }
+
+  // Validaciones específicas según tipo
+  if (this.client.typeDocument === 'DNI') {
     if (!this.client.firstName || !this.client.lastName) {
       this.alertService.error('Campos obligatorios', 'Nombres y apellidos son requeridos');
       return;
     }
-
-    if (!this.client.phoneNumber || !this.client.email) {
-      this.alertService.error('Campos obligatorios', 'Teléfono y correo son requeridos');
-      return;
-    }
-
-    // Validación específica para RUC
-    if (this.client.typeDocument === 'RUC' && !this.client.businessName) {
-      this.alertService.error('Campo obligatorio', 'Razón social es requerida para RUC');
-      return;
-    }
-    // Agrega esto en save() antes de crear/actualizar
-    if (this.client.typeDocument === 'DNI' && !/^\d{8}$/.test(this.client.documentNumber)) {
-      this.alertService.error('Error', 'El DNI debe tener 8 dígitos numéricos');
-      return;
-    }
-
-    if (this.client.typeDocument === 'RUC' && !/^\d{11}$/.test(this.client.documentNumber)) {
-      this.alertService.error('Error', 'El RUC debe tener 11 dígitos numéricos');
-      return;
-    }
-
-
-    if (this.isEditMode) {
-      this.updateClient();
-    } else {
-      this.createClient();
-    }
   }
+
+  if (this.client.typeDocument === 'RUC' && !this.client.businessName) {
+    this.alertService.error('Campo obligatorio', 'Razón social es requerida para RUC');
+    return;
+  }
+
+  if (!this.client.phoneNumber || !this.client.email) {
+    this.alertService.error('Campos obligatorios', 'Teléfono y correo son requeridos');
+    return;
+  }
+
+  // ✅ Validar si el documento ya existe antes de guardar
+  this.clientService.searchByDocument(this.client.documentNumber).subscribe({
+    next: (res) => {
+      if (res.data && (!this.isEditMode || res.data.id !== this.client.id)) {
+        this.alertService.error('Documento duplicado', 'Ya existe un cliente con ese número de documento.');
+        return;
+      }
+
+      // ✅ Si no hay duplicado o estamos editando el mismo cliente
+      if (this.isEditMode) {
+        this.updateClient();
+      } else {
+        this.createClient();
+      }
+    },
+    error: () => {
+      // Si da error (ej. 404), significa que no existe, se puede crear
+      if (this.isEditMode) {
+        this.updateClient();
+      } else {
+        this.createClient();
+      }
+    }
+  });
+}
+
 
   private createClient(): void {
     this.clientService.create(this.client).subscribe({
