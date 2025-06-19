@@ -52,7 +52,7 @@ currentYear: number = new Date().getFullYear();
   // Validar que el año sea numérico, de 4 cifras y razonable
 yearValidator(control: any): { [key: string]: boolean } | null {
   const value = control.value;
-  const year = Number(value);
+  const year = value;
   const currentYear = new Date().getFullYear();
 
   if (!value || isNaN(year)) {

@@ -10,7 +10,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
 
-
+  private expiryCheck: any;
   private login: string = 'http://localhost:8080/login';
   private register: string = 'http://localhost:8080/api/usuario';
 
