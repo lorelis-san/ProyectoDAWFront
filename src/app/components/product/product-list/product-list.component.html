@@ -47,9 +47,6 @@
             </div>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-end">
-        
-
           <div class="product-prices">
             <div class="price-row">
               <span class="price-label">Costo:</span>
@@ -70,14 +67,14 @@
         <button class="btn-action btn-view" *ngIf="product.id" (click)="viewProductDetail(product.id)" title="Ver detalles">
           <i class="fa-solid fa-eye"></i>
         </button>
-        <div *ngIf="role === 'ROLE_ADMIN'">
-        <button class="btn-action btn-edit" *ngIf="product.id" (click)="editProduct(product.id)" title="Editar">
+        <button class="btn-action btn-edit" *ngIf="product.id && role === 'ROLE_ADMIN'" (click)="editProduct(product.id)" title="Editar">
           <i class="fa-solid fa-pen-to-square"></i>
         </button>
-        <button class="btn-action btn-delete" *ngIf="product.id" (click)="deleteProduct(product.id)" title="Eliminar">
+        <button class="btn-action btn-delete" *ngIf="product.id && role === 'ROLE_ADMIN'" (click)="deleteProduct(product.id)" title="Eliminar">
           <i class="fa-solid fa-trash"></i>
         </button></div>
       </div>
+      
     </div>
   </div>
 </div>

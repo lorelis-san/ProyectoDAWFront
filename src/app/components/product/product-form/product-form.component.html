@@ -8,122 +8,210 @@
     </div>
     <div class="card-body">
       <form [formGroup]="productForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-        <div class="row">
-          <!-- Código -->
-          <div class="col-md-6 mb-3">
-            <label for="cod" class="form-label">Código</label>
-            <input type="text" id="cod" class="form-control category-input" formControlName="cod" />
-          </div>
+        
+        <div class="form-section mb-4">
+          <div class="row">
+            <!-- Código -->
+            <div class="col-md-4 mb-3">
+              <label for="cod" class="form-label">
+                <i class="fas fa-barcode me-1"></i>
+                Código *
+              </label>
+              <input type="text" id="cod" class="form-control category-input" formControlName="cod" 
+                     placeholder="Ingrese el código" />
+            </div>
 
-          <!-- Nombre -->
-          <div class="col-md-6 mb-3">
-            <label for="name" class="form-label">Nombre</label>
-            <input type="text" id="name" class="form-control category-input" formControlName="name" />
-          </div>
+            <!-- Nombre -->
+            <div class="col-md-4 mb-3">
+              <label for="name" class="form-label">
+                <i class="fas fa-tag me-1"></i>
+                Nombre *
+              </label>
+              <input type="text" id="name" class="form-control category-input" formControlName="name" 
+                     placeholder="Nombre del producto" />
+            </div>
 
-          <!-- Categoría -->
-          <div class="col-md-6 mb-3">
-            <label for="categoryProductId" class="form-label">Categoría</label>
-            <select formControlName="categoryProductId" class="form-control category-input">
-              <option value="" disabled selected>Seleccione una categoría</option>
-              <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.name }}</option>
-            </select>
-          </div>
+            <!-- Marca -->
+            <div class="col-md-4 mb-3">
+              <label for="brand" class="form-label">
+                <i class="fas fa-trademark me-1"></i>
+                Marca
+              </label>
+              <input type="text" id="brand" class="form-control category-input" formControlName="brand" 
+                     placeholder="Marca del producto" />
+            </div>
 
-          <!-- Proveedor -->
-          <div class="col-md-6 mb-3">
-            <label for="supplierProductId" class="form-label">Proveedor</label>
-            <select formControlName="supplierProductId" class="form-control category-input">
-              <option value="" disabled selected>Seleccione un proveedor</option>
-              <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.name }}</option>
-            </select>
-          </div>
+            <!-- Modelo -->
+            <div class="col-md-6 mb-3">
+              <label for="model" class="form-label">
+                <i class="fas fa-cube me-1"></i>
+                Modelo
+              </label>
+              <input type="text" id="model" class="form-control category-input" formControlName="model" 
+                     placeholder="Modelo del producto" />
+            </div>
 
-          <!-- Marca -->
-          <div class="col-md-6 mb-3">
-            <label for="brand" class="form-label">Marca</label>
-            <input type="text" id="brand" class="form-control category-input" formControlName="brand" />
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label for="model" class="form-label">Modelo</label>
-            <input type="text" id="model" class="form-control category-input" formControlName="model" />
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <label for="year" class="form-label">Año</label>
-            <input type="text" id="year" class="form-control category-input" formControlName="year" />
-            <div *ngIf="productForm.get('year')?.invalid && productForm.get('year')?.touched" class="text-danger">
-
-              <div *ngIf="productForm.get('year')?.errors?.['invalidYear']" class="text-danger">
-                <div *ngIf="productForm.get('year')?.errors?.['invalidYearRange']" class="text-danger">
+            <!-- Año -->
+            <div class="col-md-3 mb-3">
+              <label for="year" class="form-label">
+                <i class="fas fa-calendar-alt me-1"></i>
+                Año
+              </label>
+              <select id="year" class="form-control category-input" formControlName="year">
+                <option value="">Seleccionar año</option>
+                <option *ngFor="let year of getYearOptions()" [value]="year">{{ year }}</option>
+              </select>
+              <div *ngIf="productForm.get('year')?.invalid && productForm.get('year')?.touched" class="text-danger">
+                <div *ngIf="productForm.get('year')?.errors?.['invalidYear'] || productForm.get('year')?.errors?.['invalidYearRange']">
                   El año no es válido.
                 </div>
-
               </div>
-
             </div>
-
-            <div class="col-md-6 mb-3">
-              <label for="costPrice" class="form-label">Precio de Costo</label>
-              <input type="number" id="costPrice" class="form-control category-input" formControlName="costPrice" />
-            </div>
-
-            <!-- Precio Dealer -->
-            <div class="col-md-6 mb-3">
-              <label for="dealerPrice" class="form-label">Precio Dealer</label>
-              <input type="number" id="dealerPrice" class="form-control category-input" formControlName="dealerPrice" />
-            </div>
-
-            <!-- Precio Venta -->
-            <div class="col-md-6 mb-3">
-              <label for="salePrice" class="form-label">Precio de Venta</label>
-              <input type="number" id="salePrice" class="form-control category-input" formControlName="salePrice" />
-            </div>
-            <div *ngIf="productForm.errors?.['invalidPriceOrder']" class="text-danger">
-              El orden de los precios no es válido. El precio de costo debe ser menor que el dealer y este menor que el
-              de venta.
-            </div>
-
 
             <!-- Sede -->
-            <div class="col-md-6 mb-3">
-              <label for="sede" class="form-label">Sede</label>
+            <div class="col-md-3 mb-3">
+              <label for="sede" class="form-label">
+                <i class="fas fa-map-marker-alt me-1"></i>
+                Sede *
+              </label>
               <select id="sede" class="form-control category-input" formControlName="sede">
-                <option value="">Seleccione una sede</option>
+                <option value="">Seleccionar sede</option>
                 <option *ngFor="let sede of sedes" [value]="sede">{{ sede }}</option>
               </select>
             </div>
+          </div>
+        </div>
 
-            <!-- Descripción -->
-            <div class="col-md-12 mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <textarea id="description" class="form-control category-input" rows="3"
-                formControlName="description"></textarea>
+        <!-- Sección: Categorización -->
+        <div class="form-section mb-4">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="categoryProductId" class="form-label">
+                <i class="fas fa-list me-1"></i>
+                Categoría *
+              </label>
+              <select formControlName="categoryProductId" class="form-control category-input">
+                <option value="" disabled selected>Seleccionar categoría</option>
+                <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.name }}</option>
+              </select>
             </div>
 
-            <!-- Imagen actual -->
-            <div *ngIf="imagePreviewUrl" class="col-md-6 mb-3">
-              <label class="form-label">Imagen actual</label>
-              <div>
-                <img [src]="imagePreviewUrl" alt="Imagen del producto" width="150" class="img-thumbnail border-0" />
+            <div class="col-md-6 mb-3">
+              <label for="supplierProductId" class="form-label">
+                <i class="fas fa-truck me-1"></i>
+                Proveedor *
+              </label>
+              <select formControlName="supplierProductId" class="form-control category-input">
+                <option value="" disabled selected>Seleccionar proveedor</option>
+                <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección: Precios -->
+        <div class="form-section mb-4">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="costPrice" class="form-label">
+                <i class="fas fa-shopping-cart me-1"></i>
+                Precio de Costo *
+              </label>
+              <div class="input-group">
+                <span class="input-group-text price-currency">S/</span>
+                <input type="number" id="costPrice" class="form-control category-input" 
+                       formControlName="costPrice" placeholder="0.00" step="0.01" min="0" />
               </div>
             </div>
 
-            <!-- Subir nueva imagen -->
-            <div class="col-md-6 mb-3">
-              <label for="imageUrl" class="form-label">Subir Imagen</label>
-              <input type="file" id="imageUrl" class="form-control category-input" (change)="onFileSelected($event)" />
+            <div class="col-md-4 mb-3">
+              <label for="dealerPrice" class="form-label">
+                <i class="fas fa-handshake me-1"></i>
+                Precio de Distribuidor *
+              </label>
+              <div class="input-group">
+                <span class="input-group-text price-currency">S/</span>
+                <input type="number" id="dealerPrice" class="form-control category-input" 
+                       formControlName="dealerPrice" placeholder="0.00" step="0.01" min="0" />
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label for="salePrice" class="form-label">
+                <i class="fas fa-tag me-1"></i>
+                Precio de Venta *
+              </label>
+              <div class="input-group">
+                <span class="input-group-text price-currency">S/</span>
+                <input type="number" id="salePrice" class="form-control category-input" 
+                       formControlName="salePrice" placeholder="0.00" step="0.01" min="0" />
+              </div>
             </div>
           </div>
+          <div *ngIf="productForm.errors?.['invalidPriceOrder']" class="text-danger price-error">
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            El orden de los precios no es válido. El precio de costo debe ser menor que el de distribuidor y este menor que el de venta.
+          </div>
+        </div>
 
-          <div class="text-end mt-3">
-            <button type="submit" class="btn btn-save me-2" [disabled]="productForm.invalid">
-              {{ productForm.get('id')?.value ? 'Actualizar' : 'Guardar' }}
-            </button>
+        <!-- Sección: Descripción e Imagen -->
+        <div class="form-section mb-4">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="description" class="form-label">
+                <i class="fas fa-file-alt me-1"></i>
+                Descripción del producto
+              </label>
+              <textarea id="description" class="form-control category-input" rows="6"
+                        formControlName="description" placeholder="Ingrese una descripción detallada del producto..."></textarea>
+            </div>
 
+            <!-- Imagen -->
+            <div class="col-md-6 mb-3">
+              <label class="form-label">
+                <i class="fas fa-image me-1"></i>
+                Imagen del producto
+              </label>
+              
+              <!-- Área de imagen -->
+              <div class="image-upload-area">
+                <div class="image-preview-container" *ngIf="imagePreviewUrl; else noImageTemplate">
+                  <img [src]="imagePreviewUrl" alt="Imagen del producto" class="image-preview" />
+                  <div class="image-overlay">
+                    <button type="button" class="btn btn-outline-light btn-sm me-2" (click)="triggerFileInput()">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="clearImage()">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+                
+                <ng-template #noImageTemplate>
+                  <div class="no-image-placeholder" (click)="triggerFileInput()">
+                    <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                    <p class="mb-2"><strong>Seleccionar imagen</strong></p>
+                    <p class="text-muted small">Haz clic aquí o arrastra una imagen</p>
+                  </div>
+                </ng-template>
 
-            <button type="button" class="btn btn-secondary" routerLink="/productos">Cancelar</button>
+                <input type="file" id="imageUrl" class="d-none" 
+                       accept="image/*" (change)="onFileSelected($event)" />
+              </div>
+
+              <!-- Botones de acción de imagen -->
+              <div class="image-actions mt-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm me-2" (click)="triggerFileInput()">
+                  <i class="fas fa-folder-open me-1"></i>
+                  Seleccionar
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm" 
+                        *ngIf="imagePreviewUrl" (click)="clearImage()">
+                  <i class="fas fa-trash me-1"></i>
+                  Limpiar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
