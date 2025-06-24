@@ -133,7 +133,7 @@
         <i class="fa-solid fa-arrow-left me-2"></i> 
         Volver
       </button>
-      <button class="btn btn-edit-header me-2" (click)="editProduct()" title="Editar producto">
+      <button class="btn btn-edit-header me-2" (click)="editProduct()" title="Editar producto" *ngIf="role === 'ROLE_ADMIN'">
         <i class="fa-solid fa-pen-to-square me-2"></i> 
         Editar Producto
       </button>

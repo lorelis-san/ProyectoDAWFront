@@ -5,14 +5,14 @@ import { ProductService } from '../../../services/product.service';
 import { AlertService } from '../../../services/alert.service';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../../../models/product.model';
-
+import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
-export class ProductDetailComponent implements OnInit{
-product: Product | null = null;
+export class ProductDetailComponent implements OnInit {
+  product: Product | null = null;
   loading = true;
   categorias: any[] = [];
   proveedores: any[] = [];
@@ -23,14 +23,29 @@ product: Product | null = null;
     private location: Location,
     private productService: ProductService,
     private alertService: AlertService,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
+
+  role: string | null = null;
 
   ngOnInit(): void {
     this.loadCategorias();
     this.loadProveedores();
     this.loadProduct();
+    this.role = this.authService.getUserRole();
+
   }
+
+
+  isAdmin(): boolean {
+    return this.role === 'ROLE_ADMIN';
+  }
+
+  isUser(): boolean {
+    return this.role === 'ROLE_USER';
+  }
+
 
   loadProduct(): void {
     const id = this.route.snapshot.paramMap.get('id');

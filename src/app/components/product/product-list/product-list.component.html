@@ -47,38 +47,36 @@
             </div>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-end"  *ngIf="role === 'ROLE_ADMIN'">
-          <button class="btn btn-edit btn-sm" *ngIf="product.id " (click)="editProduct(product.id)" ><i
-              class="fa-solid fa-pen-to-square"></i></button>
-          <button class="btn btn-delete btn-sm" *ngIf="product.id" (click)="deleteProduct(product.id)"
-            style="margin-left: 15px;"> <i class="fa-solid fa-trash"></i></button>
+        <div class="card-footer d-flex justify-content-end">
+        
 
-        <div class="product-prices">
-          <div class="price-row">
-            <span class="price-label">Costo:</span>
-            <span class="price-value cost">S/ {{ product.costPrice }}</span>
+          <div class="product-prices">
+            <div class="price-row">
+              <span class="price-label">Costo:</span>
+              <span class="price-value cost">S/ {{ product.costPrice }}</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">Distribuidor:</span>
+              <span class="price-value dealer">S/ {{ product.dealerPrice }}</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">Venta:</span>
+              <span class="price-value sale">S/ {{ product.salePrice }}</span>
+            </div>
           </div>
-          <div class="price-row">
-            <span class="price-label">Distribuidor:</span>
-            <span class="price-value dealer">S/ {{ product.dealerPrice }}</span>
-          </div>
-          <div class="price-row">
-            <span class="price-label">Venta:</span>
-            <span class="price-value sale">S/ {{ product.salePrice }}</span>
-          </div>
-        </div>
       </div>
 
       <div class="product-actions">
         <button class="btn-action btn-view" *ngIf="product.id" (click)="viewProductDetail(product.id)" title="Ver detalles">
           <i class="fa-solid fa-eye"></i>
         </button>
+        <div *ngIf="role === 'ROLE_ADMIN'">
         <button class="btn-action btn-edit" *ngIf="product.id" (click)="editProduct(product.id)" title="Editar">
           <i class="fa-solid fa-pen-to-square"></i>
         </button>
         <button class="btn-action btn-delete" *ngIf="product.id" (click)="deleteProduct(product.id)" title="Eliminar">
           <i class="fa-solid fa-trash"></i>
-        </button>
+        </button></div>
       </div>
     </div>
   </div>
