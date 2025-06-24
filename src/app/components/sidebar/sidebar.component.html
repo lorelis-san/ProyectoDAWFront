@@ -36,6 +36,11 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link text-white" routerLink="/suppliers" *ngIf="role === 'ROLE_ADMIN'">
+            <i class="fa-solid fa-truck me-2"></i> Proveedores
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-white" routerLink="/vehiculos" >
             <i class="fa-solid fa-car me-2"></i> Vehículos
           </a>
@@ -45,11 +50,7 @@
             <i class="fa-solid fa-user me-2"></i> Clientes
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/suppliers" *ngIf="role === 'ROLE_ADMIN'">
-            <i class="fa-solid fa-truck me-2"></i> Proveedores
-          </a>
-        </li>
+        
         <li class="nav-item">
           <a class="nav-link text-white" (click)="logout()">
             <i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar sesión

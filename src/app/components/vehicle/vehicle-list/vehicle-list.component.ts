@@ -17,7 +17,7 @@ export class VehicleListComponent implements OnInit {
   isEditMode = false;
   vehicleId?: number;
   private modal: any;
-
+  searchTerm: string = '';
   constructor(
     private vehicleService: VehicleService, 
     private alertService: AlertService,
@@ -49,6 +49,20 @@ export class VehicleListComponent implements OnInit {
     });
   }
 
+  onSearch(): void {
+    if (this.searchTerm.trim()) {
+      this.vehicleService.search(this.searchTerm).subscribe({
+        next: (response) => {
+          this.vehicles = response.data || [];
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    } else {
+      this.loadVehicles();
+    }
+  }
   openModal(mode: 'create' | 'edit', vehicle?: Vehicle): void {
     this.isEditMode = mode === 'edit';
     

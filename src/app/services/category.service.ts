@@ -1,6 +1,6 @@
 // src/app/services/category.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Category } from '../models/category.model';
 
@@ -10,7 +10,7 @@ import { Category } from '../models/category.model';
 export class CategoryService {
   private url = 'http://localhost:8080/api/categorias';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<any> {
     return this.http.get<any>(this.url);
@@ -18,6 +18,11 @@ export class CategoryService {
 
   getById(id: number): Observable<any> {
     return this.http.get<any>(`${this.url}/${id}`);
+  }
+
+  search(term: string): Observable<any> {
+    const params = new HttpParams().set('termino', term);
+    return this.http.get(`${this.url}/buscar`, { params });
   }
 
   create(category: Category): Observable<any> {

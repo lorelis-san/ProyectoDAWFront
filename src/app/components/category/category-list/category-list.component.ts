@@ -13,11 +13,11 @@ export class CategoryListComponent implements OnInit {
   category: Category = { name: '', description: '' };
   isEditMode = false;
   showModal = false;
-
+  searchTerm: string = '';
   constructor(
     private categoryService: CategoryService,
     private alertService: AlertService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -28,6 +28,21 @@ export class CategoryListComponent implements OnInit {
       next: (res) => this.categories = res.data,
       error: () => this.alertService.error('Error', 'No se pudieron cargar las categorías')
     });
+  }
+
+  onSearch(): void {
+    if (this.searchTerm.trim()) {
+      this.categoryService.search(this.searchTerm).subscribe({
+        next: (response) => {
+          this.categories = response.data || [];
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    } else {
+      this.loadCategories();
+    }
   }
 
   openModal(categoria?: Category): void {
@@ -71,20 +86,20 @@ export class CategoryListComponent implements OnInit {
       });
     }
   }
- async delete(id: number): Promise<void> {
-  const confirmed = await this.alertService.confirmDelete('categoría');
+  async delete(id: number): Promise<void> {
+    const confirmed = await this.alertService.confirmDelete('categoría');
 
-  if (confirmed) {
-    this.categoryService.delete(id).subscribe({
-      next: () => {
-        this.alertService.success('Categoría eliminada', 'La categoría ha sido eliminada correctamente.');
-        this.loadCategories();
-      },
-      error: (err) => {
-        this.alertService.error('Error', 'No se pudo eliminar la categoría.');
-        console.error(err);
-      }
-    });
+    if (confirmed) {
+      this.categoryService.delete(id).subscribe({
+        next: () => {
+          this.alertService.success('Categoría eliminada', 'La categoría ha sido eliminada correctamente.');
+          this.loadCategories();
+        },
+        error: (err) => {
+          this.alertService.error('Error', 'No se pudo eliminar la categoría.');
+          console.error(err);
+        }
+      });
+    }
   }
-}
 }

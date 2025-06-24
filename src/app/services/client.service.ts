@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Client } from '../models/client.model'; 
 
@@ -19,6 +19,11 @@ export class ClientService {
   getById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
+  search(term: string): Observable<any> {
+  const params = new HttpParams().set('termino', term);
+  return this.http.get(`${this.apiUrl}/buscar`, { params });
+}
+
 
   searchByDocument(documentNumber: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/buscar/${documentNumber}`);

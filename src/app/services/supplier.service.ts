@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Supplier } from '../models/supplier.model';
 
@@ -9,12 +9,15 @@ import { Supplier } from '../models/supplier.model';
 export class SupplierService {
   private apiUrl = 'http://localhost:8080/api/suppliers';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllSuppliers(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
-
+  search(term: string): Observable<any> {
+    const params = new HttpParams().set('termino', term);
+    return this.http.get(`${this.apiUrl}/buscar`, { params });
+  }
   getSupplierById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }

@@ -12,7 +12,9 @@ declare var bootstrap: any; // Para manejar el modal de Bootstrap
 })
 export class SupplierListComponent implements OnInit {
   suppliers: Supplier[] = [];
-  
+  searchTerm: string = '';
+
+
   // Propiedades para el modal
   supplier: Supplier = {
     id: undefined,
@@ -45,6 +47,24 @@ export class SupplierListComponent implements OnInit {
       }
     }, 100);
   }
+
+ onSearch(): void {
+  if (this.searchTerm.trim()) {
+    this.supplierService.search(this.searchTerm).subscribe({
+      next: (response) => {
+        this.suppliers = response.data || [];
+      },
+      error: (err) => {
+        console.error(err);
+        this.alertService.error('Error', 'No se pudo realizar la búsqueda.');
+      }
+    });
+  } else {
+    this.loadSuppliers();
+  }
+}
+
+
 
   loadSuppliers(): void {
     this.supplierService.getAllSuppliers().subscribe({

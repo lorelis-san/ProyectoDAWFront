@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Vehicle } from '../models/vehicle.model';
@@ -22,6 +22,12 @@ export class VehicleService {
   create(vehicle: Vehicle): Observable<any> {
     return this.http.post(this.baseUrl, vehicle);
   }
+
+  search(term: string): Observable<any> {
+    const params = new HttpParams().set('termino', term);
+    return this.http.get(`${this.baseUrl}/buscar`, { params });
+  }
+
 
   update(id: number, vehicle: Vehicle): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, vehicle);
