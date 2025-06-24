@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CotizacionListComponent implements OnInit {
   cotizaciones: CotizacionResponse[] = [];
-  searchTerm: number = 0;
+    searchTerm: string = '';
   token: string | null = localStorage.getItem('token');
 
   constructor(
@@ -40,34 +40,20 @@ export class CotizacionListComponent implements OnInit {
 
 
   onSearch(): void {
-    if (this.searchTerm && this.searchTerm > 0) {
-      console.log('🔍 Buscando cotización con ID:', this.searchTerm);
-
-      this.cotizacionService.obtenerCotizacionPorId(this.searchTerm).subscribe({
+    if (this.searchTerm.trim()) {
+      this.cotizacionService.search(this.searchTerm).subscribe({
         next: (response) => {
-          console.log('📥 Respuesta de búsqueda:', response);
-          if (!response.data) {
-            this.alertService.warning('No encontrado', `No se encontró ninguna cotización con ID ${this.searchTerm}.`);
-            this.cotizaciones = [];
-            return;
-          }
-
-          this.cotizaciones = Array.isArray(response.data)
-            ? response.data
-            : [response.data];
-
-          console.log('Cotizaciones después de búsqueda:', this.cotizaciones);
+          this.cotizaciones = response.data || [];
         },
         error: (err) => {
-          console.error('Error en búsqueda:', err);
-          this.alertService.error('Error', 'Ocurrió un error al buscar la cotización.');
-          this.cotizaciones = [];
+          console.error(err);
         }
       });
     } else {
       this.cargarCotizaciones();
     }
   }
+
 
 
   cargarCotizaciones(): void {
@@ -145,10 +131,7 @@ export class CotizacionListComponent implements OnInit {
   }
 
 
-  limpiarBusqueda(): void {
-    this.searchTerm = 0;
-    this.cargarCotizaciones();
-  }
+
 
 
   verPDF(id: number): void {

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CotizacionResponse } from '../models/cotizacion-response.model';
 import { Observable } from 'rxjs';
@@ -52,6 +52,11 @@ export class CotizacionService {
 
   buscarProductos(termino: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/productos/buscar/${termino}`);
+  }
+
+  search(term: string): Observable<any> {
+    const params = new HttpParams().set('termino', term);
+    return this.http.get(`${this.baseUrl}/buscar`, { params });
   }
 
 
