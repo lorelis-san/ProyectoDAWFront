@@ -15,8 +15,10 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthGuard } from './components/helpers/auth.guard';
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
 import { ProductListComponent } from './components/product/product-list/product-list.component';
+import { ProductDetailComponent } from './components/product/product-detail/product-detail.component';
 import { CotizacionFormComponent } from './components/cotizacion-form/cotizacion-form.component';
 import { CotizacionListComponent } from './components/cotizacion-list/cotizacion-list.component';
+
 import { AuthInterceptor } from './components/helpers/auth.interceptor';
 
 const routes: Routes = [
@@ -34,6 +36,7 @@ const routes: Routes = [
       { path: 'suppliers', component: SupplierListComponent, canActivate: [AuthGuard] },
       { path: 'productos', component: ProductListComponent, canActivate: [AuthGuard] },
       { path: 'productos/nuevo', component: ProductFormComponent, canActivate: [AuthGuard] },
+      { path: 'productos/detalle/:id', component: ProductDetailComponent, canActivate: [AuthGuard] },
       { path: 'productos/editar/:id', component: ProductFormComponent, canActivate: [AuthGuard] },
       { path: 'cotizaciones', component: CotizacionListComponent,canActivate: [AuthGuard] },
       { path: 'cotizaciones/nueva', component: CotizacionFormComponent,canActivate: [AuthGuard] },

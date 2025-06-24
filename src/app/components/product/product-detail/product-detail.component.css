@@ -1,0 +1,442 @@
+/* Product Detail - Compact Design */
+.main-content {
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  padding: 1rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0820 0%, #1a1a3a 100%);
+}
+
+.product-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  height: calc(100vh - 2rem);
+}
+
+/* Image Section - Más compacta */
+.image-section {
+  position: sticky;
+  top: 1rem;
+}
+
+.image-container {
+  background: linear-gradient(135deg, #0e0c28 0%, #1a1a3a 100%);
+  border: 2px solid #2e2a5a;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.image-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f2be22 0%, #ffd700 100%);
+}
+
+.product-detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-detail-image:hover {
+  transform: scale(1.05);
+}
+
+.no-image-placeholder {
+  text-align: center;
+  color: #8a8a8a;
+  padding: 1.5rem;
+}
+
+.no-image-placeholder i {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+/* Product Info - Más compacta */
+.product-info-card {
+  background: linear-gradient(135deg, #0e0c28 0%, #1a1a3a 100%);
+  border: 2px solid #2e2a5a;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  height: fit-content;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+/* Scrollbar personalizada */
+.product-info-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.product-info-card::-webkit-scrollbar-track {
+  background: rgba(46, 42, 90, 0.3);
+  border-radius: 3px;
+}
+
+.product-info-card::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #f2be22, #e2ae10);
+  border-radius: 3px;
+}
+
+/* Header compacto */
+.product-header {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(46, 42, 90, 0.3);
+  position: relative;
+}
+
+.product-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #f2be22 0%, transparent 100%);
+}
+
+.product-name {
+  color: #f2be22;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  text-shadow: 0 2px 6px rgba(242, 190, 34, 0.3);
+  line-height: 1.2;
+}
+
+.product-code-badge {
+  background: linear-gradient(135deg, #2d215c 0%, #3d2f7c 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 3px 10px rgba(45, 33, 92, 0.4);
+}
+
+/* Info sections más compactas */
+.info-section {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(46, 42, 90, 0.2);
+}
+
+.info-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.section-subtitle {
+  color: #f2be22;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 1px 3px rgba(242, 190, 34, 0.2);
+}
+
+.section-subtitle i {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Technical details - Grid compacto */
+.technical-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.detail-item {
+  background: rgba(26, 24, 51, 0.4);
+  border: 1px solid rgba(46, 42, 90, 0.5);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+  background: rgba(46, 42, 90, 0.3);
+  transform: translateY(-1px);
+}
+
+.detail-item .label {
+  font-weight: 500;
+  color: #b0b0b0;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-item .value {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Prices - Grid compacto horizontal */
+.prices-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.price-card {
+  background: linear-gradient(135deg, #1a1833 0%, #252147 100%);
+  border: 2px solid #2e2a5a;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.price-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-color);
+}
+
+.price-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.price-card.cost {
+  --accent-color: linear-gradient(90deg, #4a90e2 0%, #357abd 100%);
+}
+
+.price-card.dealer {
+  --accent-color: linear-gradient(90deg, #f2be22 0%, #e2ae10 100%);
+}
+
+.price-card.sale {
+  --accent-color: linear-gradient(90deg, #28a745 0%, #20923a 100%);
+}
+
+.price-label {
+  font-size: 0.75rem;
+  color: #b0b0b0;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.price-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Stock info compacta */
+.stock-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #1a1833 0%, #252147 100%);
+  border: 2px solid #2e2a5a;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.stock-label {
+  color: #b0b0b0;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stock-value {
+  color: #28a745;
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-shadow: 0 1px 3px rgba(40, 167, 69, 0.3);
+}
+
+.stock-value.low-stock {
+  color: #dc3545;
+  text-shadow: 0 1px 3px rgba(220, 53, 69, 0.3);
+}
+
+/* Description compacta */
+.description-content {
+  background: rgba(26, 24, 51, 0.3);
+  border: 1px solid rgba(46, 42, 90, 0.4);
+  border-radius: 8px;
+  padding: 1rem;
+  color: #f8f9fa;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+/* Action buttons compactos */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-back {
+  background: linear-gradient(135deg, #2d215c 0%, #3d2f7c 100%);
+  color: white;
+}
+
+.btn-edit-header {
+  background: linear-gradient(135deg, #f2be22 0%, #ffd700 100%);
+  color: #0e0c28;
+}
+
+.btn-delete-header {
+  background: linear-gradient(135deg, #c63d2f 0%, #e74c3c 100%);
+  color: white;
+}
+
+/* Animaciones suaves */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-layout {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.info-section {
+  animation: fadeInUp 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.info-section:nth-child(2) { animation-delay: 0.1s; }
+.info-section:nth-child(3) { animation-delay: 0.15s; }
+.info-section:nth-child(4) { animation-delay: 0.2s; }
+.info-section:nth-child(5) { animation-delay: 0.25s; }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-content {
+    width: calc(100% - 260px);
+    margin-left: 260px;
+  }
+  
+  .product-layout {
+    grid-template-columns: 350px 1fr;
+  }
+}
+
+@media (max-width: 992px) {
+  .main-content {
+    width: 100%;
+    margin-left: 0;
+    padding: 1rem;
+  }
+  
+  .product-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    height: auto;
+  }
+  
+  .image-section {
+    position: static;
+  }
+  
+  .image-container {
+    height: 250px;
+  }
+  
+  .product-info-card {
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .technical-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .prices-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn {
+    width: 200px;
+    justify-content: center;
+  }
+}

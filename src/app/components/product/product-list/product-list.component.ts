@@ -100,6 +100,11 @@ export class ProductListComponent implements OnInit {
     return supplier ? supplier.name : 'Sin proveedor';
   }
 
+  viewProductDetail(id: number): void {
+    this.router.navigate(['/productos/detalle', id]);
+  }
+
+
   deleteProduct(id: number) {
     this.alertService.confirmDelete('producto').then(confirmed => {
       if (confirmed) {

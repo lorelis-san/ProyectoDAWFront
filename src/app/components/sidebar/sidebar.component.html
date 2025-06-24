@@ -1,4 +1,13 @@
-<div class="nav-left-sidebar sidebar-custom text-white">
+<!-- Botón toggle para móviles -->
+<button class="sidebar-toggle" (click)="toggleSidebar()">
+  <i class="fa-solid fa-bars"></i>
+</button>
+
+<!-- Overlay para cerrar sidebar en móviles -->
+<div class="sidebar-overlay" [class.active]="sidebarActive" (click)="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<div class="nav-left-sidebar sidebar-custom text-white" [class.active]="sidebarActive">
   <nav class="navbar navbar-expand-lg navbar-dark flex-column">
     <div class="collapse navbar-collapse show w-100" id="navbarNav">
       <ul class="navbar-nav flex-column w-100">
@@ -7,17 +16,17 @@
         </div>
 
         <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/dashboard">
+          <a class="nav-link text-white" routerLink="/dashboard" (click)="closeSidebar()">
             <i class="fa-solid fa-house me-2"></i> Dashboard
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/cotizaciones">
+          <a class="nav-link text-white" routerLink="/cotizaciones" (click)="closeSidebar()">
             <i class="fa-solid fa-file-invoice me-2"></i> Cotizaciones
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/productos">
+          <a class="nav-link text-white" routerLink="/productos" (click)="closeSidebar()">
             <i class="fa-solid fa-toolbox me-2"></i> Productos
           </a>
         </li>
@@ -32,7 +41,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/clientes">
+          <a class="nav-link text-white" routerLink="/clientes" (click)="closeSidebar()">
             <i class="fa-solid fa-user me-2"></i> Clientes
           </a>
         </li>
@@ -46,7 +55,6 @@
             <i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar sesión
           </a>
         </li>
-
       </ul>
     </div>
   </nav>

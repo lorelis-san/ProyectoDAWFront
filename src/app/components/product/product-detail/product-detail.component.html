@@ -1,0 +1,148 @@
+<div class="main-content container-fluid mt-4 pt-4" *ngIf="product">
+  <div class="row g-4"> 
+    
+    <div class="col-lg-5 mb-4">
+      <div class="image-container">
+        <img 
+          *ngIf="product.imageUrl; else noImage" 
+          [src]="product.imageUrl" 
+          [alt]="product.name"
+          class="product-detail-image"
+        />
+        <ng-template #noImage>
+          <div class="no-image-placeholder">
+            <i class="fa-solid fa-image"></i>
+            <p>Sin imagen disponible</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="product-info-card">
+        
+        <div class="info-section">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <div class="product-code-badge">
+            <i class="fa-solid fa-barcode me-2"></i>
+            Código: <strong>{{ product.cod }}</strong>
+          </div>
+        </div>
+
+    <div class="info-section">
+      <h4 class="section-subtitle">
+        <i class="fa-solid fa-info-circle"></i> 
+        Información Técnica
+      </h4>
+      <div class="technical-grid"> 
+        <div>
+          <div class="detail-item">
+            <span class="label">
+              <i class="fa-solid fa-tag me-1"></i>
+              Marca:
+            </span>
+            <span class="value">{{ product.brand || 'No especificada' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">
+              <i class="fa-solid fa-cube me-1"></i>
+              Modelo:
+            </span>
+            <span class="value">{{ product.model || 'No especificado' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">
+              <i class="fa-solid fa-calendar me-1"></i>
+              Año:
+            </span>
+            <span class="value">{{ product.year || 'No especificado' }}</span>
+          </div>
+        </div>
+        <div>
+          <div class="detail-item">
+            <span class="label">
+              <i class="fa-solid fa-layer-group me-1"></i>
+              Categoría:
+            </span>
+            <span class="value">{{ getCategoryName(product.categoryProductId) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">
+              <i class="fa-solid fa-truck me-1"></i>
+              Proveedor:
+            </span>
+            <span class="value">{{ getSupplierName(product.supplierProductId) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">
+              <i class="fa-solid fa-building me-1"></i>
+              Sede:
+            </span>
+            <span class="value">{{ product.sede }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- Precios -->
+        <div class="info-section">
+          <h4 class="section-subtitle">
+            <i class="fa-solid fa-dollar-sign"></i> 
+            Estructura de Precios
+          </h4>
+          <div class="prices-grid">
+            <div class="price-card cost">
+              <div class="price-label">
+                <i class="fa-solid fa-receipt me-1"></i>
+                Precio de Costo
+              </div>
+              <div class="price-value">S/ {{ product.costPrice | number:'1.2-2' }}</div>
+            </div>
+            <div class="price-card dealer">
+              <div class="price-label">
+                <i class="fa-solid fa-handshake me-1"></i>
+                Precio Distribuidor
+              </div>
+              <div class="price-value">S/ {{ product.dealerPrice | number:'1.2-2' }}</div>
+            </div>
+            <div class="price-card sale">
+              <div class="price-label">
+                <i class="fa-solid fa-store me-1"></i>
+                Precio de Venta
+              </div>
+              <div class="price-value">S/ {{ product.salePrice | number:'1.2-2' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="info-section" *ngIf="product.description">
+          <h4 class="section-subtitle">
+            <i class="fa-solid fa-align-left"></i> 
+            Descripción del Producto
+          </h4>
+          <div class="description-content">
+            {{ product.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-5">
+    <div class="btn-group" role="group" aria-label="Acciones del producto">
+      <button class="btn btn-back me-2" (click)="goBack()" title="Volver a la lista">
+        <i class="fa-solid fa-arrow-left me-2"></i> 
+        Volver
+      </button>
+      <button class="btn btn-edit-header me-2" (click)="editProduct()" title="Editar producto">
+        <i class="fa-solid fa-pen-to-square me-2"></i> 
+        Editar Producto
+      </button>
+      <!--
+      <button class="btn btn-delete-header" (click)="deleteProduct()" title="Eliminar producto">
+        <i class="fa-solid fa-trash me-2"></i> 
+        Eliminar
+      </button>
+      -->
+    </div>
+  </div>
+</div>

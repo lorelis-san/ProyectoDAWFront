@@ -1,33 +1,50 @@
 <div class="main-content container-fluid mt-4">
-  <div class="text-center mb-4">
-    <h2 class="section-title">Lista de Productos</h2>
+  <div class="text-center mb-5">
+    <h3 class="section-title">Lista de Productos</h3>
+  </div>
+  <div class="search-container mb-4">
+    <div class="search-wrapper">
+      <i class="fa-solid fa-search search-icon"></i>
+      <input type="text" class="form-control search-input" placeholder="Buscar por código o nombre..."
+        [(ngModel)]="searchTerm" (ngModelChange)="onSearch()" />
+    </div>
+    <button class="btn btn-add-product" routerLink="/productos/nuevo"  *ngIf="role === 'ROLE_ADMIN'">
+      <i class="fa-solid fa-plus"></i>
+      Nuevo Producto
+    </button>
   </div>
 
-  <div class="mb-4">
-    <input type="text" class="form-control search-input" placeholder="Buscar por código o nombre..."
-      [(ngModel)]="searchTerm" (ngModelChange)="onSearch()" />
-  </div>
-  <div class="text-end mt-4">
-    <button class="btn btn-add-category" routerLink="/productos/nuevo"  *ngIf="role === 'ROLE_ADMIN'">+ Nuevo Producto</button>
-  </div>
-  <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let product of products">
-      <div class="card elegant-card h-100">
-        <div class="card-img-wrapper">
-          <img *ngIf="product.imageUrl" [src]="product.imageUrl" class="product-image" alt="Imagen del producto" />
+  <div class="products-grid">
+    <div class="product-card" *ngFor="let product of products">
+      <div class="product-image-container">
+        <img *ngIf="product.imageUrl" [src]="product.imageUrl" class="product-image" alt="Imagen del producto" />
+        <div *ngIf="!product.imageUrl" class="no-image-placeholder">
+          <i class="fa-solid fa-image"></i>
         </div>
-        <div class="card-body d-flex flex-column">
-          <h5 class="product-title mb-2">{{ product.name }}</h5>
-          <p class="product-code mb-1">Código: <strong>{{ product.cod }}</strong></p>
-          <div class="product-details mt-2 mb-2">
-            <span><i class="fa-solid fa-store"></i> {{ product.sede }}</span><br />
-            <span><i class="fa-solid fa-tags"></i> {{ getCategoryName(product.categoryProductId) }}</span><br />
-            <span><i class="fa-solid fa-truck"></i> {{ getSupplierName(product.supplierProductId) }}</span>
+      </div>
+
+      <div class="product-content">
+        <div class="product-header">
+          <div class="title-code-row">
+            <h5 class="product-title">{{ product.name }}</h5>
+            <span class="product-code-badge">{{ product.cod }}</span>
           </div>
-          <div class="product-prices mt-auto">
-            <p class="mb-1 text-light-emphasis">Costo: <strong>S/ {{ product.costPrice }}</strong></p>
-            <p class="mb-1 text-light-emphasis">Distribuidor: <strong>S/ {{ product.dealerPrice }}</strong></p>
-            <p class="mb-1 text-light-emphasis">Venta: <strong>S/ {{ product.salePrice }}</strong></p>
+        </div>
+
+        <div class="product-info">
+          <div class="info-row-compact">
+            <div class="info-item-compact">
+              <i class="fa-solid fa-store info-icon"></i>
+              <span>{{ product.sede }}</span>
+            </div>
+            <div class="info-item-compact">
+              <i class="fa-solid fa-tags info-icon"></i>
+              <span>{{ getCategoryName(product.categoryProductId) }}</span>
+            </div>
+            <div class="info-item-compact">
+              <i class="fa-solid fa-truck info-icon"></i>
+              <span>{{ getSupplierName(product.supplierProductId) }}</span>
+            </div>
           </div>
         </div>
         <div class="card-footer d-flex justify-content-end"  *ngIf="role === 'ROLE_ADMIN'">
@@ -35,10 +52,34 @@
               class="fa-solid fa-pen-to-square"></i></button>
           <button class="btn btn-delete btn-sm" *ngIf="product.id" (click)="deleteProduct(product.id)"
             style="margin-left: 15px;"> <i class="fa-solid fa-trash"></i></button>
+
+        <div class="product-prices">
+          <div class="price-row">
+            <span class="price-label">Costo:</span>
+            <span class="price-value cost">S/ {{ product.costPrice }}</span>
+          </div>
+          <div class="price-row">
+            <span class="price-label">Distribuidor:</span>
+            <span class="price-value dealer">S/ {{ product.dealerPrice }}</span>
+          </div>
+          <div class="price-row">
+            <span class="price-label">Venta:</span>
+            <span class="price-value sale">S/ {{ product.salePrice }}</span>
+          </div>
         </div>
+      </div>
+
+      <div class="product-actions">
+        <button class="btn-action btn-view" *ngIf="product.id" (click)="viewProductDetail(product.id)" title="Ver detalles">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        <button class="btn-action btn-edit" *ngIf="product.id" (click)="editProduct(product.id)" title="Editar">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+        <button class="btn-action btn-delete" *ngIf="product.id" (click)="deleteProduct(product.id)" title="Eliminar">
+          <i class="fa-solid fa-trash"></i>
+        </button>
       </div>
     </div>
   </div>
-
-
 </div>

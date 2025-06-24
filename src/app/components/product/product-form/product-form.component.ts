@@ -35,11 +35,11 @@ currentYear: number = new Date().getFullYear();
       description: [''],
       brand: [''],
       model: [''],
-      year: [''],
+      year: ['', this.yearValidator.bind(this)],      
       sede: ['', Validators.required],
-      costPrice: [0],
-      dealerPrice: [0],
-      salePrice: [0],
+      costPrice: [0, Validators.required],
+      dealerPrice: [0, Validators.required],
+      salePrice: [0, Validators.required],
       stock: [0],
       categoryProductId: [null, Validators.required],
       supplierProductId: [null, Validators.required],
@@ -108,9 +108,9 @@ yearValidator(control: any): { [key: string]: boolean } | null {
 
   }
 
-  onFileSelected(event: any): void {
-    this.imageUrl = event.target.files[0];
-  }
+  //onFileSelected(event: any): void {
+    //this.imageUrl = event.target.files[0];
+  //}
 
   onSubmit(): void {
     const productData: Partial<Product> = this.productForm.value;
@@ -161,4 +161,51 @@ yearValidator(control: any): { [key: string]: boolean } | null {
         }
       });
   }
+
+  getYearOptions(): number[] {
+    const currentYear = new Date().getFullYear();
+    const startYear = 2000;
+    const years: number[] = [];
+    
+    for (let year = currentYear; year >= startYear; year--) {
+      years.push(year);
+    }
+    return years;
+  }
+
+    // Método para activar el input de archivo
+  triggerFileInput(): void {
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  // Método para limpiar la imagen
+  clearImage(): void {
+    this.imagePreviewUrl = null;
+    this.imageUrl = null as any;
+    
+    // Limpiar el input de archivo
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
+  // Actualiza el método onFileSelected para mostrar preview
+  onFileSelected(event: any): void {
+    this.imageUrl = event.target.files[0];
+    
+    // Mostrar preview de la imagen seleccionada
+    if (this.imageUrl) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreviewUrl = e.target.result;
+      };
+      reader.readAsDataURL(this.imageUrl);
+    }
+  }
+
+
 }

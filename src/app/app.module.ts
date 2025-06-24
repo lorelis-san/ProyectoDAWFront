@@ -25,6 +25,8 @@ import { ProductListComponent } from './components/product/product-list/product-
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
 import { CotizacionFormComponent } from './components/cotizacion-form/cotizacion-form.component';
 import { CotizacionListComponent } from './components/cotizacion-list/cotizacion-list.component';
+import { ProductDetailComponent } from './components/product/product-detail/product-detail.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,8 +42,10 @@ import { CotizacionListComponent } from './components/cotizacion-list/cotizacion
     DashboardComponent,
     ProductListComponent,
     ProductFormComponent,
+    ProductDetailComponent,
     CotizacionFormComponent,
-    CotizacionListComponent
+    CotizacionListComponent,
+    ProductDetailComponent
   ],
   imports: [
     BrowserModule,

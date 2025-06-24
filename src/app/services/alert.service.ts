@@ -60,7 +60,7 @@ export class AlertService {
     requiredFields(): void {
         this.warning('Campos obligatorios', 'Por favor, completa todos los campos requeridos.');
     }
-    confirm(message: string, title = '¿Estás seguro?'): Promise<boolean> {
+    confirm(message: string, title = '¿Estás seguro?', p0: string, p1: string): Promise<boolean> {
         return Swal.fire({
             title,
             text: message,
