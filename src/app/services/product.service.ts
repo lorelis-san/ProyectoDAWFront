@@ -6,7 +6,7 @@ import { Product } from '../models/product.model';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8080/api/productos'; // Cambia el puerto si tu backend está en otro
+  private apiUrl = 'http://localhost:8080/api/productos'; 
 
   constructor(private http: HttpClient) {}
 

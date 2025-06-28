@@ -42,7 +42,7 @@ export class CotizacionFormComponent implements OnInit {
     vehiculo: { id: 0, placa: '', marca: '', modelo: '', year: '' },
     detalles: []
   };
-  maxAnio = new Date().getFullYear(); // Ejemplo: 2025
+  maxAnio = new Date().getFullYear(); 
   clienteEncontrado: boolean | null = null;
   busquedaRealizada: boolean = false;
   vehiculoEncontrado: boolean | null = null;

@@ -38,7 +38,7 @@ export class SidebarComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     if (event.target.innerWidth > 768) {
-      this.sidebarActive = false; // Cerrar sidebar en pantallas grandes
+      this.sidebarActive = false; 
     }
   }
 

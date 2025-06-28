@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CotizacionListComponent implements OnInit {
   cotizaciones: CotizacionResponse[] = [];
-    searchTerm: string = '';
+  searchTerm: string = '';
   token: string | null = localStorage.getItem('token');
 
   constructor(
@@ -57,21 +57,16 @@ export class CotizacionListComponent implements OnInit {
 
 
   cargarCotizaciones(): void {
-    console.log('📊 Cargando todas las cotizaciones...');
-
+   
     this.cotizacionService.listarCotizaciones().subscribe({
       next: (response) => {
-        console.log('📥 Respuesta del listado:', response);
-        console.log('📋 Datos recibidos:', response.data);
 
         this.cotizaciones = response.data || [];
-
-        console.log('✅ Cotizaciones cargadas:', this.cotizaciones.length);
 
         this.verificarDuplicados();
       },
       error: (err) => {
-        console.error('❌ Error al cargar cotizaciones:', err);
+
         this.cotizaciones = [];
       }
     });
@@ -82,7 +77,6 @@ export class CotizacionListComponent implements OnInit {
     const duplicados = ids.filter((id, index) => ids.indexOf(id) !== index);
 
     if (duplicados.length > 0) {
-      console.warn('⚠️ Se encontraron IDs duplicados:', duplicados);
 
       this.eliminarDuplicados();
     }
@@ -94,9 +88,6 @@ export class CotizacionListComponent implements OnInit {
     );
 
     if (cotizacionesUnicas.length !== this.cotizaciones.length) {
-      console.log('🧹 Eliminando duplicados...');
-      console.log('- Antes:', this.cotizaciones.length);
-      console.log('- Después:', cotizacionesUnicas.length);
 
       this.cotizaciones = cotizacionesUnicas;
     }
@@ -124,20 +115,32 @@ export class CotizacionListComponent implements OnInit {
   editCotizacion(id: number): void {
     this.alertService.confirmEdit('Editar cotización', '¿Deseas editar esta cotización?').then((confirmed) => {
       if (confirmed) {
-        console.log('✏️ Editando cotización ID:', id);
         this.router.navigate(['/cotizaciones/editar', id]);
       }
     });
   }
 
-
-
-
-
   verPDF(id: number): void {
     const token = localStorage.getItem('token');
-    const url = `http://localhost:8080/api/pdf/cotizacion/${id}?token=${token}`;
-    window.open(url, '_blank');
+    if (!token) {
+      alert('No se encontró token. Por favor, inicia sesión.');
+      return;
+    }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    const url = `http://localhost:8080/api/pdf/cotizacion/${id}`;
+    this.http.get(url, {headers, responseType:'blob'}).subscribe( {
+       next: (response) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, '_blank');
+      },
+      error: (err) => {
+        console.error('Error al obtener el PDF:', err);
+      }
+    });
   }
 
 

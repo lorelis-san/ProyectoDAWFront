@@ -51,17 +51,17 @@ import { ProductDetailComponent } from './components/product/product-detail/prod
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule, 
+    FormsModule,
     AppRoutingModule,
     RouterModule.forRoot([
-      {path: 'productos', component: ProductListComponent, canActivate: [AuthGuard]},
-      {path: 'login', component: LoginComponent},
-      {path: '', component: LoginComponent},
+      { path: 'productos', component: ProductListComponent, canActivate: [AuthGuard] },
+      { path: 'login', component: LoginComponent },
+      { path: '', component: LoginComponent },
     ]),
   ],
   providers: [
-     {
-      provide : HTTP_INTERCEPTORS, useClass : AuthInterceptor, multi : true
+    {
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
     }
   ],
   bootstrap: [AppComponent]

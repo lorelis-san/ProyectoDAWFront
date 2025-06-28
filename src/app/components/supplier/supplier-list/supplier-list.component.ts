@@ -3,7 +3,7 @@ import { SupplierService } from '../../../services/supplier.service';
 import { Supplier } from '../../../models/supplier.model';
 import { AlertService } from '../../../services/alert.service';
 
-declare var bootstrap: any; // Para manejar el modal de Bootstrap
+declare var bootstrap: any; 
 
 @Component({
   selector: 'app-supplier-list',
@@ -15,7 +15,6 @@ export class SupplierListComponent implements OnInit {
   searchTerm: string = '';
 
 
-  // Propiedades para el modal
   supplier: Supplier = {
     id: undefined,
     name: '',
@@ -39,7 +38,7 @@ export class SupplierListComponent implements OnInit {
   }
 
   private initializeModal(): void {
-    // Inicializar el modal de Bootstrap cuando el componente esté listo
+   
     setTimeout(() => {
       const modalElement = document.getElementById('supplierModal');
       if (modalElement) {
@@ -156,7 +155,7 @@ export class SupplierListComponent implements OnInit {
       next: () => {
         this.alertService.success('Proveedor actualizado', 'El proveedor fue actualizado correctamente.');
         this.closeModal();
-        this.loadSuppliers(); // Recargar la lista
+        this.loadSuppliers(); 
       },
       error: (err) => {
         console.error('Error al actualizar proveedor:', err);

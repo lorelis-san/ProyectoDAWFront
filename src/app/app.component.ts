@@ -7,7 +7,7 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class AppComponent {
   showSidebar = true;
-  private noSidebarRoutes = ['/login', '/register']; // Rutas donde NO se debe mostrar
+  private noSidebarRoutes = ['/login', '/register']; 
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {

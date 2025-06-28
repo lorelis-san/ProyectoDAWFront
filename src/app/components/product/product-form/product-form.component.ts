@@ -49,7 +49,6 @@ currentYear: number = new Date().getFullYear();
     });
   }
 
-  // Validar que el año sea numérico, de 4 cifras y razonable
 yearValidator(control: any): { [key: string]: boolean } | null {
   const value = control.value;
   const year = value;
@@ -107,10 +106,6 @@ yearValidator(control: any): { [key: string]: boolean } | null {
     }
 
   }
-
-  //onFileSelected(event: any): void {
-    //this.imageUrl = event.target.files[0];
-  //}
 
   onSubmit(): void {
     const productData: Partial<Product> = this.productForm.value;
