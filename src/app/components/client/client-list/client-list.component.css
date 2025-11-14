@@ -1,77 +1,276 @@
 .main-content {
-  width: 80%;
-  margin-left: 260px;
+  background-color: #f5f5f5;
+  
+  padding: 30px 20px;
+   max-width: 80%;
+  margin-left: 250px;
 }
 
 .section-title {
-  color: #ffffff;
+  font-size: 28px;
   font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 5px;
 }
 
-.btn-add-category {
-  background-color: #2d215c;
-  color: white;
+/* Header de clientes */
+.client-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.header-left h5 {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.btn-new-client {
+  background: #10b981;
   border: none;
-  transition: background-color 0.3s ease;
-}
-.btn-add-category:hover {
-  background-color: #341d88;
-}
-/* Estilos de la tabla */
-.category-table {
-  background-color: #0e0c28 !important;
-  border: 1px solid #2e2a5a;
-}
-.category-table thead {
-  background-color: #2e2a5a !important;
-}
-.category-table th,
-.category-table td {
-  color: #ffffff !important;
-  background-color: #0e0c28 !important;
-  vertical-align: middle;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
+.btn-new-client:hover {
+  background: #3651d4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+/* Buscador */
+.search-container {
+  max-width: 100%;
+}
+
+.search-wrapper {
+  position: relative;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+.search-input {
+  padding: 12px 15px 12px 45px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #4361ee;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  outline: none;
+}
+
+/* Grid de tarjetas */
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+/* Tarjeta de cliente */
+.client-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.client-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Header de la tarjeta */
+.card-header-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.client-avatar {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.client-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.client-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.client-id {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
 
 .btn-edit {
-  background-color: #f2be22;
-  color: #0e0c28;
-  border: none;
+  background: #fff7ed;
+  color: #f59e0b;
 }
+
 .btn-edit:hover {
-  background-color: #e2ae10;
+  background: #fed7aa;
+  transform: scale(1.05);
 }
 
 .btn-delete {
-  background-color: #c63d2f;
-  color: white;
-  border: none;
+  background: #fee;
+  color: #ef4444;
 }
+
 .btn-delete:hover {
-  background-color: #a63025;
-}
-.category-modal {
-  background-color: #1a1833;
-  color: white;
-  border: 1px solid #2e2a5a;
-  border-radius: 10px;
+  background: #fecaca;
+  transform: scale(1.05);
 }
 
-/* Inputs del modal */
-.category-input {
-  background-color: #2e2a5a;
-  color: white;
-  border: none;
-}
-.category-input::placeholder {
-  color: #ccc;
+/* Body de la tarjeta */
+.card-body-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-.btn-save {
-  background-color: #2e2a5a;
-  color: white;
-  border: none;
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #475569;
 }
-.btn-save:hover {
-  background-color: #251486;
+
+.info-item i {
+  color: #94a3b8;
+  font-size: 14px;
+  width: 18px;
+}
+
+.info-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Footer de la tarjeta */
+.card-footer-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 15px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-regular {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.badge-premium {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .clients-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .client-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .btn-new-client {
+    width: 100%;
+  }
 }

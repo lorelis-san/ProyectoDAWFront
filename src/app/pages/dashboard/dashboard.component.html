@@ -1,17 +1,126 @@
-<div class="container mt-5">
-  <div class="card shadow-lg p-4 rounded">
-    <h2 class=" mb-3">¡Bienvenido(a), {{ username }}!</h2>
-    
-    <p class="lead">
-      Este es el <strong>Sistema de Cotizaciones</strong>, una plataforma diseñada para ayudarte a crear, gestionar y visualizar cotizaciones de forma rápida y eficiente.
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Dashboard</h1>
+    <p class="dashboard-subtitle">
+      Bienvenido, <strong>{{ username }}</strong> al panel de administración de Cars Accessories
     </p>
+  </div>
 
-    <p>
-      Desde aquí podrás registrar clientes y vehículos, agregar productos, generar cotizaciones personalizadas y descargar archivos PDF con toda la información que necesitas.
-    </p>
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <!-- Card 1 - Cotizaciones del Mes -->
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon blue">
+          <i class="fa-solid fa-file-invoice"></i>
+        </div>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">S/. {{ resumen.cotizacionesMes}}</h3>
+        <p class="stat-label">En el Mes</p>
+      </div>
+    </div>
 
-    <hr>
+    <!-- Card 2 - Cotizaciones Aprobadas -->
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon green">
+          <i class="fa-solid fa-check-circle"></i>
+        </div>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ resumen.aprobadas }}</h3>
+        <p class="stat-label">Cotizaciones Aprobadas</p>
+      </div>
+    </div>
 
-    <p class="text-muted">Selecciona una opción en el menú para comenzar. </p>
+    <!-- Card 3 - Cotizaciones Pendientes -->
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon purple">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ resumen.pendientes }}</h3>
+        <p class="stat-label">Cotizaciones Pendientes</p>
+      </div>
+    </div>
+
+    <!-- Card 4 - Ventas Totales -->
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon orange">
+          <i class="fa-solid fa-dollar-sign"></i>
+        </div>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">S/. {{ resumen.totalVentas | number:'1.2-2' }}</h3>
+        <p class="stat-label">Ventas Totales</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="dashboard-card">
+      <h3 class="card-title">Cotizaciones por Estado</h3>
+      <canvas id="cotizacionesEstadoChart"></canvas>
+    </div>
+
+    <div class="dashboard-card">
+      <h3 class="card-title">Ingresos por Mes</h3>
+      <canvas id="ingresosMesChart"></canvas>
+    </div>
+
+    <div class="dashboard-card">
+      <h3 class="card-title">Ventas por Usuario</h3>
+      <canvas id="ventasUsuarioChart"></canvas>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="dashboard-card">
+      <h3 class="card-title">Cotizaciones Pendientes</h3>
+      <div class="cotizacion-list">
+        <div class="cotizacion-item" *ngFor="let cot of cotizacionesRecientes">
+          <div class="cotizacion-info">
+            <h4 class="cotizacion-code">{{ cot?.numeroCotizacion }}</h4>
+            <p class="cotizacion-client">
+              {{ cot?.cliente || 'Sin cliente' }}
+              <span class="cotizacion-date"> | {{ cot?.fecha | date:'dd/MM/yyyy' }}</span>
+            </p>
+            <span class="cotizacion-price">S/. {{ cot?.total | number:'1.2-2' }}</span>
+            <span class="badge" [ngClass]="{
+                'badge-success': cot?.estado === 'APROBADA',
+                'badge-warning': cot?.estado === 'PENDIENTE',
+                'badge-info': cot?.estado === 'CREADA'
+              }">
+              {{ cot?.estado }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clientes Top -->
+    <div class="dashboard-card">
+      <h3 class="card-title">Top de Clientes</h3>
+      <div class="product-list">
+        <div class="product-item" *ngFor="let cli of clientesTop; let i = index">
+          <div class="product-rank">{{ i + 1 }}</div>
+          <div class="product-info">
+            <h4 class="product-name">{{ cli.cliente }}</h4>
+          </div>
+          <div class="product-sales">
+            <span class="sales-number">{{ cli.totalCotizaciones }}</span>
+            <span class="sales-label">cotizaciones</span>
+            <br>
+            <span class="sales-amount">S/. {{ cli.montoTotal | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

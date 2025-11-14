@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="text-white">Listado de Cotizaciones</h2>
+    <h2 class="text-black">Listado de Cotizaciones</h2>
     <button class="btn btn-success" routerLink="/cotizaciones/nueva">
       + Nueva Cotización
     </button>
@@ -100,6 +100,16 @@
         </button>
         <button class="btn btn-outline-info" (click)="verPDF(cot.id!)">
           <i class="fa-solid fa-file-pdf"></i>
+        </button>
+
+        <!-- NUEVOS BOTONES -->
+        <button class="btn btn-success me-2" *ngIf="cot.estado === 'PENDIENTE' "
+          (click)="aprobarCotizacion(cot.id!)">
+          Aprobar
+        </button>
+        <button class="btn btn-danger" *ngIf="cot.estado === 'PENDIENTE'"
+          (click)="rechazarCotizacion(cot.id!)">
+          Rechazar
         </button>
       </div>
     </div>

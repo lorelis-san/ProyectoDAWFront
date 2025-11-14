@@ -1,57 +1,77 @@
 <div class="main-content container-fluid mt-4">
   <div class="text-center mb-4">
-    <h2 class="section-title text-white">Gestión de Clientes</h2>
+    <h2 class="section-title text-dark">Clientes</h2>
+    <p class="text-muted">Gestiona la información de tus clientes</p>
   </div>
+
+  <div class="client-header mb-4">
+    <div class="header-left">
+      <h5 class="mb-0">Lista de Clientes</h5>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-primary btn-new-client" (click)="openModal()">
+        <i class="fa-solid fa-plus"></i> Nuevo Cliente
+      </button>
+    </div>
+  </div>
+
   <div class="search-container mb-4">
     <div class="search-wrapper">
-
-      <input type="text" class="form-control search-input" placeholder="Buscar por código o nombre..."
+      <i class="fa-solid fa-search search-icon"></i>
+      <input type="text" class="form-control search-input" placeholder="Buscar clientes..."
         [(ngModel)]="searchTerm" (ngModelChange)="onSearch()" />
     </div>
-
-  </div>
-  <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-add-category" (click)="openModal()">+ Nuevo Cliente</button>
   </div>
 
-  <div class="table-responsive">
-    <table class="table category-table text-white rounded overflow-hidden">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Documento</th>
-          <th>Nro Documento</th>
-          <th>Nombre del Cliente</th>
-          <th>Teléfono</th>
-          <th>Correo</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cliente of clients">
-          <td>{{ cliente.id }}</td>
-          <td>{{ cliente.typeDocument }}</td>
-          <td>{{ cliente.documentNumber }}</td>
-          <!-- Una sola columna dinámica -->
-          <td>
+  <div class="clients-grid">
+    <div class="client-card" *ngFor="let cliente of clients">
+      <div class="card-header-section">
+        <div class="client-avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="client-info">
+          <h6 class="client-name">
             {{ cliente.typeDocument === 'DNI'
             ? (cliente.firstName + ' ' + cliente.lastName)
             : cliente.businessName || '-' }}
-          </td>
-          <td>{{ cliente.phoneNumber }}</td>
-          <td>{{ cliente.email }}</td>
-          <td>
-            <button class="btn btn-sm btn-outline-warning me-2" (click)="openModal(cliente)">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <button *ngIf="cliente.id !== undefined" class="btn btn-sm btn-outline-danger" (click)="delete(cliente.id)">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </h6>
+          <span class="client-id">{{ cliente.typeDocument }}-{{ cliente.documentNumber }}</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn-icon btn-edit" (click)="openModal(cliente)" title="Editar">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button *ngIf="cliente.id !== undefined" class="btn-icon btn-delete" (click)="delete(cliente.id)" title="Eliminar">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body-section">
+        <div class="info-item">
+          <i class="fa-solid fa-phone"></i>
+          <span>{{ cliente.phoneNumber }}</span>
+        </div>
+        <div class="info-item">
+          <i class="fa-solid fa-envelope"></i>
+          <span>{{ cliente.email }}</span>
+        </div>
+      </div>
+
+      <div class="card-footer-section">
+        <div class="stat-item">
+          <span class="stat-label">Vehículos</span>
+          <span class="stat-value">1</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Cotizaciones</span>
+          <span class="stat-value">5</span>
+        </div>
+        <span class="badge badge-regular">Regular</span>
+      </div>
+    </div>
   </div>
+
   <!-- MODAL -->
   <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -161,3 +181,4 @@
       </div>
     </div>
   </div>
+</div>

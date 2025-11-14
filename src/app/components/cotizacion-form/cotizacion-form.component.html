@@ -1,25 +1,25 @@
 <div class="container py-4">
-  <h2 class="text-white mb-4">{{ cotizacion.id ? 'Editar Cotización' : 'Nueva Cotización' }}</h2>
+  <h2 class=" mb-4">{{ cotizacion.id ? 'Editar Cotización' : 'Nueva Cotización' }}</h2>
 
   <form (ngSubmit)="guardar()" #form="ngForm">
     <!-- Estado y Fecha -->
     <div class="row mb-3">
       <div class="col-md-6">
-        <label class="form-label text-white">Estado</label>
+        <label class="form-label">Estado</label>
         <input type="text" name="estado" [(ngModel)]="cotizacion.estado" readonly class="form-control" />
       </div>
       <div class="col-md-6">
-        <label class="form-label text-white">Fecha</label>
+        <label class="form-label ">Fecha</label>
         <input type="text" name="fecha" [(ngModel)]="cotizacion.fecha" readonly class="form-control" />
       </div>
     </div>
 
     <hr class="border-secondary" />
     <!-- Cliente -->
-    <h5 class="form-label text-white">Cliente</h5>
+    <h5 class="form-label ">Cliente</h5>
     <div class="row mb-3">
       <div class="col-md-6">
-        <label class="form-label text-white">Tipo de documento</label>
+        <label class="form-label ">Tipo de documento</label>
         <select class="form-select" [(ngModel)]="cotizacion.cliente!.typeDocument" name="tipoDoc" required>
           <option value="">Seleccionar</option>
           <option value="DNI">DNI</option>
@@ -28,7 +28,7 @@
       </div>
 
       <div class="col-md-6">
-        <label class="form-label text-white">Número de documento</label>
+        <label class="form-label">Número de documento</label>
         <div class="input-group">
           <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.documentNumber" name="documentNumber"
             [attr.maxLength]="cotizacion.cliente?.typeDocument === 'DNI' ? 8 : 11"
@@ -54,24 +54,24 @@
     <!-- Cliente encontrado -->
     <div *ngIf="clienteEncontrado && busquedaRealizada" class="row mb-3">
       <div *ngIf="cotizacion.cliente!.typeDocument === 'DNI'" class="col-md-6">
-        <label class="form-label text-white">Nombre</label>
+        <label class="form-label ">Nombre</label>
         <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.firstName" name="firstName" readonly />
       </div>
       <div *ngIf="cotizacion.cliente!.typeDocument === 'DNI'" class="col-md-6">
-        <label class="form-label text-white">Apellido</label>
+        <label class="form-label ">Apellido</label>
         <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.lastName" name="lastName" readonly />
       </div>
       <div *ngIf="cotizacion.cliente!.typeDocument === 'RUC'" class="col-12">
-        <label class="form-label text-white">Razón social</label>
+        <label class="form-label ">Razón social</label>
         <input type="text" class="form-control" [(ngModel)]="cotizacion.cliente!.businessName" name="businessName"
           readonly />
       </div>
       <div class="col-md-6">
-        <label class="form-label text-white">Email</label>
+        <label class="form-label">Email</label>
         <input type="text" class="form-control" name="email" [(ngModel)]="cotizacion.cliente!.email" readonly />
       </div>
       <div class="col-md-6">
-        <label class="form-label text-white">Celular</label>
+        <label class="form-label">Celular</label>
         <input type="text" class="form-control" name="phoneNumber" [(ngModel)]="cotizacion.cliente!.phoneNumber"
           readonly />
       </div>
@@ -87,11 +87,11 @@
     </div>
 
     <hr class="border-secondary" />
-    <h5 class="form-label text-white">Vehículo</h5>
+    <h5 class="form-label">Vehículo</h5>
     <!-- Vehículo -->
     <div class="row mb-3">
       <div class="col-md-6">
-        <label class="form-label text-white">Placa del vehículo</label>
+        <label class="form-label">Placa del vehículo</label>
         <div class="input-group">
           <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.placa" name="placa" />
           <button type="button" class="btn btn-secondary" (click)="buscarVehiculoPorPlaca()">Buscar</button>
@@ -102,15 +102,15 @@
     <!-- Vehículo encontrado -->
     <div *ngIf="vehiculoEncontrado" class="row mb-3">
       <div class="col-md-4">
-        <label class="form-label text-white">Marca</label>
+        <label class="form-label">Marca</label>
         <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.marca" name="marca" readonly />
       </div>
       <div class="col-md-4">
-        <label class="form-label text-white">Modelo</label>
+        <label class="form-label">Modelo</label>
         <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.modelo" name="modelo" readonly />
       </div>
       <div class="col-md-4">
-        <label class="form-label text-white">Año</label>
+        <label class="form-label ">Año</label>
         <input type="text" class="form-control" [(ngModel)]="cotizacion.vehiculo!.year" name="year" readonly />
       </div>
     </div>
@@ -124,10 +124,10 @@
     </div>
 
     <hr class="border-secondary" />
-    <h5 class="form-label text-white">Agregar Productos</h5>
+    <h5 class="form-label ">Agregar Productos</h5>
     <!-- Productos -->
     <div class="mb-3">
-      <label class="form-label text-white">Buscar producto</label>
+      <label class="form-label">Buscar producto</label>
       <input type="text" class="form-control" [(ngModel)]="busquedaProducto" name="buscarProducto"
         (input)="buscarProducto()" placeholder="Ingrese nombre del producto" />
       <ul class="list-group mt-2" *ngIf="productosFiltrados.length">
@@ -163,7 +163,7 @@
     </div>
 
     <!-- Totales -->
-    <div class="text-white mt-3 align-items-end">
+    <div class="mt-3 align-items-end">
       <p><strong>Subtotal :</strong> {{ cotizacion.subtotal | currency:'PEN' }}</p>
       <p><strong>IGV (18%) :</strong> {{ cotizacion.igv | currency:'PEN' }}</p>
       <p><strong>Total :</strong> {{ cotizacion.total | currency:'PEN' }}</p>
@@ -171,7 +171,7 @@
 
     <!-- Observaciones -->
     <div class="mb-3">
-      <label class="form-label text-white">Observaciones</label>
+      <label class="form-label">Observaciones</label>
       <textarea class="form-control" [(ngModel)]="cotizacion.observaciones" name="observaciones"></textarea>
     </div>
 
@@ -187,7 +187,7 @@
 <!-- Modal Cliente -->
 <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content text-white" style="background-color: #1c1b3a;">
+    <div class="modal-content " style="background-color: #1c1b3a;">
       <div class="modal-header">
         <h5 class="modal-title" id="clienteModalLabel">Agregar Cliente</h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeModalCliente()"

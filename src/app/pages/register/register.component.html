@@ -50,7 +50,7 @@
           <label for="role">Rol</label>
           <select id="role" class="form-control" [(ngModel)]="role" name="role" required #roleRef="ngModel">
             <option value="" disabled selected>Selecciona un rol</option>
-            <option value="ROLE_USER">Usuario</option>
+            <option value="ROLE_USER">Vendedor</option>
             <option value="ROLE_ADMIN">Administrador</option>
           </select>
           <div *ngIf="roleRef.invalid && roleRef.touched" class="text-danger mt-1">

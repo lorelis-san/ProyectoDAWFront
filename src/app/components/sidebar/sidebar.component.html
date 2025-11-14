@@ -7,56 +7,78 @@
 <div class="sidebar-overlay" [class.active]="sidebarActive" (click)="closeSidebar()"></div>
 
 <!-- Sidebar -->
-<div class="nav-left-sidebar sidebar-custom text-white" [class.active]="sidebarActive">
-  <nav class="navbar navbar-expand-lg navbar-dark flex-column">
-    <div class="collapse navbar-collapse show w-100" id="navbarNav">
-      <ul class="navbar-nav flex-column w-100">
-        <div class="sidebar-user p-3 text-white border-bottom border-secondary">
-          <strong>{{ username }}</strong>
-        </div>
+<div class="sidebar-custom" [class.active]="sidebarActive">
+  <!-- Header del sidebar con información de usuario -->
+  <div class="sidebar-user">
+    <h4>Cars Accessories</h4>
+    <p>Panel de Administración</p>
+  </div>
 
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/dashboard" (click)="closeSidebar()">
-            <i class="fa-solid fa-house me-2"></i> Dashboard
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/cotizaciones" (click)="closeSidebar()">
-            <i class="fa-solid fa-file-invoice me-2"></i> Cotizaciones
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/productos" (click)="closeSidebar()">
-            <i class="fa-solid fa-toolbox me-2"></i> Productos
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/categorias"  *ngIf="role === 'ROLE_ADMIN'">
-            <i class="fa-solid fa-tags me-2"></i> Categorías
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/suppliers" *ngIf="role === 'ROLE_ADMIN'">
-            <i class="fa-solid fa-truck me-2"></i> Proveedores
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/vehiculos" >
-            <i class="fa-solid fa-car me-2"></i> Vehículos
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/clientes" (click)="closeSidebar()">
-            <i class="fa-solid fa-user me-2"></i> Clientes
-          </a>
-        </li>
-        
-        <li class="nav-item">
-          <a class="nav-link text-white" (click)="logout()">
-            <i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar sesión
-          </a>
-        </li>
-      </ul>
-    </div>
+  <!-- Navegación -->
+  <nav>
+    <ul class="navbar-nav flex-column w-100">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/cotizaciones" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-file-invoice"></i>
+          Cotizaciones
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/productos" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-toolbox"></i>
+          Productos
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="role === 'ROLE_ADMIN'">
+        <a class="nav-link" routerLink="/categorias" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-tags"></i>
+          Categorías
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="role === 'ROLE_ADMIN'">
+        <a class="nav-link" routerLink="/suppliers" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-truck"></i>
+          Proveedores
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/vehiculos" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-car"></i>
+          Vehículos
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/clientes" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-user"></i>
+          Clientes
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="role === 'ROLE_ADMIN'">
+        <a class="nav-link" routerLink="/register" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="fa-solid fa-user-plus"></i>
+          Registrar Usuario
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" (click)="logout()" style="cursor: pointer;">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Cerrar Sesión
+        </a>
+      </li>
+    </ul>
   </nav>
 </div>

@@ -60,6 +60,41 @@ export class CotizacionService {
   }
 
 
+  /////////////////////////
+
+
+  cotizacionesPorEstado(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/por-estado`);
+  }
+
+  ingresosPorMes(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/ingresos-mes`);
+  }
+
+  ventasPorUsuario(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/ventas-usuario`);
+  }
+
+  clientesTop(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/clientes-top`);
+  }
+
+  cotizacionesPendientes(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/pendientes`);
+  }
+
+  montoAprobadasMes(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/aprobadas-mes`);
+  }
+  //
+  // cotizacion.service.ts
+  actualizarEstadoCotizacion(id: number, estado: string): Observable<any> {
+    const params = new HttpParams().set('estado', estado);
+     return this.http.put(`${this.baseUrl}/${id}/estado?estado=${estado}`, {});
+  }
+
+
+
 
 
 }

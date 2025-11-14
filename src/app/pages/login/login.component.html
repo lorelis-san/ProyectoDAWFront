@@ -1,21 +1,77 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>Inicio de sesión</h2>
-    <form [formGroup]="formLogin">
-      <div class="mb-3">
-        <label class="form-label">Correo electrónico</label>
-        <input type="email" class="form-control" formControlName="email">
+<div class="login-wrapper">
+  <!-- Fondo animado con burbujas -->
+  <div class="background-animation">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Logo/Icono mejorado -->
+      <div class="login-header">
+        <div class="login-icon">
+          <i class="fa-solid fa-car"></i>
+        </div>
+        <h2 class="login-title">Bienvenido de nuevo</h2>
+        <p class="login-subtitle">Sistema de Cotizaciones Automotrices</p>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Contraseña</label>
-        <input type="password" class="form-control" formControlName="password">
-      </div>
-      <div class="mb-3 text-center">
-        <a href="/register" class="forgot-password">¿No tienes una cuenta? Regístrate ahora</a>
-      </div>
-      <div class="d-grid">
-        <button type="submit" class="btn btn-primary" (click)="login()">Ingresar</button>
-      </div>
-    </form>
+      
+      <form [formGroup]="formLogin" class="login-form">
+        <!-- Campo Email -->
+        <div class="form-group">
+          <label class="form-label">Correo Electrónico</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <i class="fa-solid fa-envelope"></i>
+            </span>
+            <input 
+              type="email" 
+              class="form-control modern-input" 
+              formControlName="email"
+              placeholder="tucorreo@ejemplo.com"
+              [class.input-error]="formLogin.get('email')?.invalid && formLogin.get('email')?.touched">
+          </div>
+          <span class="error-message" *ngIf="formLogin.get('email')?.invalid && formLogin.get('email')?.touched">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            Por favor ingrese un correo válido
+          </span>
+        </div>
+        
+        <!-- Campo Contraseña -->
+        <div class="form-group">
+          <div class="label-row">
+            <label class="form-label">Contraseña</label>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input 
+              type="password" 
+              class="form-control modern-input" 
+              formControlName="password"
+              placeholder="Ingresa tu contraseña"
+              [class.input-error]="formLogin.get('password')?.invalid && formLogin.get('password')?.touched">
+          </div>
+          <span class="error-message" *ngIf="formLogin.get('password')?.invalid && formLogin.get('password')?.touched">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            La contraseña es requerida
+          </span>
+        </div>
+        
+        <!-- Botón de Login -->
+        <button 
+          type="submit" 
+          class="btn btn-login" 
+          (click)="login()"
+          [disabled]="formLogin.invalid">
+          <span class="btn-text">Iniciar Sesión</span>
+          <i class="fa-solid fa-arrow-right btn-arrow"></i>
+        </button>
+      </form>
+    </div>
   </div>
 </div>

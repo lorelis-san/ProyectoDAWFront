@@ -1,72 +1,360 @@
-body {
-    background-color: #0e0c28;
-    color: white;
-}
-
+/* Contenedor principal */
 .container {
-    width: 80%;
-    margin-left: 260px;
+  width: 80%;
+  margin-left: 260px;
+  padding: 2.5rem;
+  background: #f8fafc;
+  min-height: 100vh;
+  color: black;
 }
 
-strong {
-    color: white;
+/* Header del listado */
+.container h2 {
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 1.875rem;
+  margin-bottom: 0;
+}
+
+/* Botón Nueva Cotización */
+.btn-success {
+  background: #10b981;
+  border: none;
+  color: white;
+  padding: 0.75rem 1.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.btn-success:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Buscador */
+.form-control {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.form-control::placeholder {
+  color: #94a3b8;
+}
+
+.form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: white;
+  outline: none;
+  color: #1e293b;
+}
+
+/* Alerta */
+.alert-warning {
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  color: #92400e;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Card de cotización - DISEÑO LIMPIO */
+.cotizacion-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.cotizacion-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e0;
+  transform: translateY(-4px);
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+/* Título de la card */
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.text-primary {
+  color: #3b82f6 !important;
+  font-weight: 700;
+}
+
+/* Filas de información */
+.row.mb-2 {
+  margin-bottom: 1rem !important;
+  padding: 0.5rem 0;
 }
 
 .col-md-6 {
-    color: white;
+  color: #475569;
+  font-size: 0.9375rem;
+  line-height: 1.8;
 }
 
-.cotizacion-card {
-    background-color: #1d1b3f;
-    border: 1px solid #2a2850;
-    border-radius: 12px;
+.col-md-6 strong {
+  color: #1e293b;
+  font-weight: 600;
+  display: inline-block;
+  margin-right: 0.5rem;
+  min-width: 150px;
 }
 
-.card-title {
-    font-size: 1.25rem;
+/* Total destacado */
+.text-success {
+  color: #10b981 !important;
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+
+/* Details - Acordeón de productos */
+details {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+details:hover {
+  background: #f1f5f9;
 }
 
 details summary {
-    cursor: pointer;
-    font-weight: 500;
+  cursor: pointer;
+  font-weight: 600;
+  color: #3b82f6;
+  font-size: 0.9375rem;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.table th,
-.table td {
-    vertical-align: middle;
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::before {
+  content: '▶';
+  display: inline-block;
+  transition: transform 0.2s ease;
+  color: #3b82f6;
+  font-size: 0.75rem;
+}
+
+details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+details summary:hover {
+  color: #2563eb;
+}
+
+/* Tabla de detalles - LIMPIA Y ELEGANTE */
+.table-responsive {
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
 }
 
 .detalle-cotizacion-table {
-    width: 100%;
-    background-color: #0e0c28;
-    /* fondo base */
-    border: 1px solid #2e2a5a;
-    color: white;
-    border-radius: 8px;
-    overflow: hidden;
+  width: 100%;
+  background-color: white;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
 }
 
 .detalle-cotizacion-table thead {
-    background-color: #2e2a5a;
-}
-
-.detalle-cotizacion-table th,
-.detalle-cotizacion-table td {
-    color: #ffffff;
-    background-color: #0e0c28;
-    border: 1px solid #3a3660;
-    padding: 10px 14px;
-    text-align: center;
-}
-
-.detalle-cotizacion-table tbody tr:nth-child(even) {
-    background-color: #181636;
-}
-
-.detalle-cotizacion-table tbody tr:nth-child(odd) {
-    background-color: #1e1c3e;
+  background: #f8fafc;
 }
 
 .detalle-cotizacion-table th {
-    font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
+  letter-spacing: 0.5px;
+}
+
+.detalle-cotizacion-table tbody tr {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.detalle-cotizacion-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.detalle-cotizacion-table tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+.detalle-cotizacion-table tbody tr:nth-child(odd) {
+  background-color: white;
+}
+
+.detalle-cotizacion-table td {
+  color: #334155;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0.875rem 1rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+/* Botones de acción */
+.text-end {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-outline-warning {
+  background: white;
+  border: 1.5px solid #f59e0b;
+  color: #f59e0b;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-warning:hover {
+  background: #f59e0b;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  border-color: #f59e0b;
+}
+
+.btn-outline-danger {
+  background: white;
+  border: 1.5px solid #ef4444;
+  color: #ef4444;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+  background: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+}
+
+.btn-outline-info {
+  background: white;
+  border: 1.5px solid #3b82f6;
+  color: #3b82f6;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-info:hover {
+  background: #3b82f6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  border-color: #3b82f6;
+}
+
+/* Iconos en botones */
+.btn i {
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+
+  .container h2 {
+    font-size: 1.5rem;
+  }
+
+  .col-md-6 strong {
+    min-width: auto;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .text-end {
+    flex-wrap: wrap;
+  }
+
+  .btn-outline-warning,
+  .btn-outline-danger,
+  .btn-outline-info {
+    flex: 1;
+    min-width: 90px;
+  }
+
+  .detalle-cotizacion-table {
+    font-size: 0.875rem;
+  }
+
+  .detalle-cotizacion-table th,
+  .detalle-cotizacion-table td {
+    padding: 0.625rem 0.5rem;
+  }
+}
+
+/* Scrollbar personalizado */
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
