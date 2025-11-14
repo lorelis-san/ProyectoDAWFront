@@ -90,11 +90,13 @@ export class CotizacionService {
   // cotizacion.service.ts
   actualizarEstadoCotizacion(id: number, estado: string): Observable<any> {
     const params = new HttpParams().set('estado', estado);
-     return this.http.put(`${this.baseUrl}/${id}/estado?estado=${estado}`, {});
+    return this.http.put(`${this.baseUrl}/${id}/estado?estado=${estado}`, {});
   }
 
 
-
+  graficoCotizacionesPorEstado(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/grafico-estados`);
+  }
 
 
 }

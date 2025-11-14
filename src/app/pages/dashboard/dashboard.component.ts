@@ -55,13 +55,13 @@ export class DashboardComponent implements OnInit {
     });
 
     //  Cotizaciones por estado (para el gráfico)
-    this.cotizacionService.cotizacionesPorEstado().subscribe({
-      next: (res) => {
-        this.cotizacionesEstado = res.data || [];
-        this.crearGraficoCotizacionesEstado();
-      },
-      error: () => this.cotizacionesEstado = []
-    });
+    this.cotizacionService.graficoCotizacionesPorEstado().subscribe({
+    next: (res) => {
+      this.cotizacionesEstado = res.data || [];
+      this.crearGraficoCotizacionesEstado();
+    },
+    error: () => this.cotizacionesEstado = []
+  });
 
     // Monto de cotizaciones aprobadas del mes
     this.cotizacionService.montoAprobadasMes().subscribe({
