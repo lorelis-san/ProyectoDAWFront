@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component'; 
-import { RegisterComponent } from './pages/register/register.component'; 
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
 import { CategoryListComponent } from './components/category/category-list/category-list.component';
 import { SupplierListComponent } from './components/supplier/supplier-list/supplier-list.component';
@@ -23,13 +23,13 @@ import { AuthInterceptor } from './components/helpers/auth.interceptor';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
   {
     path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard] },
+      { path: 'register', component: RegisterComponent },
       { path: 'clientes', component: ClientListComponent ,canActivate: [AuthGuard]},
       { path: 'vehiculos', component: VehicleListComponent,canActivate: [AuthGuard] },
       { path: 'categorias', component: CategoryListComponent,canActivate: [AuthGuard] },
@@ -41,7 +41,7 @@ const routes: Routes = [
       { path: 'cotizaciones', component: CotizacionListComponent,canActivate: [AuthGuard] },
       { path: 'cotizaciones/nueva', component: CotizacionFormComponent,canActivate: [AuthGuard] },
       { path: 'cotizaciones/editar/:id', component: CotizacionFormComponent ,canActivate: [AuthGuard]},
-     
+
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

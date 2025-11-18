@@ -1,77 +1,182 @@
-<div class="login-container" style="background-color: #0e0c28; min-height: 100vh; display: flex; justify-content: center; align-items: center;">
-  <div class="login-card" style="background-color: #1a1833; padding: 2rem; border-radius: 1rem; box-shadow: 0 0 10px rgba(0,0,0,0.5); width: 100%; max-width: 700px; color: white;">
-    <h2 class="text-center mb-4">Registro de Usuario</h2>
+<!-- register.component.html -->
+<div class="main-content">
+  <div class="container-fluid">
+    <!-- Header -->
+    <div class="page-header">
+      <h2 class="page-title">
+        <i class="fa-solid fa-user-plus me-2"></i>
+        Registro de Usuario
+      </h2>
+      <p class="page-subtitle">Crear una nueva cuenta de usuario en el sistema</p>
+    </div>
 
-    <form (ngSubmit)="onSubmit()" #registerForm="ngForm" novalidate>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" class="form-control" [(ngModel)]="nombre" name="nombre" required #nombreRef="ngModel">
-          <div *ngIf="nombreRef.invalid && nombreRef.touched" class="text-danger mt-1">
-            El nombre es obligatorio.
+    <!-- Formulario -->
+    <div class="form-card">
+      <form (ngSubmit)="onSubmit()" #registerForm="ngForm" novalidate>
+        <div class="row g-3">
+          <!-- Nombre -->
+          <div class="col-md-6">
+            <label for="nombre" class="form-label">
+              <i class="fa-solid fa-user me-1"></i>
+              Nombre
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              class="form-control"
+              [(ngModel)]="nombre"
+              name="nombre"
+              required
+              #nombreRef="ngModel"
+              placeholder="Ingrese el nombre"
+            >
+            <div *ngIf="nombreRef.invalid && nombreRef.touched" class="invalid-feedback d-block">
+              El nombre es obligatorio.
+            </div>
+          </div>
+
+          <!-- Apellido -->
+          <div class="col-md-6">
+            <label for="apellido" class="form-label">
+              <i class="fa-solid fa-user me-1"></i>
+              Apellido
+            </label>
+            <input
+              type="text"
+              id="apellido"
+              class="form-control"
+              [(ngModel)]="apellido"
+              name="apellido"
+              required
+              #apellidoRef="ngModel"
+              placeholder="Ingrese el apellido"
+            >
+            <div *ngIf="apellidoRef.invalid && apellidoRef.touched" class="invalid-feedback d-block">
+              El apellido es obligatorio.
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="col-md-6">
+            <label for="email" class="form-label">
+              <i class="fa-solid fa-envelope me-1"></i>
+              Correo electrónico
+            </label>
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              [(ngModel)]="email"
+              name="email"
+              required
+              email
+              #emailRef="ngModel"
+              placeholder="ejemplo@correo.com"
+            >
+            <div *ngIf="emailRef.invalid && emailRef.touched" class="invalid-feedback d-block">
+              Ingresa un correo válido.
+            </div>
+          </div>
+
+          <!-- Usuario -->
+          <div class="col-md-6">
+            <label for="username" class="form-label">
+              <i class="fa-solid fa-id-badge me-1"></i>
+              Usuario
+            </label>
+            <input
+              type="text"
+              id="username"
+              class="form-control"
+              [(ngModel)]="username"
+              name="username"
+              required
+              #usernameRef="ngModel"
+              placeholder="Nombre de usuario"
+            >
+            <div *ngIf="usernameRef.invalid && usernameRef.touched" class="invalid-feedback d-block">
+              El nombre de usuario es obligatorio.
+            </div>
+          </div>
+
+          <!-- Contraseña -->
+          <div class="col-md-6">
+            <label for="password" class="form-label">
+              <i class="fa-solid fa-lock me-1"></i>
+              Contraseña
+            </label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minlength="6"
+              #passwordRef="ngModel"
+              placeholder="Mínimo 6 caracteres"
+            >
+            <div *ngIf="passwordRef.invalid && passwordRef.touched" class="invalid-feedback d-block">
+              La contraseña debe tener mínimo 6 caracteres.
+            </div>
+          </div>
+
+          <!-- Rol -->
+          <div class="col-md-6">
+            <label for="role" class="form-label">
+              <i class="fa-solid fa-shield-halved me-1"></i>
+              Rol
+            </label>
+            <select
+              id="role"
+              class="form-select"
+              [(ngModel)]="role"
+              name="role"
+              required
+              #roleRef="ngModel"
+            >
+              <option value="" disabled selected>Selecciona un rol</option>
+              <option value="ROLE_USER">Vendedor</option>
+              <option value="ROLE_ADMIN">Administrador</option>
+            </select>
+            <div *ngIf="roleRef.invalid && roleRef.touched" class="invalid-feedback d-block">
+              Selecciona un rol.
+            </div>
           </div>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label for="apellido">Apellido</label>
-          <input type="text" id="apellido" class="form-control" [(ngModel)]="apellido" name="apellido" required #apellidoRef="ngModel">
-          <div *ngIf="apellidoRef.invalid && apellidoRef.touched" class="text-danger mt-1">
-            El apellido es obligatorio.
-          </div>
+        <!-- Mensajes -->
+        <div *ngIf="errorMessage" class="alert alert-danger mt-4 d-flex align-items-center">
+          <i class="fa-solid fa-circle-exclamation me-2"></i>
+          {{ errorMessage }}
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label for="email">Correo electrónico</label>
-          <input type="email" id="email" class="form-control" [(ngModel)]="email" name="email" required email #emailRef="ngModel">
-          <div *ngIf="emailRef.invalid && emailRef.touched" class="text-danger mt-1">
-            Ingresa un correo válido.
-          </div>
+        <div *ngIf="successMessage" class="alert alert-success mt-4 d-flex align-items-center">
+          <i class="fa-solid fa-circle-check me-2"></i>
+          {{ successMessage }}
         </div>
 
-     
-        <div class="col-md-6 mb-3">
-          <label for="username">Usuario</label>
-          <input type="text" id="username" class="form-control" [(ngModel)]="username" name="username" required #usernameRef="ngModel">
-          <div *ngIf="usernameRef.invalid && usernameRef.touched" class="text-danger mt-1">
-            El nombre de usuario es obligatorio.
-          </div>
+        <!-- Botones -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="goBack()"
+          >
+            <i class="fa-solid fa-arrow-left me-2"></i>
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="loading || registerForm.invalid"
+          >
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!loading" class="fa-solid fa-user-plus me-2"></i>
+            {{ loading ? 'Registrando...' : 'Registrar Usuario' }}
+          </button>
         </div>
-
-    
-        <div class="col-md-6 mb-3">
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required minlength="6" #passwordRef="ngModel">
-          <div *ngIf="passwordRef.invalid && passwordRef.touched" class="text-danger mt-1">
-            Mínimo 6 caracteres.
-          </div>
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label for="role">Rol</label>
-          <select id="role" class="form-control" [(ngModel)]="role" name="role" required #roleRef="ngModel">
-            <option value="" disabled selected>Selecciona un rol</option>
-            <option value="ROLE_USER">Vendedor</option>
-            <option value="ROLE_ADMIN">Administrador</option>
-          </select>
-          <div *ngIf="roleRef.invalid && roleRef.touched" class="text-danger mt-1">
-            Selecciona un rol.
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-        {{ errorMessage }}
-      </div>
-      <div *ngIf="successMessage" class="alert alert-success mt-3">
-        {{ successMessage }}
-      </div>
-
-      <!-- Botón -->
-      <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary px-4" [disabled]="loading || registerForm.invalid">
-          {{ loading ? 'Registrando...' : 'Registrarse' }}
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
