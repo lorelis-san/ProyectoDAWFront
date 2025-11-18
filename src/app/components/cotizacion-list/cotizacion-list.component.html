@@ -6,15 +6,70 @@
     </button>
   </div>
 
+  <!-- Sección de búsqueda y filtros -->
   <div class="mb-4">
-    <input type="text" class="form-control" placeholder="Buscar cotizaciones" [(ngModel)]="searchTerm"
-      (ngModelChange)="onSearch()" />
+    <div class="row g-3">
+      <!-- Buscador general -->
+      <div class="col-md-6">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Buscar por número, documento, placa, usuario..." 
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()" 
+        />
+      </div>
+
+      <!-- Filtro por estado -->
+      <div class="col-md-4">
+        <select 
+          class="form-select" 
+          [(ngModel)]="estadoFiltro" 
+          (ngModelChange)="onSearch()"
+        >
+          <option value="">Todos los estados</option>
+          <option *ngFor="let estado of estadosDisponibles" [value]="estado">
+            {{ estado }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Botón para limpiar filtros -->
+      <div class="col-md-2">
+        <button 
+          class="btn btn-outline-secondary w-100" 
+          (click)="limpiarFiltros()"
+          [disabled]="!searchTerm && !estadoFiltro"
+        >
+          <i class="fa-solid fa-filter-circle-xmark"></i> Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- Indicador de filtros activos -->
+    <div class="mt-2" *ngIf="searchTerm || estadoFiltro">
+      <small class="text-muted">
+        <i class="fa-solid fa-filter"></i> Filtros activos:
+        <span *ngIf="searchTerm" class="badge bg-info me-2">Búsqueda: {{ searchTerm }}</span>
+        <span *ngIf="estadoFiltro" class="badge bg-secondary">Estado: {{ estadoFiltro }}</span>
+      </small>
+    </div>
   </div>
 
+  <!-- Mensaje cuando no hay resultados -->
   <div *ngIf="cotizaciones.length === 0" class="alert alert-warning">
-    No hay cotizaciones registradas.
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    {{ (searchTerm || estadoFiltro) ? 'No se encontraron cotizaciones con los filtros aplicados.' : 'No hay cotizaciones registradas.' }}
   </div>
 
+  <!-- Indicador de cantidad de resultados -->
+  <div *ngIf="cotizaciones.length > 0" class="mb-3">
+    <small class="text-muted">
+      Mostrando {{ cotizaciones.length }} cotizacion(es)
+    </small>
+  </div>
+
+  <!-- Listado de cotizaciones -->
   <div *ngFor="let cot of cotizaciones" class="card cotizacion-card mb-4 shadow-sm">
     <div class="card-body">
       <h5 class="card-title mb-2">
@@ -29,6 +84,7 @@
           <strong>Modificado por:</strong> {{ cot.usuarioModificadorNombre }} {{ cot.usuarioModificadorApellido }}
         </div>
       </div>
+
       <div class="row mb-2">
         <div class="col-md-6">
           <strong>Fecha de Creación:</strong> {{ cot.fechaCreacion | date: 'short' }}
@@ -37,6 +93,7 @@
           <strong>Fecha de Modificación:</strong> {{ cot.fechaModificacion | date: 'short' }}
         </div>
       </div>
+
       <div class="row mb-2">
         <div class="col-md-6">
           <strong>Tipo de Documento:</strong> {{ cot.cliente?.typeDocument }}
@@ -53,7 +110,18 @@
           <strong>Vehículo:</strong> {{ cot.vehiculo?.marca }} {{ cot.vehiculo?.modelo }} - {{ cot.vehiculo?.placa }}
         </div>
         <div class="col-md-6">
-          <strong>Estado:</strong> {{ cot.estado }}
+          <strong>Estado:</strong>
+          <span 
+            class="badge"
+            [ngClass]="{
+              'bg-warning text-dark': cot.estado === 'PENDIENTE',
+              'bg-success': cot.estado === 'APROBADA',
+              'bg-danger': cot.estado === 'RECHAZADA',
+              'bg-info': cot.estado === 'MODIFICADA'
+            }"
+          >
+            {{ cot.estado }}
+          </span>
         </div>
       </div>
 
@@ -64,7 +132,7 @@
         </div>
       </div>
 
-
+      <!-- Detalles de productos -->
       <details class="mb-3">
         <summary class="text-info">Ver Detalles de Productos</summary>
         <div class="table-responsive mt-3">
@@ -89,7 +157,7 @@
         </div>
       </details>
 
-
+      <!-- Botones de acción -->
       <div class="text-end">
         <button class="btn btn-outline-warning me-2" *ngIf="cot.id" (click)="editCotizacion(cot.id)">
           <i class="fa-solid fa-pen-to-square"></i>
@@ -98,18 +166,18 @@
           (click)="deleteCotizacion(cot.id)">
           <i class="fa-solid fa-trash"></i>
         </button>
-        <button class="btn btn-outline-info" (click)="verPDF(cot.id!)">
+        <button class="btn btn-outline-info me-2" (click)="verPDF(cot.id!)">
           <i class="fa-solid fa-file-pdf"></i>
         </button>
 
-        <!-- NUEVOS BOTONES -->
-        <button class="btn btn-success me-2" *ngIf="cot.estado === 'PENDIENTE' "
+        <!-- Botones de aprobación/rechazo -->
+        <button class="btn btn-success me-2" *ngIf="cot.estado === 'PENDIENTE'"
           (click)="aprobarCotizacion(cot.id!)">
-          Aprobar
+          <i class="fa-solid fa-check"></i> Aprobar
         </button>
         <button class="btn btn-danger" *ngIf="cot.estado === 'PENDIENTE'"
           (click)="rechazarCotizacion(cot.id!)">
-          Rechazar
+          <i class="fa-solid fa-times"></i> Rechazar
         </button>
       </div>
     </div>

@@ -8,10 +8,11 @@
       <input type="text" class="form-control search-input" placeholder="Buscar por código o nombre..."
         [(ngModel)]="searchTerm" (ngModelChange)="onSearch()" />
     </div>
+    <div class="d-flex justify-content-end mb-3">
+      <button class="btn btn-add-category" (click)="openModal('create')">+ Nuevo Vehículo</button>
+    </div>
   </div>
-  <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-add-category" (click)="openModal('create')">+ Nuevo Vehículo</button>
-  </div>
+
 
   <div class="table-responsive">
     <table class="table category-table text-white rounded overflow-hidden">
@@ -81,7 +82,8 @@
 
             <div class="mb-3">
               <label for="year" class="form-label">Año</label>
-              <input type="number" class="form-control category-input" id="year" formControlName="year" min="1900" max="2030" required />
+              <input type="number" class="form-control category-input" id="year" formControlName="year" min="1900"
+                max="2030" required />
               <div *ngIf="form.get('year')?.invalid && form.get('year')?.touched" class="text-danger small">
                 El año es requerido y debe ser válido
               </div>

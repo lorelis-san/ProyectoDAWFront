@@ -11,7 +11,8 @@
   <!-- Header del sidebar con información de usuario -->
   <div class="sidebar-user">
     <h4>Cars Accessories</h4>
-    <p>Panel de Administración</p>
+    <p *ngIf="role === 'ROLE_ADMIN'">Panel de Administración</p>
+    <p *ngIf="role === 'ROLE_USER'">Panel de Ventas</p>
   </div>
 
   <!-- Navegación -->

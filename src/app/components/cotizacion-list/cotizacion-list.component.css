@@ -358,3 +358,33 @@ details summary:hover {
 .table-responsive::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+
+.filtros-container {
+  display: flex;
+  gap: 15px;
+}
+
+.filtros-container input,
+.filtros-container select {
+  height: 45px;
+  border-radius: 8px;
+}
+
+.cotizacion-card {
+  border-radius: 12px;
+  transition: transform .1s ease-in-out;
+}
+
+.cotizacion-card:hover {
+  transform: scale(1.01);
+}
+
+.detalle-cotizacion-table th {
+  background: #f1f1f1;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+}

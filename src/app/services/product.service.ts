@@ -54,4 +54,11 @@ export class ProductService {
     }
     return formData;
   }
+
+
+  getTopProductos(top: number = 5): Observable<any> {
+  const params = new HttpParams().set('top', top);
+  return this.http.get(`${this.apiUrl}/mas-vendidos`, { params });
+}
+
 }

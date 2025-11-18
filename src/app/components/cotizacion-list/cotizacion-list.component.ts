@@ -14,7 +14,11 @@ import { AuthService } from '../../services/auth.service';
 export class CotizacionListComponent implements OnInit {
   cotizaciones: CotizacionResponse[] = [];
   searchTerm: string = '';
+  estadoFiltro: string = ''; // Nuevo: filtro de estado
   role: string | null = null;
+
+  // Estados disponibles para el filtro
+  estadosDisponibles: string[] = ['PENDIENTE', 'APROBADA', 'RECHAZADA', 'MODIFICADA'];
 
   constructor(
     private cotizacionService: CotizacionService,
@@ -39,18 +43,32 @@ export class CotizacionListComponent implements OnInit {
 
   onSearch(): void {
     const term = this.searchTerm.trim();
-    if (!term) {
+    
+    // Si no hay término de búsqueda ni filtro de estado, cargar todas
+    if (!term && !this.estadoFiltro) {
       this.cargarCotizaciones();
       return;
     }
 
+    // Si solo hay filtro de estado, buscar por estado
+    if (!term && this.estadoFiltro) {
+      this.buscarPorEstado();
+      return;
+    }
+
+    // Búsqueda general (puede incluir estado en el término)
     this.cotizacionService.search(term).subscribe({
       next: (response) => {
-        // Si hay resultados, asigna, si no, vacía la lista
-        this.cotizaciones = response?.data || [];
+        let resultados = response?.data || [];
+        
+        // Si hay filtro de estado, aplicar filtrado adicional
+        if (this.estadoFiltro) {
+          resultados = resultados.filter((cot: CotizacionResponse) => cot.estado === this.estadoFiltro);
+        }
+        
+        this.cotizaciones = resultados;
       },
       error: (err) => {
-        // Manejo de 404: no se encontraron cotizaciones
         if (err.status === 404) {
           this.cotizaciones = [];
           console.warn('No se encontraron cotizaciones para:', term);
@@ -60,6 +78,30 @@ export class CotizacionListComponent implements OnInit {
         }
       }
     });
+  }
+
+  // Método para buscar solo por estado
+  private buscarPorEstado(): void {
+    this.cotizacionService.search(this.estadoFiltro).subscribe({
+      next: (response) => {
+        this.cotizaciones = response?.data || [];
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.cotizaciones = [];
+        } else {
+          console.error('Error al buscar por estado:', err);
+          this.alertService.error('Error', 'Ocurrió un error al filtrar por estado.');
+        }
+      }
+    });
+  }
+
+  // Método para limpiar filtros
+  limpiarFiltros(): void {
+    this.searchTerm = '';
+    this.estadoFiltro = '';
+    this.cargarCotizaciones();
   }
 
   cargarCotizaciones(): void {
@@ -140,7 +182,6 @@ export class CotizacionListComponent implements OnInit {
     this.cotizacionService.actualizarEstadoCotizacion(id, 'APROBADA').subscribe({
       next: (res) => {
         this.alertService.success('Estado actualizado', res.mensaje);
-        // Actualizar localmente para evitar 404 en búsqueda
         const cot = this.cotizaciones.find(c => c.id === id);
         if (cot) cot.estado = 'APROBADA';
       },
@@ -155,7 +196,6 @@ export class CotizacionListComponent implements OnInit {
     this.cotizacionService.actualizarEstadoCotizacion(id, 'RECHAZADA').subscribe({
       next: (res) => {
         this.alertService.success('Actualizado', res.mensaje);
-        // Actualizar localmente
         const cot = this.cotizaciones.find(c => c.id === id);
         if (cot) cot.estado = 'RECHAZADA';
       },

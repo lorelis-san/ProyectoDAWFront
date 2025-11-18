@@ -409,3 +409,54 @@ canvas {
     height: 200px !important;
   }
 }
+
+.top-productos-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.top-productos-card h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.top-productos-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.top-productos-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ededed;
+}
+
+.top-productos-list li:last-child {
+  border-bottom: none;
+}
+
+.producto-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.producto-nombre {
+  font-weight: bold;
+  color: #333;
+}
+
+.producto-cantidad {
+  font-size: 14px;
+  color: #666;
+}
+
+.producto-monto {
+  font-weight: bold;
+  color: #2e7d32;
+}

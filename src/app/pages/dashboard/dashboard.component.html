@@ -9,19 +9,6 @@
 
   <!-- Stats Grid -->
   <div class="stats-grid">
-    <!-- Card 1 - Cotizaciones del Mes -->
-    <div class="stat-card">
-      <div class="stat-header">
-        <div class="stat-icon blue">
-          <i class="fa-solid fa-file-invoice"></i>
-        </div>
-      </div>
-      <div class="stat-content">
-        <h3 class="stat-number">S/. {{ resumen.cotizacionesMes}}</h3>
-        <p class="stat-label">En el Mes</p>
-      </div>
-    </div>
-
     <!-- Card 2 - Cotizaciones Aprobadas -->
     <div class="stat-card">
       <div class="stat-header">
@@ -31,9 +18,26 @@
       </div>
       <div class="stat-content">
         <h3 class="stat-number">{{ resumen.aprobadas }}</h3>
-        <p class="stat-label">Cotizaciones Aprobadas</p>
+        <p class="stat-label">Aprobadas en el Mes</p>
       </div>
     </div>
+    <!-- Card 1 - Cotizaciones del Mes -->
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon blue">
+          <i class="fa-solid fa-file-invoice"></i>
+        </div>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">S/. {{ resumen.cotizacionesMes }}</h3>
+        <p class="stat-label">En total del mes</p>
+
+        <!-- <h4 class="stat-label">Cantidad: {{ resumen.cantidadCotizacionesMes }}</h4>-->
+      </div>
+    </div>
+
+
+
 
     <!-- Card 3 - Cotizaciones Pendientes -->
     <div class="stat-card">
@@ -57,7 +61,7 @@
       </div>
       <div class="stat-content">
         <h3 class="stat-number">S/. {{ resumen.totalVentas | number:'1.2-2' }}</h3>
-        <p class="stat-label">Ventas Totales</p>
+        <p class="stat-label">Ventas Totales del Año</p>
       </div>
     </div>
   </div>
@@ -65,18 +69,35 @@
   <!-- Charts -->
   <div class="charts-grid">
     <div class="dashboard-card">
-      <h3 class="card-title">Cotizaciones por Estado</h3>
+      <h3 class="card-title">Cotizaciones por Estado en el Año</h3>
       <canvas id="cotizacionesEstadoChart"></canvas>
     </div>
 
     <div class="dashboard-card">
-      <h3 class="card-title">Ingresos por Mes</h3>
+      <h3 class="card-title">Ingresos por Mes (Cotizaciones Aprobadas) </h3>
       <canvas id="ingresosMesChart"></canvas>
     </div>
 
-    <div class="dashboard-card">
+    <div class="dashboard-card" *ngIf="role === 'ROLE_ADMIN'">
       <h3 class="card-title">Ventas por Usuario</h3>
       <canvas id="ventasUsuarioChart"></canvas>
+    </div>
+
+    <div class="top-productos-card">
+      <h3>Productos Más Vendidos</h3>
+
+      <ul class="top-productos-list">
+        <li *ngFor="let p of topProductos">
+          <div class="producto-info">
+            <span class="producto-nombre">{{ p.nombreProducto }}</span>
+            <span class="producto-cantidad">Cantidad: {{ p.cantidadVendida }}</span>
+          </div>
+
+          <div class="producto-monto">
+            S/. {{ p.montoGenerado }}
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 
@@ -123,4 +144,5 @@
       </div>
     </div>
   </div>
+
 </div>
