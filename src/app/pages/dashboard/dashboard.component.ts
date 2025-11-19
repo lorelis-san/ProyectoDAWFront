@@ -139,7 +139,7 @@ export class DashboardComponent implements OnInit {
         datasets: [{
           label: 'Cotizaciones',
           data: montos,
-          backgroundColor: ['#f8eb31ff', '#61ca6fff', '#d3330bff', '#9C27B0', '#FF5722', '#009688']
+          backgroundColor: ['#61ca6fff', '#f8eb31ff', '#d3330bff', '#9C27B0', '#FF5722', '#009688']
         }]
       },
       options: {
