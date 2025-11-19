@@ -155,7 +155,7 @@ export class ClientListComponent implements OnInit {
       return;
     }
 
-    // ✅ Validar si el documento ya existe antes de guardar
+    // Validar si el documento ya existe antes de guardar
     this.clientService.searchByDocument(this.client.documentNumber).subscribe({
       next: (res) => {
         if (res.data && (!this.isEditMode || res.data.id !== this.client.id)) {
@@ -163,7 +163,6 @@ export class ClientListComponent implements OnInit {
           return;
         }
 
-        // ✅ Si no hay duplicado o estamos editando el mismo cliente
         if (this.isEditMode) {
           this.updateClient();
         } else {
